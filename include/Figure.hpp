@@ -18,51 +18,31 @@
 
 #include <string>
 
+#include "common.hpp"
+
 namespace plotcpp {
 
 class Figure {
 public:
 	/**
+	 * \brief Build the figure with its current data and configuration. This sets the
+	 * figure ready to be displayed or saved.
+	 */
+	virtual void Build() = 0;
+
+	/**
+	 * \brief Render the figure on a window.
+	 */
+	void Show() const;
+
+	/**
 	 * Render and save the figure to a file.
-	 *
 	 * \param filepath Path to a file to save the figure.
 	 */
-	virtual void Save(const std::string& filepath) const = 0;
+	void Save(const std::string& filepath) const;
 
 	/**
-	 * Render the figure on a window.
-	 */
-	virtual void Show() = 0;
-
-	/**
-	 * Set figure size in pixels.
-	 *
-	 * \param width
-	 * \param height
-	 */
-	virtual void SetSize(unsigned int width, unsigned int height) = 0;
-
-	/**
-	 * Returns the figure width in pixels.
-	 *
-	 * \return width
-	 */
-	unsigned int Width() const {
-		return m_width;
-	}
-
-	/**
-	 * Returns the figure height in pixels.
-	 *
-	 * \return height
-	 */
-	unsigned int Height() const {
-		return m_height;
-	}
-
-	/**
-	 * Set figure title.
-	 *
+	 * \brief Set figure title.
 	 * \param title
 	 */
 	void SetTitle(const std::string& title) {
@@ -70,12 +50,34 @@ public:
 	}
 
 	/**
-	 * Returns the figure's title.
-	 *
+	 * \brief Returns the figure's title.
 	 * \return title
 	 */
 	std::string Title() const {
 		return m_title;
+	}
+
+	/**
+	 * \brief Set figure size in pixels.
+	 * \param width
+	 * \param height
+	 */
+	virtual void SetSize(unsigned int width, unsigned int height) = 0;
+
+	/**
+	 * \brief Returns the figure width in pixels.
+	 * \return width
+	 */
+	unsigned int Width() const {
+		return m_width;
+	}
+
+	/**
+	 * \brief Returns the figure height in pixels.
+	 * \return height
+	 */
+	unsigned int Height() const {
+		return m_height;
 	}
 
 protected:
@@ -88,9 +90,15 @@ protected:
 	unsigned int m_width = DEFAULT_WIDTH;
 	unsigned int m_height = DEFAULT_HEIGHT;
 
-	Figure();
+	/** String containing an XML description of an SVG image */
+	std::string m_svg;
+
+	explicit Figure();
 
 private:
+	/** Static counter of figures. The figure number can be used to identify the
+	 * figure in case this has no title.
+	 */
 	static unsigned int m_figure_counter;
 };
 
