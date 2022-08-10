@@ -10,7 +10,8 @@ CXX_FLAGS += \
 	-Wall -Werror
 
 LIB_SOURCES += \
-	$(SRC)/Figure.cpp
+	$(SRC)/Figure.cpp \
+	$(SRC)/Plot2D.cpp \
 
 
 all: tests
@@ -27,7 +28,7 @@ clean:
 TEST_SOURCES += \
 	$(TEST)/Plot2DTest.cpp
 
-tests: 
+tests: | build_dir
 	$(CXX) $(CXX_FLAGS) \
 		-I $(INCLUDE) \
 		$(LIB_SOURCES) $(TEST_SOURCES) \

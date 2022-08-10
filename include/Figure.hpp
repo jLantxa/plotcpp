@@ -18,7 +18,7 @@
 
 #include <string>
 
-#include "common.hpp"
+#include "plotcpp.hpp"
 
 namespace plotcpp {
 
