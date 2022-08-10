@@ -26,4 +26,29 @@ Figure::Figure() {
 	m_figure_number = ++m_figure_counter;
 }
 
+void Figure::SetTitle(const std::string& title) {
+	m_title = title;
+}
+
+std::string Figure::Title() const {
+	return m_title;
+}
+
+unsigned int Figure::GetID() const {
+	return m_figure_number;
+}
+
+void Figure::SetSize(unsigned int width, unsigned int height) {
+	m_width = width;
+	m_height = height;
+}
+
+unsigned int Figure::Width() const {
+	return m_width;
+}
+
+unsigned int Figure::Height() const {
+	return m_height;
+}
+
 }

@@ -27,7 +27,7 @@
 namespace plotcpp {
 
 /**
- * @brief A 2D plot consisting of one or more 2D sets of points
+ * \brief A 2D plot consisting of one or more 2D sets of points
  *
  * @tparam X x-axis data type
  * @tparam Y y-axis data type
@@ -38,29 +38,29 @@ public:
     Plot2D() : Figure() {}
 
     /**
-     * @brief Add a plot consisting of an x-axis sequence and a y-axis sequence
+     * \brief Add a plot consisting of an x-axis sequence and a y-axis sequence
      * of the same length
      *
-     * @param x_data x-axis data
-     * @param y_data y-axis data
+     * \param x_data x-axis data
+     * \param y_data y-axis data
      */
     void Plot(std::vector<X> x_data, std::vector<Y> y_data);
 
     /**
-     * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
+     * \brief Add a plot consisting of one y-axis sequence of size N. The x-axis
      * sequence will be automatically deduced as an 1-increment sequence from
      * 0 to N-1.
      *
-     * @param x_data x-axis data
-     * @param y_data y-axis data
+     * \param x_data x-axis data
+     * \param y_data y-axis data
      */
     void Plot(std::vector<Y> y_data);
 
     /**
-     * @brief Set a range for the x axis
+     * \brief Set a range for the x axis
      *
-     * @param x0 Minimum value
-     * @param x1 Maximum value
+     * \param x0 Minimum value
+     * \param x1 Maximum value
      */
     void SetXRange(X x0, X x1) {
         const X x_min = std::min(static_cast<Real>(x0), static_cast<Real>(x1));
@@ -69,10 +69,10 @@ public:
     }
 
     /**
-     * @brief Set a range for the y axis
+     * \brief Set a range for the y axis
      *
-     * @param y0 Minimum value
-     * @param y1 Maximum value
+     * \param y0 Minimum value
+     * \param y1 Maximum value
      */
     void SetYRange(Y y0, Y y1) {
         const Y y_min = std::min(static_cast<Real>(y0), static_cast<Real>(y1));
@@ -80,9 +80,25 @@ public:
         m_y_range = {y_min, y_max};
     }
 
+
+	/**
+	 * Returns the x axis range.
+	 */
+	auto GetXRange() const {
+		return m_x_range;
+	}
+
+	/**
+	 * Returns the y axis range.
+	 */
+	auto GetYRange() const {
+		return m_y_range;
+	}
+
+
     /**
      * \brief Set a label for the x axis.
-     * @param label
+     * \param label
      */
     void SetXLabel(const std::string& label) {
         m_x_label = label;
@@ -90,14 +106,31 @@ public:
 
     /**
      * \brief Set a label for the y axis.
-     * @param label
+     * \param label
      */
     void SetYLabel(const std::string& label) {
         m_y_label = label;
     }
 
+	/**
+	 * \brief Returns the x axis label
+	 * \return x axis label
+	 */
+	std::string GetXLabel() const {
+		return m_x_label;
+	}
+
+	/**
+	 * \brief Returns the y axis label
+	 * \return y axis label
+	 */
+	std::string GetYLabel() const {
+		return m_y_label;
+	}
+
+
     /**
-     * @brief Build the figure
+     * \brief Build the figure
      */
     void Build() override {
         /* TODO(jLantxa):

@@ -45,40 +45,37 @@ public:
 	 * \brief Set figure title.
 	 * \param title
 	 */
-	void SetTitle(const std::string& title) {
-		m_title = title;
-	}
+	void SetTitle(const std::string& title);
 
 	/**
 	 * \brief Returns the figure's title.
 	 * \return title
 	 */
-	std::string Title() const {
-		return m_title;
-	}
+	std::string Title() const;
+
+	/**
+	 * \brief Returns the figure number.
+	 */
+	unsigned int GetID() const;
 
 	/**
 	 * \brief Set figure size in pixels.
 	 * \param width
 	 * \param height
 	 */
-	virtual void SetSize(unsigned int width, unsigned int height) = 0;
+	void SetSize(unsigned int width, unsigned int height);
 
 	/**
 	 * \brief Returns the figure width in pixels.
 	 * \return width
 	 */
-	unsigned int Width() const {
-		return m_width;
-	}
+	unsigned int Width() const;
 
 	/**
 	 * \brief Returns the figure height in pixels.
 	 * \return height
 	 */
-	unsigned int Height() const {
-		return m_height;
-	}
+	unsigned int Height() const;
 
 protected:
 	unsigned int m_figure_number;
