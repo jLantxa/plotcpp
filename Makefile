@@ -9,6 +9,12 @@ CXX_FLAGS += \
 	-O2 \
 	-Wall -Werror
 
+LIB_SOURCES += \
+	$(SRC)/Figure.cpp
+
+
+all: tests
+
 build_dir:
 	mkdir -p $(BUILD)
 
@@ -17,3 +23,15 @@ doc:
 
 clean:
 	rm -r $(BUILD)
+
+TEST_SOURCES += \
+	$(TEST)/Plot2DTest.cpp
+
+tests: 
+	$(CXX) $(CXX_FLAGS) \
+		-I $(INCLUDE) \
+		$(LIB_SOURCES) $(TEST_SOURCES) \
+		-lgtest_main -lgtest \
+		-o $(BUILD)/tests
+
+	./$(BUILD)/tests
