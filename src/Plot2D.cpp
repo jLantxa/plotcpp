@@ -106,7 +106,7 @@ void Plot2D::Build() {
     /* TODO(jLantxa):
         * Generate graphic primitives from bottom to top:
         * 1. Add title (if defined)
-        * 2. Add labels (if defined). [Real label must be translated and rotated]
+        * 2. Add labels (if defined). [x label must be translated and rotated]
         * 3. Add grid (if set)
         * 4. Calculate ranges for the largest x and y scales
         *   3.0. If N == 1: place point in the middle
