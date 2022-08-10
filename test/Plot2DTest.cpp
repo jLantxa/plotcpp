@@ -24,18 +24,18 @@ using plotcpp::Plot2D;
 using plotcpp::Real;
 
 TEST(Plot2DTest, Constructor) {
-	Plot2D<float, float> plot1;
+	Plot2D plot1;
 	EXPECT_EQ(plot1.Title(), "");
 	EXPECT_EQ(plot1.GetID(), 1U);
 	EXPECT_EQ(plot1.Width(), 400);
 	EXPECT_EQ(plot1.Height(), 300);
 
-	Plot2D<float, float> plot2;
+	Plot2D plot2;
 	EXPECT_EQ(plot2.GetID(), 2U);
 }
 
 TEST(Plot2DTest, BuilderOptions) {
-	Plot2D<float, float> plot;
+	Plot2D plot;
 
 	plot.SetSize(123U, 456U);
 	plot.SetTitle("Test figure 1234");
