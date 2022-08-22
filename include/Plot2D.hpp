@@ -68,12 +68,11 @@ public:
      */
     void SetYRange(Real y0, Real y1);
 
+    /** Returns the x axis range. */
+    std::optional<std::pair<Real, Real>> GetXRange() const;
 
-	/** Returns the x axis range. */
-	std::optional<std::pair<Real, Real>> GetXRange() const;
-
-	/** Returns the x axis range. */
-	std::optional<std::pair<Real, Real>> GetYRange() const;
+    /** Returns the x axis range. */
+    std::optional<std::pair<Real, Real>> GetYRange() const;
 
     /**
      * \brief Set a label for the x axis.
@@ -87,17 +86,17 @@ public:
      */
     void SetYLabel(const std::string& label);
 
-	/**
-	 * \brief Returns the x axis label
-	 * \return x axis label
-	 */
-	std::string GetXLabel() const;
+    /**
+     * \brief Returns the x axis label
+     * \return x axis label
+     */
+    std::string GetXLabel() const;
 
-	/**
-	 * \brief Returns the y axis label
-	 * \return y axis label
-	 */
-	std::string GetYLabel() const;
+    /**
+     * \brief Returns the y axis label
+     * \return y axis label
+     */
+    std::string GetYLabel() const;
 
     /** Clear figure configuration */
     void Clear();
