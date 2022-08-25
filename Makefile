@@ -14,7 +14,10 @@ LIB_SOURCES += \
 	$(SRC)/Plot2D.cpp \
 
 
-all: tests
+all: compiledb tests
+
+compiledb: | build_dir
+	compiledb make -n
 
 build_dir:
 	mkdir -p $(BUILD)
