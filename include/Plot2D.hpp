@@ -16,6 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#ifndef _PLOTCPP_INCLUDE_PLOT2D_HPP_
+#define _PLOTCPP_INCLUDE_PLOT2D_HPP_
+
 #include <algorithm>
 #include <optional>
 #include <string>
@@ -120,4 +123,6 @@ protected:
     std::optional<std::pair<Real, Real>> m_y_range;
 };
 
-}
+}  // namespace plotcpp
+
+#endif  // _PLOTCPP_INCLUDE_PLOT2D_HPP_

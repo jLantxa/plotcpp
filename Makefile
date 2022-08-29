@@ -11,27 +11,30 @@ CXX_FLAGS += \
 
 LIB_SOURCES += \
 	$(SRC)/Figure.cpp \
-	$(SRC)/Plot2D.cpp \
+	$(SRC)/Plot2D.cpp
 
+
+.PHONY: doc
 
 all: compiledb tests
 
-compiledb: | build_dir
+compiledb: build_dir
 	compiledb make -n
 
 build_dir:
 	mkdir -p $(BUILD)
 
 doc:
-	@doxygen
+	doxygen
 
 clean:
 	rm -r $(BUILD)
+	rm -r $(DOC)
 
 TEST_SOURCES += \
 	$(TEST)/Plot2DTest.cpp
 
-tests: | build_dir
+tests: build_dir
 	$(CXX) $(CXX_FLAGS) \
 		-I $(INCLUDE) \
 		$(LIB_SOURCES) $(TEST_SOURCES) \

@@ -16,12 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#ifndef _PLOTCPP_INCLUDE_PLOTCPP_HPP_
+#define _PLOTCPP_INCLUDE_PLOTCPP_HPP_
+
 #include <vector>
 
 namespace plotcpp {
 
 /** Internal real number type */
 using Real = double;
+
+struct Point {
+    Real x, y;
+};
 
 namespace adaptor {
     /**
@@ -58,4 +65,6 @@ namespace adaptor {
     }
 }
 
-}
+}  // namespace plotcpp
+
+#endif  // _PLOTCPP_INCLUDE_PLOTCPP_HPP_

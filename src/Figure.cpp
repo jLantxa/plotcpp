@@ -51,4 +51,4 @@ unsigned int Figure::Height() const {
 	return m_height;
 }
 
-}
+}  // namespace plotcpp

@@ -122,4 +122,4 @@ void Plot2D::Build() {
     */
 }
 
-}
+}  // namespace plotcpp

@@ -16,6 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#ifndef _PLOTCPP_INCLUDE_FIGURE_HPP_
+#define _PLOTCPP_INCLUDE_FIGURE_HPP_
+
 #include <string>
 
 #include "plotcpp.hpp"
@@ -99,4 +102,6 @@ private:
 	static unsigned int m_figure_counter;
 };
 
-}
+}  // namespace plotcpp
+
+#endif  // _PLOTCPP_INCLUDE_FIGURE_HPP_
