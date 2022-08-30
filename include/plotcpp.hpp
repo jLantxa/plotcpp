@@ -21,14 +21,12 @@
 
 #include <vector>
 
+#include "svg.hpp"
+
 namespace plotcpp {
 
 /** Internal real number type */
 using Real = double;
-
-struct Point {
-    Real x, y;
-};
 
 namespace adaptor {
     /**
