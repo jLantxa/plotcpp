@@ -88,6 +88,7 @@ struct Path {
 class Document {
 public:
 	Document();
+	~Document();
 
 	/** Return the xml text */
 	std::string GetText() const;

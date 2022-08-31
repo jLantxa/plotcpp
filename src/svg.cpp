@@ -17,6 +17,7 @@
 */
 
 #include "svg.hpp"
+#include "libxml/tree.h"
 
 namespace plotcpp {
 namespace svg {
@@ -44,6 +45,10 @@ Document::Document() {
 	m_doc = xmlNewDoc(xchar("1.0"));
 	m_root = xmlNewNode(nullptr, xchar("svg"));
 	xmlDocSetRootElement(m_doc, m_root);
+}
+
+Document::~Document() {
+	xmlFreeDoc(m_doc);
 }
 
 std::string Document::GetText() const {
