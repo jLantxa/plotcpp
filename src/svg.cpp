@@ -72,7 +72,11 @@ std::string PathCommand::ToString() const {
 			ss << "Z";
 	}
 	
-	ss << " " << std::to_string(x) << " " << std::to_string(y);
+	/* The close (Z) command has no arguments */
+	if (id != Id::CLOSE) {
+		ss << " " << std::to_string(x) << " " << std::to_string(y);
+	}
+	
 	return ss.str();
 }
 
