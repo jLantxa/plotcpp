@@ -23,6 +23,8 @@
 using plotcpp::svg::Document;
 using plotcpp::svg::Line;
 using plotcpp::svg::Rect;
+using plotcpp::svg::Path;
+using plotcpp::svg::PathCommand;
 
 int main() {
 	Document svg;
@@ -53,6 +55,14 @@ int main() {
 		.fill_opacity = 0.85f
 	};
 	svg.DrawRect(rect);
+
+	Path path;
+	path.Add({PathCommand::Id::MOVE, 100.0f, 200.0f});
+	path.Add({PathCommand::Id::LINE_R, 20.0f, 20.0f});
+	path.Add({PathCommand::Id::LINE_R, 20.0f, -20.0f});
+	path.Add({PathCommand::Id::LINE_R, 20.0f, 20.0f});
+	path.Add({PathCommand::Id::LINE_R, 20.0f, -20.0f});
+	svg.DrawPath(path);
 
 	std::cout << svg.GetText();
 

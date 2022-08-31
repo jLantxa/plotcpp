@@ -23,6 +23,7 @@
 
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -56,6 +57,31 @@ struct Rect {
 	float fill_opacity = 1.0f;
 };
 
+struct PathCommand {
+	enum class Id {
+		MOVE,
+		MOVE_R,
+		LINE,
+		LINE_R,
+		CLOSE,
+	};
+
+	Id id;
+	float x, y;
+
+	std::string ToString() const;
+};
+
+struct Path {
+	std::vector<PathCommand> commands;
+	RGB stroke_color {0, 0, 0};
+	RGB fill_color {0, 0, 0};
+	bool fill_transparent = true;
+
+	void Add(const PathCommand& command);
+	void Clear();
+};
+
 /**
  * /brief An SVG document
  */
@@ -82,6 +108,9 @@ public:
 
 	/** Draw a rectangle */
 	void DrawRect(const Rect& rect);
+
+	/** Draw a path */
+	void DrawPath(const Path& path);
 
 private:
 	unsigned int m_width, m_height;

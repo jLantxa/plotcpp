@@ -52,6 +52,38 @@ std::string Document::GetText() const {
 	return std::string{(char*) xml_str};
 }
 
+std::string PathCommand::ToString() const {
+	std::stringstream ss;
+
+	switch (id) {
+		case Id::MOVE:
+			ss << "M";
+			break;
+		case Id::MOVE_R:
+			ss << "m";
+			break;
+		case Id::LINE:
+			ss << "L";
+			break;
+		case Id::LINE_R:
+			ss << "l";
+			break;
+		case Id::CLOSE:
+			ss << "Z";
+	}
+	
+	ss << " " << std::to_string(x) << " " << std::to_string(y);
+	return ss.str();
+}
+
+void Path::Add(const PathCommand& command) {
+	commands.push_back(command);
+}
+
+void Path::Clear() {
+	commands.clear();
+}
+
 void Document::Clear() {
 	// TODO
 }
@@ -106,6 +138,35 @@ void Document::DrawRect(const Rect& rect) {
 			std::to_string(rect.fill_color.b) << "); " <<
 		"fill-opacity:" << std::to_string(rect.fill_opacity);
 	SetAttribute(node, "style", style_value_ss.str());
+}
+
+void Document::DrawPath(const Path& path) {
+	auto* node = AppendNode(m_root, "path");	
+
+	std::stringstream path_ss;
+	for (const PathCommand& cmd : path.commands) {
+		path_ss << cmd.ToString() << " "; 
+	}
+
+	std::stringstream stroke_ss;
+	stroke_ss << "RGB(" <<
+		std::to_string(path.stroke_color.r) << ", " <<
+		std::to_string(path.stroke_color.g) << ", " <<
+		std::to_string(path.stroke_color.b) << ")";
+
+	if (path.fill_transparent == true) {
+		SetAttribute(node, "fill", "transparent");
+	} else {
+		std::stringstream ss;
+		ss << "RGB(" <<
+			std::to_string(path.fill_color.r) << ", " <<
+			std::to_string(path.fill_color.g) << ", " <<
+			std::to_string(path.fill_color.b) << ")";
+		SetAttribute(node, "fill", ss.str());
+	}
+	
+	SetAttribute(node, "stroke", stroke_ss.str());
+	SetAttribute(node, "d", path_ss.str());
 }
 
 }  // namespace svg
