@@ -35,6 +35,9 @@ clean:
 	rm -r $(BUILD)
 	rm -r $(DOC)
 
+cloc:
+	@cloc $(INCLUDE) $(SRC) $(TEST)
+
 TEST_SOURCES += \
 	$(TEST)/Plot2DTest.cpp \
 
