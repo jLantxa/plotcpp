@@ -121,6 +121,17 @@ protected:
     std::vector<DataPair> m_data;
     std::optional<std::pair<Real, Real>> m_x_range;
     std::optional<std::pair<Real, Real>> m_y_range;
+
+	// Constraints
+	static constexpr float FRAME_TOP_MARGIN_REL = 0.15f;
+	static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.10f;
+	static constexpr float FRAME_LEFT_MARGIN_REL = 0.10f;
+	static constexpr float FRAME_RIGHT_MARGIN_REL = 0.10f;
+
+	void DrawFrame();
+	void DrawData();
+
+	friend class Plot2DTest;
 };
 
 }  // namespace plotcpp
