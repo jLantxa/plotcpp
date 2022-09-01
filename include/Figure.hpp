@@ -22,6 +22,7 @@
 #include <string>
 
 #include "plotcpp.hpp"
+#include "svg.hpp"
 
 namespace plotcpp {
 
@@ -39,10 +40,16 @@ public:
 	void Show() const;
 
 	/**
-	 * Render and save the figure to a file.
+	 * \brief Render and save the figure to a file.
 	 * \param filepath Path to a file to save the figure.
 	 */
 	void Save(const std::string& filepath) const;
+
+	/**
+	 * \brief Return the SVG representation of this Figure.
+	 * This function must be called after Build
+	 */
+	std::string GetSVG() const;
 
 	/**
 	 * \brief Set figure title.
@@ -91,7 +98,7 @@ protected:
 	unsigned int m_height = DEFAULT_HEIGHT;
 
 	/** String containing an XML description of an SVG image */
-	std::string m_svg;
+	svg::Document m_svg;
 
 	explicit Figure();
 

@@ -96,6 +96,7 @@ void Plot2D::Clear() {
     SetYLabel("");
     m_x_range.reset();
     m_y_range.reset();
+    m_svg.Clear();
 }
 
 void Plot2D::ClearData() {
@@ -103,6 +104,9 @@ void Plot2D::ClearData() {
 }
 
 void Plot2D::Build() {
+    m_svg.Clear();
+    m_svg.SetSize(m_width, m_height);
+
     /* TODO(jLantxa):
         * Generate graphic primitives from bottom to top:
         * 1. Add title (if defined)
@@ -120,6 +124,22 @@ void Plot2D::Build() {
         * 6. Add legend (if set)
         * 7. Generate SVG description from primitives
     */
+
+    DrawFrame();
+    DrawData();
+}
+
+void Plot2D::DrawFrame() {
+    svg::Rect frame_rect {
+        .x = m_width * FRAME_LEFT_MARGIN_REL,
+        .y = m_height * FRAME_TOP_MARGIN_REL,
+        .width = m_width * (1.0f - FRAME_LEFT_MARGIN_REL - FRAME_RIGHT_MARGIN_REL),
+        .height = m_height * (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL),
+    };
+    m_svg.DrawRect(frame_rect);
+}
+
+void Plot2D::DrawData() { 
 }
 
 }  // namespace plotcpp

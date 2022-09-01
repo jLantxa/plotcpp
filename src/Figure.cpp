@@ -51,4 +51,8 @@ unsigned int Figure::Height() const {
 	return m_height;
 }
 
+std::string Figure::GetSVG() const {
+	return m_svg.GetText();
+}
+
 }  // namespace plotcpp
