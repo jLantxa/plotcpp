@@ -59,6 +59,13 @@ public:
     void Plot(const std::vector<Real>& y_data);
 
     /**
+     * \brief Set hold on/off
+     * Setting the hold on allows multiple data series to be plotted. If hold is off,
+     * plotting overwrites the plot data.
+     */
+    void SetHold(bool hold_on);
+
+    /**
      * \brief Set a range for the x axis
      *
      * \param x0 Minimum value
@@ -118,7 +125,7 @@ public:
 protected:
     using DataPair = std::pair<std::vector<Real>, std::vector<Real>>;
 
-    float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
+    bool m_hold = true;
 
     std::string m_x_label;
     std::string m_y_label;
@@ -129,6 +136,7 @@ protected:
 	Range m_x_range, m_y_range;
     float m_zoom_x = 1.0f;
     float m_zoom_y = 1.0f;
+    float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
 
     std::pair<Range, Range> XDataRange() const;
     std::pair<Range, Range> YDataRange() const;
