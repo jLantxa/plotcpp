@@ -17,6 +17,7 @@
 */
 
 #include <algorithm>
+#include <limits>
 #include <numeric>
 #include <optional>
 #include <string>
@@ -24,8 +25,16 @@
 #include <vector>
 
 #include "Plot2D.hpp"
+#include "svg.hpp"
 
 namespace plotcpp {
+
+static constexpr std::array<svg::RGB, 4> PLOT_COLORS {
+    svg::RGB{32, 112, 255},
+    {255, 32, 32},
+    {16, 192, 16},
+    {0, 0, 0}
+};
 
 Plot2D::Plot2D() : Figure() {}
 
@@ -55,21 +64,21 @@ void Plot2D::Plot(const std::vector<Real>& y_data) {
 void Plot2D::SetXRange(Real x0, Real x1) {
     const Real x_min = std::min(x0, x1);
     const Real x_max = std::max(x0, x1);
-    m_x_range = {x_min, x_max};
+    m_x_set_range = {x_min, x_max};
 }
 
 void Plot2D::SetYRange(Real y0, Real y1) {
     const Real y_min = std::min(y0, y1);
     const Real y_max = std::max(y0, y1);
-    m_y_range = {y_min, y_max};
+    m_y_set_range = {y_min, y_max};
 }
 
-std::optional<std::pair<Real, Real>> Plot2D::GetXRange() const {
-    return m_x_range;
+std::optional<Plot2D::Range> Plot2D::GetXRange() const {
+    return m_x_set_range;
 }
 
-std::optional<std::pair<Real, Real>> Plot2D::GetYRange() const {
-    return m_y_range;
+std::optional<Plot2D::Range> Plot2D::GetYRange() const {
+    return m_y_set_range;
 }
 
 void Plot2D::SetXLabel(const std::string& label) {
@@ -94,9 +103,9 @@ void Plot2D::Clear() {
     SetSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     SetXLabel("");
     SetYLabel("");
-    m_x_range.reset();
-    m_y_range.reset();
-    m_svg.Clear();
+    m_x_set_range.reset();
+    m_y_set_range.reset();
+    m_svg.Reset();
 }
 
 void Plot2D::ClearData() {
@@ -104,7 +113,7 @@ void Plot2D::ClearData() {
 }
 
 void Plot2D::Build() {
-    m_svg.Clear();
+    m_svg.Reset();
     m_svg.SetSize(m_width, m_height);
 
     /* TODO(jLantxa):
@@ -125,9 +134,52 @@ void Plot2D::Build() {
         * 7. Generate SVG description from primitives
     */
 
+    CalculateFrame();
+
     DrawBackground();
-    DrawFrame();
     DrawData();
+    DrawFrame();
+}
+
+void Plot2D::CalculateFrame() {
+    // Frame rectangle
+    m_frame_x = m_width * FRAME_LEFT_MARGIN_REL;
+    m_frame_y = m_height * (FRAME_TOP_MARGIN_REL);
+    m_frame_w = m_width * (1.0f - FRAME_LEFT_MARGIN_REL - FRAME_RIGHT_MARGIN_REL);
+    m_frame_h = m_height * (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL);
+
+    // Ranges
+    Real min_x = std::numeric_limits<Real>::max();
+    Real max_x = std::numeric_limits<Real>::min();
+    Real min_y = std::numeric_limits<Real>::max();
+    Real max_y = std::numeric_limits<Real>::min();
+    for (auto& plot : m_data) {
+        const std::size_t size = plot.first.size();
+        for (std::size_t i = 0; i < size; ++i) {
+            const Real x = plot.first[i];
+            const Real y = plot.second[i];
+
+            min_x = std::min(x, min_x);
+            max_x = std::max(x, max_x);
+            min_y = std::min(y, min_y);
+            max_y = std::max(y, max_y);
+        }
+    }
+    m_x_data_range = {min_x, max_x};
+    m_y_data_range = {min_y, max_y};
+
+    m_x_range = m_x_set_range.has_value()? m_x_set_range.value() : m_x_data_range;
+    m_y_range = m_y_set_range.has_value()? m_y_set_range.value() : m_y_data_range;
+
+    // Zoom factors
+    m_zoom_x = abs(m_frame_w / (m_x_range.second - m_x_range.first));
+    m_zoom_y = abs(m_frame_h / (m_y_range.second - m_y_range.first));
+}
+
+std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
+    float tx = (m_zoom_x * (x + m_x_range.first)) + m_frame_x;
+    float ty = -(m_zoom_y * (y - m_y_range.first)) + m_frame_y + m_frame_h;
+    return {tx, ty};
 }
 
 void Plot2D::DrawBackground() {
@@ -136,15 +188,38 @@ void Plot2D::DrawBackground() {
 
 void Plot2D::DrawFrame() {
     svg::Rect frame_rect {
-        .x = m_width * FRAME_LEFT_MARGIN_REL,
-        .y = m_height * FRAME_TOP_MARGIN_REL,
-        .width = m_width * (1.0f - FRAME_LEFT_MARGIN_REL - FRAME_RIGHT_MARGIN_REL),
-        .height = m_height * (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL),
+        .x = m_frame_x,
+        .y = m_frame_y,
+        .width = m_frame_w,
+        .height = m_frame_h,
+        .fill_opacity = 0.0f,
     };
     m_svg.DrawRect(frame_rect);
+
+    // TODO: Add clip-path rectangle
 }
 
 void Plot2D::DrawData() {
+    const std::size_t num_plots = m_data.size();
+    for (std::size_t p = 0; p < num_plots; ++p) {
+        const DataPair& plot = m_data[p];
+
+        svg::Path path;
+        path.stroke_color = PLOT_COLORS[p % PLOT_COLORS.size()];
+        path.stroke_width = 2;
+
+        const std::vector<Real>& data_x = plot.first;
+        const std::vector<Real>& data_y = plot.second;
+        const std::size_t size = data_x.size();
+
+        for (std::size_t i = 0; i < size; ++i) {
+            const auto path_cmd = (i > 0)? svg::PathCommand::Id::LINE : svg::PathCommand::Id::MOVE;
+            const auto trans_point = TranslateToFrame(data_x[i], data_y[i]);
+            path.Add({path_cmd, trans_point.first, trans_point.second});
+       }
+
+        m_svg.DrawPath(path);
+    }
 }
 
 }  // namespace plotcpp

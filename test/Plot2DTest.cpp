@@ -67,12 +67,3 @@ TEST(Plot2DTest, BuilderOptions) {
 	plot.SetYRange(200.0f, 100.0f);
 	EXPECT_EQ(plot.GetYRange().value(), range);
 }
-
-TEST(Plot2DTest, Build) {
-	Plot2D plot;
-
-	plot.Build();
-
-	std::string svg = plot.GetSVG();
-	std::cout << svg << std::endl;
-}

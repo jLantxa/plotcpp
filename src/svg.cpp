@@ -43,8 +43,7 @@ void Document::SetAttribute(xmlNode* node,
 
 Document::Document() {
 	m_doc = xmlNewDoc(xchar("1.0"));
-	m_root = xmlNewNode(nullptr, xchar("svg"));
-	xmlDocSetRootElement(m_doc, m_root);
+	Reset();
 }
 
 Document::~Document() {
@@ -55,6 +54,15 @@ std::string Document::GetText() const {
 	xmlChar* xml_str;
 	xmlDocDumpFormatMemory(m_doc, &xml_str, nullptr, 1);
 	return std::string{(char*) xml_str};
+}
+
+std::string RGB::ToString() const {
+	std::stringstream ss;
+	ss << "RGB(" <<
+			std::to_string(r) << ", " <<
+			std::to_string(g) << ", " <<
+			std::to_string(b) << ")";
+	return ss.str();
 }
 
 std::string PathCommand::ToString() const {
@@ -93,8 +101,16 @@ void Path::Clear() {
 	commands.clear();
 }
 
-void Document::Clear() {
-	// TODO
+void Document::Reset() {
+	if (m_root != nullptr) {
+		xmlUnlinkNode(m_root);
+		xmlFreeNode(m_root);
+	}
+
+	m_root = xmlNewNode(nullptr, xchar("svg"));
+	xmlDocSetRootElement(m_doc, m_root);
+
+	m_defs = AppendNode(m_root, "defs");
 }
 
 void Document::SetSize(unsigned int width, unsigned int height) {
@@ -104,8 +120,20 @@ void Document::SetSize(unsigned int width, unsigned int height) {
 	SetAttribute(m_root, "height", std::to_string(m_height));
 }
 
+xmlNodePtr Document::AddGroup(const Path& path, xmlNodePtr parent_node, const std::string& id) {
+	xmlNodePtr parent = parent_node==nullptr? m_root : parent_node;
+	auto* node = AppendNode(parent, "g");
+	return node;
+}
+
+xmlNodePtr Document::Defs() {
+	return m_defs;
+}
+
 void Document::DrawBackground(RGB color) {
 	auto* node = AppendNode(m_root, "rect");
+
+	SetAttribute(node, "id", "_background");
 
 	SetAttribute(node, "x", "0");
 	SetAttribute(node, "y", "0");
@@ -122,27 +150,30 @@ void Document::DrawBackground(RGB color) {
 	SetAttribute(node, "style", style_value_ss.str());
 }
 
-void Document::DrawLine(const Line& line) {
-	auto* node = AppendNode(m_root, "line");
+void Document::DrawLine(const Line& line, xmlNodePtr parent_node, const std::string& id) {
+	xmlNodePtr parent = parent_node==nullptr? m_root : parent_node;
+	auto* node = AppendNode(parent, "line");
+
+	if (!id.empty()) {
+		SetAttribute(node, "id", id);
+	}
 
 	SetAttribute(node, "x1", std::to_string(line.x1));
 	SetAttribute(node, "y1", std::to_string(line.y1));
 	SetAttribute(node, "x2", std::to_string(line.x2));
 	SetAttribute(node, "y2", std::to_string(line.y2));
-
-	std::stringstream style_value_ss;
-	style_value_ss <<
-		"stroke: RGB(" <<
-			std::to_string(line.stroke_color.r) << ", " <<
-			std::to_string(line.stroke_color.g) << ", " <<
-			std::to_string(line.stroke_color.b) << "); " <<
-		"stroke-width:" << std::to_string(line.stroke_width) << "; " <<
-		"stroke-opacity:" << std::to_string(line.stroke_opacity);
-	SetAttribute(node, "style", style_value_ss.str());
+	SetAttribute(node, "stroke", line.stroke_color.ToString());
+	SetAttribute(node, "stroke-width", std::to_string(line.stroke_width));
+	SetAttribute(node, "stroke-opacity", std::to_string(line.stroke_opacity));
 }
 
-void Document::DrawRect(const Rect& rect) {
-	auto* node = AppendNode(m_root, "rect");
+void Document::DrawRect(const Rect& rect, xmlNodePtr parent_node, const std::string& id) {
+	xmlNodePtr parent = parent_node==nullptr? m_root : parent_node;
+	auto* node = AppendNode(parent, "rect");
+
+	if (!id.empty()) {
+		SetAttribute(node, "id", id);
+	}
 
 	SetAttribute(node, "x", std::to_string(rect.x));
 	SetAttribute(node, "y", std::to_string(rect.y));
@@ -150,49 +181,36 @@ void Document::DrawRect(const Rect& rect) {
 	SetAttribute(node, "height", std::to_string(rect.height));
 	SetAttribute(node, "rx", std::to_string(rect.rx));
 	SetAttribute(node, "ry", std::to_string(rect.ry));
+	SetAttribute(node, "stroke", rect.stroke_color.ToString());
+	SetAttribute(node, "stroke-width", std::to_string(rect.stroke_width));
+	SetAttribute(node, "stroke-opacity", std::to_string(rect.stroke_opacity));
 
-	std::stringstream style_value_ss;
-	style_value_ss <<
-		"stroke: RGB(" <<
-			std::to_string(rect.stroke_color.r) << ", " <<
-			std::to_string(rect.stroke_color.g) << ", " <<
-			std::to_string(rect.stroke_color.b) << "); " <<
-		"stroke-width:" << std::to_string(rect.stroke_width) << "; " <<
-		"stroke-opacity:" << std::to_string(rect.stroke_opacity) << "; " <<
-		"fill: RGB(" <<
-			std::to_string(rect.fill_color.r) << ", " <<
-			std::to_string(rect.fill_color.g) << ", " <<
-			std::to_string(rect.fill_color.b) << "); " <<
-		"fill-opacity:" << std::to_string(rect.fill_opacity);
-	SetAttribute(node, "style", style_value_ss.str());
+	if (rect.fill_transparent == true) {
+		SetAttribute(node, "fill", "transparent");
+	} else {
+		SetAttribute(node, "fill", rect.fill_color.ToString());
+		SetAttribute(node, "fill-opacity", std::to_string(rect.fill_opacity));
+	}
 }
 
-void Document::DrawPath(const Path& path) {
-	auto* node = AppendNode(m_root, "path");
+void Document::DrawPath(const Path& path, xmlNodePtr parent_node, const std::string& id) {
+	xmlNodePtr parent = parent_node==nullptr? m_root : parent_node;
+	auto* node = AppendNode(parent, "path");
 
 	std::stringstream path_ss;
 	for (const PathCommand& cmd : path.commands) {
 		path_ss << cmd.ToString() << " ";
 	}
 
-	std::stringstream stroke_ss;
-	stroke_ss << "RGB(" <<
-		std::to_string(path.stroke_color.r) << ", " <<
-		std::to_string(path.stroke_color.g) << ", " <<
-		std::to_string(path.stroke_color.b) << ")";
-
 	if (path.fill_transparent == true) {
 		SetAttribute(node, "fill", "transparent");
 	} else {
-		std::stringstream ss;
-		ss << "RGB(" <<
-			std::to_string(path.fill_color.r) << ", " <<
-			std::to_string(path.fill_color.g) << ", " <<
-			std::to_string(path.fill_color.b) << ")";
-		SetAttribute(node, "fill", ss.str());
+		SetAttribute(node, "fill", path.fill_color.ToString());
+		SetAttribute(node, "fill-opacity", std::to_string(path.fill_opacity));
 	}
 
-	SetAttribute(node, "stroke", stroke_ss.str());
+	SetAttribute(node, "stroke", path.stroke_color.ToString());
+	SetAttribute(node, "stroke-width", std::to_string(path.stroke_width));
 	SetAttribute(node, "d", path_ss.str());
 }
 
