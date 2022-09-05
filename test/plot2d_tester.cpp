@@ -30,6 +30,11 @@ using plotcpp::Real;
 int main() {
 	Plot2D plot2d;
 
+	plot2d.SetSize(800, 600);
+	plot2d.SetTitle("Beautiful plots");
+	plot2d.SetXLabel("x label");
+	plot2d.SetYLabel("y label");
+
 	std::vector<Real> data_x0;
 	std::vector<Real> data_y0;
 	for (plotcpp::Real x = 0; x < 10*M_PI; x += 0.01) {
@@ -46,7 +51,9 @@ int main() {
 		data_x1.push_back(x);
 		data_y1.push_back(y);
 	}
-	plot2d.Plot(data_x1, data_y1);
+	plot2d.Plot(data_x1, data_y1, {
+		.color={0, 128, 0},
+		.dash_array="10, 5, 2, 5"});
 
 	std::vector<Real> data_x2;
 	std::vector<Real> data_y2;
@@ -55,7 +62,7 @@ int main() {
 		data_x2.push_back(x);
 		data_y2.push_back(y);
 	}
-	plot2d.Plot(data_x2, data_y2);
+	plot2d.Plot(data_x2, data_y2, {{0, 0, 255}, "6, 2"});
 
 	std::vector<Real> data_x3;
 	std::vector<Real> data_y3;
@@ -64,7 +71,7 @@ int main() {
 		data_x3.push_back(x);
 		data_y3.push_back(y);
 	}
-	plot2d.Plot(data_x3, data_y3);
+	plot2d.Plot(data_x3, data_y3, {{255, 0, 0}});
 
 	plot2d.SetXRange(0, 10*M_PI);
 	plot2d.SetYRange(-1.5, 3);

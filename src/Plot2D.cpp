@@ -29,16 +29,11 @@
 
 namespace plotcpp {
 
-static constexpr std::array<svg::RGB, 4> PLOT_COLORS {
-    svg::RGB{32, 112, 255},
-    {255, 32, 32},
-    {16, 192, 16},
-    {0, 0, 0}
-};
-
 Plot2D::Plot2D() : Figure() {}
 
-void Plot2D::Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data) {
+void Plot2D::Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
+                  const Style& style)
+{
     const std::size_t size = x_data.size();
 
     if (x_data.size() != y_data.size()) {
@@ -49,20 +44,21 @@ void Plot2D::Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_da
         m_data.clear();
     }
 
-    DataPair data_pair;
-    data_pair.first.resize(size);
-    data_pair.second.resize(size);
-    std::copy(x_data.begin(), x_data.end(), data_pair.first.begin());
-    std::copy(y_data.begin(), y_data.end(), data_pair.second.begin());
-    m_data.emplace_back(data_pair);
+    DataSeries data_series;
+    data_series.x.resize(size);
+    data_series.y.resize(size);
+    data_series.style = style;
+    std::copy(x_data.begin(), x_data.end(), data_series.x.begin());
+    std::copy(y_data.begin(), y_data.end(), data_series.y.begin());
+    m_data.emplace_back(data_series);
 }
 
-void Plot2D::Plot(const std::vector<Real>& y_data) {
+void Plot2D::Plot(const std::vector<Real>& y_data, const Style& style) {
     std::vector<Real> x_data;
     x_data.resize(y_data.size());
 
     std::iota(x_data.begin(), x_data.end(), 1.0f);
-    Plot(x_data, y_data);
+    Plot(x_data, y_data, style);
 }
 
 void Plot2D::SetXRange(Real x0, Real x1) {
@@ -147,6 +143,9 @@ void Plot2D::Build() {
     DrawBackground();
     DrawData();
     DrawFrame();
+    DrawTitle();
+    DrawXLabel();
+    DrawYLabel();
 }
 
 void Plot2D::CalculateFrame() {
@@ -162,10 +161,10 @@ void Plot2D::CalculateFrame() {
     Real min_y = std::numeric_limits<Real>::max();
     Real max_y = std::numeric_limits<Real>::min();
     for (auto& plot : m_data) {
-        const std::size_t size = plot.first.size();
+        const std::size_t size = plot.x.size();
         for (std::size_t i = 0; i < size; ++i) {
-            const Real x = plot.first[i];
-            const Real y = plot.second[i];
+            const Real x = plot.x[i];
+            const Real y = plot.y[i];
 
             min_x = std::min(x, min_x);
             max_x = std::max(x, max_x);
@@ -210,24 +209,78 @@ void Plot2D::DrawFrame() {
 void Plot2D::DrawData() {
     const std::size_t num_plots = m_data.size();
     for (std::size_t p = 0; p < num_plots; ++p) {
-        const DataPair& plot = m_data[p];
+        const DataSeries& plot = m_data[p];
 
         svg::Path path;
-        path.stroke_color = PLOT_COLORS[p % PLOT_COLORS.size()];
+        path.stroke_color = plot.style.color;
         path.stroke_width = 2;
 
-        const std::vector<Real>& data_x = plot.first;
-        const std::vector<Real>& data_y = plot.second;
+        const std::vector<Real>& data_x = plot.x;
+        const std::vector<Real>& data_y = plot.y;
         const std::size_t size = data_x.size();
 
         for (std::size_t i = 0; i < size; ++i) {
             const auto path_cmd = (i > 0)? svg::PathCommand::Id::LINE : svg::PathCommand::Id::MOVE;
             const auto trans_point = TranslateToFrame(data_x[i], data_y[i]);
             path.Add({path_cmd, trans_point.first, trans_point.second});
-       }
+        }
 
-        m_svg.DrawPath(path);
+        auto path_node = m_svg.DrawPath(path);
+
+        svg::SetAttribute(path_node, "stroke-linecap", "round");
+        if (!plot.style.dash_array.empty()) {
+            svg::SetAttribute(path_node, "stroke-dasharray", plot.style.dash_array);
+        }
+
+        // TODO: Can further customize the paths with:
+        // svg::SetAttribute(path_node, "stroke-linejoin", "bevel");
+        // svg::SetAttribute(path_node, "stroke-dasharray", "10,5,2,5");
     }
 }
+
+void Plot2D::DrawTitle() {
+    if (m_title.empty()) {
+        return;
+    }
+
+    float x = static_cast<float>(m_width) / 2;
+    float y = (m_height * FRAME_TOP_MARGIN_REL) / 2;
+
+    auto node_ptr = m_svg.DrawText(svg::Text{m_title, x, y, 20, "arial"});
+    svg::SetAttribute(node_ptr, "font-weight", "bold");
+    svg::SetAttribute(node_ptr, "text-anchor", "middle");
+}
+
+void Plot2D::DrawXLabel() {
+    if (m_x_label.empty()) {
+        return;
+    }
+
+    float x = static_cast<float>(m_width) / 2;
+    float y = (m_height * (1.0f - FRAME_BOTTOM_MARGIN_REL/4));
+
+    auto node_ptr = m_svg.DrawText(svg::Text{m_x_label, x, y, 12, "arial"});
+    svg::SetAttribute(node_ptr, "text-anchor", "middle");
+}
+
+void Plot2D::DrawYLabel() {
+    if (m_x_label.empty()) {
+        return;
+    }
+
+    float x = m_width * (FRAME_LEFT_MARGIN_REL / 4);
+    float y = static_cast<float>(m_height) / 2;
+
+    auto node_ptr = m_svg.DrawText(svg::Text{m_y_label, 0, 0, 12, "arial"});
+    svg::SetAttribute(node_ptr, "text-anchor", "middle");
+
+    std::stringstream trans_ss;
+    trans_ss << "translate(" <<
+        std::to_string(x) << ", " <<
+        std::to_string(y) << ") " <<
+        "rotate(-90)";
+    svg::SetAttribute(node_ptr, "transform", trans_ss.str());
+}
+
 
 }  // namespace plotcpp

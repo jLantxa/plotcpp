@@ -32,6 +32,13 @@ namespace plotcpp {
 
 namespace svg {
 
+xmlNode* AppendNode(xmlNode* parent, const std::string& name);
+
+void SetAttribute(xmlNode* node,
+			const std::string& name,
+			const std::string& value,
+			const std::string& unit = "");
+
 struct RGB {
 	uint8_t r;
 	uint8_t g;
@@ -88,6 +95,14 @@ struct Path {
 	void Clear();
 };
 
+struct Text {
+	std::string text;
+	float x, y;
+	float font_size = 12;
+	std::string font_family;
+	RGB color = {0, 0, 0};
+};
+
 /**
  * /brief An SVG document
  */
@@ -111,16 +126,19 @@ public:
 	void SetSize(unsigned int width, unsigned int height);
 
 	/** Draw background color */
-	void DrawBackground(RGB color);
+	xmlNodePtr DrawBackground(RGB color);
 
 	/** Draw a line */
-	void DrawLine(const Line& line, xmlNodePtr parent_node=nullptr, const std::string& id="");
+	xmlNodePtr DrawLine(const Line& line, xmlNodePtr parent_node=nullptr, const std::string& id="");
 
 	/** Draw a rectangle */
-	void DrawRect(const Rect& rect, xmlNodePtr parent_node=nullptr, const std::string& id="");
+	xmlNodePtr DrawRect(const Rect& rect, xmlNodePtr parent_node=nullptr, const std::string& id="");
 
 	/** Draw a path */
-	void DrawPath(const Path& path, xmlNodePtr parent_node=nullptr, const std::string& id="");
+	xmlNodePtr DrawPath(const Path& path, xmlNodePtr parent_node=nullptr, const std::string& id="");
+
+	/** Draw text */
+	xmlNodePtr DrawText(const Text& text, xmlNodePtr parent_node=nullptr, const std::string& id="");
 
 	/** Add a group node */
 	xmlNodePtr AddGroup(const Path& path, xmlNodePtr parent_node=nullptr, const std::string& id="");
@@ -133,14 +151,6 @@ private:
 	xmlDocPtr m_doc = nullptr;
 	xmlNodePtr m_root = nullptr;
 	xmlNodePtr m_defs = nullptr;
-
-	xmlNode* AppendNode(xmlNode* parent, const std::string& name);
-
-	void SetAttribute(xmlNode* node,
-					const std::string& name,
-					const std::string& value,
-					const std::string& unit = "");
-
 };
 
 }  // namespace svg

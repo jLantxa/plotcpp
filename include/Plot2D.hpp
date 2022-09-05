@@ -37,6 +37,11 @@ class Plot2D : public Figure {
 public:
     using Range = std::pair<Real, Real>;
 
+    struct Style {
+        svg::RGB color;
+        std::string dash_array;
+    };
+
     Plot2D();
 
     /**
@@ -46,7 +51,7 @@ public:
      * \param x_data x-axis data
      * \param y_data y-axis data
      */
-    void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data);
+    void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data, const Style& style={{0, 0, 0}});
 
     /**
      * \brief Add a plot consisting of one y-axis sequence of size N. The x-axis
@@ -56,7 +61,7 @@ public:
      * \param x_data x-axis data
      * \param y_data y-axis data
      */
-    void Plot(const std::vector<Real>& y_data);
+    void Plot(const std::vector<Real>& y_data, const Style& style={{0, 0, 0}});
 
     /**
      * \brief Set hold on/off
@@ -123,14 +128,18 @@ public:
     void Build() override;
 
 protected:
-    using DataPair = std::pair<std::vector<Real>, std::vector<Real>>;
+    struct DataSeries {
+        std::vector<Real> x;
+        std::vector<Real> y;
+        Style style;
+    };
 
     bool m_hold = true;
 
     std::string m_x_label;
     std::string m_y_label;
 
-    std::vector<DataPair> m_data;
+    std::vector<DataSeries> m_data;
     Range m_x_data_range, m_y_data_range;
     std::optional<Range> m_x_set_range, m_y_set_range;
 	Range m_x_range, m_y_range;
@@ -148,14 +157,17 @@ protected:
     std::pair<float, float> TranslateToFrame(Real x, Real y) const;
 
     // Constraints
-    static constexpr float FRAME_TOP_MARGIN_REL = 0.15f;
+    static constexpr float FRAME_TOP_MARGIN_REL = 0.10f;
     static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.10f;
     static constexpr float FRAME_LEFT_MARGIN_REL = 0.10f;
-    static constexpr float FRAME_RIGHT_MARGIN_REL = 0.10f;
+    static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
 
     void DrawBackground();
     void DrawFrame();
     void DrawData();
+    void DrawTitle();
+    void DrawXLabel();
+    void DrawYLabel();
 };
 
 }  // namespace plotcpp
