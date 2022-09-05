@@ -45,6 +45,10 @@ void Plot2D::Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_da
         return;
     }
 
+    if (m_hold == false) {
+        m_data.clear();
+    }
+
     DataPair data_pair;
     data_pair.first.resize(size);
     data_pair.second.resize(size);
@@ -95,6 +99,10 @@ std::string Plot2D::GetXLabel() const {
 
 std::string Plot2D::GetYLabel() const {
     return m_y_label;
+}
+
+void Plot2D::SetHold(bool hold) {
+    m_hold = hold;
 }
 
 void Plot2D::Clear() {
