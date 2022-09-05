@@ -125,8 +125,13 @@ void Plot2D::Build() {
         * 7. Generate SVG description from primitives
     */
 
+    DrawBackground();
     DrawFrame();
     DrawData();
+}
+
+void Plot2D::DrawBackground() {
+    m_svg.DrawBackground(svg::RGB{255, 255, 255});
 }
 
 void Plot2D::DrawFrame() {
@@ -139,7 +144,7 @@ void Plot2D::DrawFrame() {
     m_svg.DrawRect(frame_rect);
 }
 
-void Plot2D::DrawData() { 
+void Plot2D::DrawData() {
 }
 
 }  // namespace plotcpp

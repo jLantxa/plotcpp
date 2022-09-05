@@ -76,12 +76,12 @@ std::string PathCommand::ToString() const {
 		case Id::CLOSE:
 			ss << "Z";
 	}
-	
+
 	/* The close (Z) command has no arguments */
 	if (id != Id::CLOSE) {
 		ss << " " << std::to_string(x) << " " << std::to_string(y);
 	}
-	
+
 	return ss.str();
 }
 
@@ -102,6 +102,24 @@ void Document::SetSize(unsigned int width, unsigned int height) {
 	m_height = height;
 	SetAttribute(m_root, "width", std::to_string(m_width));
 	SetAttribute(m_root, "height", std::to_string(m_height));
+}
+
+void Document::DrawBackground(RGB color) {
+	auto* node = AppendNode(m_root, "rect");
+
+	SetAttribute(node, "x", "0");
+	SetAttribute(node, "y", "0");
+	SetAttribute(node, "width", "100", "%");
+	SetAttribute(node, "height", "100", "%");
+
+	std::stringstream style_value_ss;
+	style_value_ss <<
+		"stroke-opacity:" << "1.0" << "; " <<
+		"fill: RGB(" <<
+			std::to_string(color.r) << ", " <<
+			std::to_string(color.g) << ", " <<
+			std::to_string(color.b) << ");";
+	SetAttribute(node, "style", style_value_ss.str());
 }
 
 void Document::DrawLine(const Line& line) {
@@ -150,11 +168,11 @@ void Document::DrawRect(const Rect& rect) {
 }
 
 void Document::DrawPath(const Path& path) {
-	auto* node = AppendNode(m_root, "path");	
+	auto* node = AppendNode(m_root, "path");
 
 	std::stringstream path_ss;
 	for (const PathCommand& cmd : path.commands) {
-		path_ss << cmd.ToString() << " "; 
+		path_ss << cmd.ToString() << " ";
 	}
 
 	std::stringstream stroke_ss;
@@ -173,7 +191,7 @@ void Document::DrawPath(const Path& path) {
 			std::to_string(path.fill_color.b) << ")";
 		SetAttribute(node, "fill", ss.str());
 	}
-	
+
 	SetAttribute(node, "stroke", stroke_ss.str());
 	SetAttribute(node, "d", path_ss.str());
 }
