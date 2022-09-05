@@ -36,6 +36,8 @@ struct RGB {
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
+
+	std::string ToString() const;
 };
 
 struct Line {
@@ -55,6 +57,7 @@ struct Rect {
 	float stroke_width = 1;
 	RGB fill_color {255, 255, 255};
 	float fill_opacity = 1.0f;
+	bool fill_transparent = true;
 };
 
 struct PathCommand {
@@ -74,8 +77,11 @@ struct PathCommand {
 
 struct Path {
 	std::vector<PathCommand> commands;
+	float stroke_width = 1;
 	RGB stroke_color {0, 0, 0};
+	float stroke_opacity = 1.0f;
 	RGB fill_color {0, 0, 0};
+	float fill_opacity = 1.0f;
 	bool fill_transparent = true;
 
 	void Add(const PathCommand& command);
@@ -94,7 +100,7 @@ public:
 	std::string GetText() const;
 
 	/** Clear all elements in this document */
-	void Clear();
+	void Reset();
 
 	/**
 	 * \brief Set the Size object
@@ -108,18 +114,25 @@ public:
 	void DrawBackground(RGB color);
 
 	/** Draw a line */
-	void DrawLine(const Line& line);
+	void DrawLine(const Line& line, xmlNodePtr parent_node=nullptr, const std::string& id="");
 
 	/** Draw a rectangle */
-	void DrawRect(const Rect& rect);
+	void DrawRect(const Rect& rect, xmlNodePtr parent_node=nullptr, const std::string& id="");
 
 	/** Draw a path */
-	void DrawPath(const Path& path);
+	void DrawPath(const Path& path, xmlNodePtr parent_node=nullptr, const std::string& id="");
+
+	/** Add a group node */
+	xmlNodePtr AddGroup(const Path& path, xmlNodePtr parent_node=nullptr, const std::string& id="");
+
+	/** Get the <defs> node */
+	xmlNodePtr Defs();
 
 private:
 	unsigned int m_width, m_height;
-	xmlDocPtr m_doc;
-	xmlNodePtr m_root;
+	xmlDocPtr m_doc = nullptr;
+	xmlNodePtr m_root = nullptr;
+	xmlNodePtr m_defs = nullptr;
 
 	xmlNode* AppendNode(xmlNode* parent, const std::string& name);
 

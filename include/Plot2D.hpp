@@ -20,6 +20,7 @@
 #define _PLOTCPP_INCLUDE_PLOT2D_HPP_
 
 #include <algorithm>
+#include <array>
 #include <optional>
 #include <string>
 #include <utility>
@@ -34,6 +35,8 @@ namespace plotcpp {
  */
 class Plot2D : public Figure {
 public:
+    using Range = std::pair<Real, Real>;
+
     Plot2D();
 
     /**
@@ -72,10 +75,10 @@ public:
     void SetYRange(Real y0, Real y1);
 
     /** Returns the x axis range. */
-    std::optional<std::pair<Real, Real>> GetXRange() const;
+    std::optional<Range> GetXRange() const;
 
     /** Returns the x axis range. */
-    std::optional<std::pair<Real, Real>> GetYRange() const;
+    std::optional<Plot2D::Range> GetYRange() const;
 
     /**
      * \brief Set a label for the x axis.
@@ -115,24 +118,36 @@ public:
 protected:
     using DataPair = std::pair<std::vector<Real>, std::vector<Real>>;
 
+    float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
+
     std::string m_x_label;
     std::string m_y_label;
 
     std::vector<DataPair> m_data;
-    std::optional<std::pair<Real, Real>> m_x_range;
-    std::optional<std::pair<Real, Real>> m_y_range;
+    Range m_x_data_range, m_y_data_range;
+    std::optional<Range> m_x_set_range, m_y_set_range;
+	Range m_x_range, m_y_range;
+    float m_zoom_x = 1.0f;
+    float m_zoom_y = 1.0f;
 
-	// Constraints
-	static constexpr float FRAME_TOP_MARGIN_REL = 0.15f;
-	static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.10f;
-	static constexpr float FRAME_LEFT_MARGIN_REL = 0.10f;
-	static constexpr float FRAME_RIGHT_MARGIN_REL = 0.10f;
+    std::pair<Range, Range> XDataRange() const;
+    std::pair<Range, Range> YDataRange() const;
 
-	void DrawBackground();
-	void DrawFrame();
-	void DrawData();
+    /** Calculate all frame parameters needed to draw the plots. */
+    void CalculateFrame();
 
-	friend class Plot2DTest;
+    /** Translate the (x, y) coordinates from the plot function to (x, y) in the svg image */
+    std::pair<float, float> TranslateToFrame(Real x, Real y) const;
+
+    // Constraints
+    static constexpr float FRAME_TOP_MARGIN_REL = 0.15f;
+    static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.10f;
+    static constexpr float FRAME_LEFT_MARGIN_REL = 0.10f;
+    static constexpr float FRAME_RIGHT_MARGIN_REL = 0.10f;
+
+    void DrawBackground();
+    void DrawFrame();
+    void DrawData();
 };
 
 }  // namespace plotcpp

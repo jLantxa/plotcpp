@@ -49,11 +49,11 @@ tests: build_dir
 		$(LIBXML2_LIBS) -lgtest_main -lgtest \
 		-o $(BUILD)/tests
 
-	# SVG Tester
+	# plot2d tester
 	$(CXX) $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
 		-I$(INCLUDE) \
-		$(TEST)/svg_tester.cpp $(SRC)/svg.cpp \
+		$(TEST)/plot2d_tester.cpp $(LIB_SOURCES) \
 		$(LIBXML2_LIBS) \
-		-o $(BUILD)/svg_tester
+		-o $(BUILD)/plot2d_tester
 
 	./$(BUILD)/tests
