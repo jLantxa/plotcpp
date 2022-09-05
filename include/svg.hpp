@@ -104,6 +104,9 @@ public:
 	 */
 	void SetSize(unsigned int width, unsigned int height);
 
+	/** Draw background color */
+	void DrawBackground(RGB color);
+
 	/** Draw a line */
 	void DrawLine(const Line& line);
 

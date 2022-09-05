@@ -28,7 +28,7 @@ using plotcpp::svg::PathCommand;
 
 int main() {
 	Document svg;
-	svg.SetSize(400, 300);
+	svg.SetSize(800, 600);
 
 	Line line {
 		.x1 = 0,

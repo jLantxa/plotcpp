@@ -29,8 +29,8 @@ TEST(Plot2DTest, Constructor) {
 	Plot2D plot1;
 	EXPECT_EQ(plot1.Title(), "");
 	EXPECT_EQ(plot1.GetID(), 1U);
-	EXPECT_EQ(plot1.Width(), 400);
-	EXPECT_EQ(plot1.Height(), 300);
+	EXPECT_EQ(plot1.Width(), 800);
+	EXPECT_EQ(plot1.Height(), 600);
 
 	Plot2D plot2;
 	EXPECT_EQ(plot2.GetID(), 2U);
@@ -72,7 +72,7 @@ TEST(Plot2DTest, Build) {
 	Plot2D plot;
 
 	plot.Build();
-	
+
 	std::string svg = plot.GetSVG();
 	std::cout << svg << std::endl;
 }

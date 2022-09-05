@@ -91,8 +91,8 @@ protected:
 	unsigned int m_figure_number;
 	std::string m_title;
 
-	static constexpr unsigned int DEFAULT_WIDTH = 400;
-	static constexpr unsigned int DEFAULT_HEIGHT = 300;
+	static constexpr unsigned int DEFAULT_WIDTH = 800;
+	static constexpr unsigned int DEFAULT_HEIGHT = 600;
 
 	unsigned int m_width = DEFAULT_WIDTH;
 	unsigned int m_height = DEFAULT_HEIGHT;

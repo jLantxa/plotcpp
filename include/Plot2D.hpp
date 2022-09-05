@@ -128,6 +128,7 @@ protected:
 	static constexpr float FRAME_LEFT_MARGIN_REL = 0.10f;
 	static constexpr float FRAME_RIGHT_MARGIN_REL = 0.10f;
 
+	void DrawBackground();
 	void DrawFrame();
 	void DrawData();
 
