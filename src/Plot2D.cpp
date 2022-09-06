@@ -29,6 +29,15 @@
 
 namespace plotcpp {
 
+template <typename T>
+static void ClipInfinity(T& x) {
+    if (x == -std::numeric_limits<T>::infinity()) {
+        x = std::numeric_limits<T>::lowest();
+    } else if (x == std::numeric_limits<T>::infinity()) {
+        x = std::numeric_limits<T>::max();
+    }
+}
+
 Plot2D::Plot2D() : Figure() {}
 
 void Plot2D::Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
@@ -220,9 +229,13 @@ void Plot2D::DrawData() {
         const std::size_t size = data_x.size();
 
         for (std::size_t i = 0; i < size; ++i) {
-            const auto path_cmd = (i > 0)? svg::PathCommand::Id::LINE : svg::PathCommand::Id::MOVE;
-            const auto trans_point = TranslateToFrame(data_x[i], data_y[i]);
-            path.Add({path_cmd, trans_point.first, trans_point.second});
+            const bool must_join_points = (i > 0);
+            const auto path_cmd = must_join_points? svg::PathCommand::Id::LINE : svg::PathCommand::Id::MOVE;
+
+            auto [x, y] = TranslateToFrame(data_x[i], data_y[i]);
+            ClipInfinity(x);
+            ClipInfinity(y);
+            path.Add({path_cmd, x, y});
         }
 
         auto path_node = m_svg.DrawPath(path);

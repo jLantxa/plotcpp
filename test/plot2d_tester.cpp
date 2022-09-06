@@ -37,44 +37,15 @@ int main() {
 
 	std::vector<Real> data_x0;
 	std::vector<Real> data_y0;
-	for (plotcpp::Real x = 0; x < 10*M_PI; x += 0.01) {
-		Real y = std::sin(2*x) * std::exp(-x/10.0f);
+	for (plotcpp::Real x = 0; x < 10; x += 0.001) {
+		Real y = 1/(x-5);
 		data_x0.push_back(x);
 		data_y0.push_back(y);
 	}
 	plot2d.Plot(data_x0, data_y0);
 
-	std::vector<Real> data_x1;
-	std::vector<Real> data_y1;
-	for (plotcpp::Real x = 0; x < 10*M_PI; x += 0.01) {
-		Real y = std::cos(x);
-		data_x1.push_back(x);
-		data_y1.push_back(y);
-	}
-	plot2d.Plot(data_x1, data_y1, {
-		.color={0, 128, 0},
-		.dash_array="10, 5, 2, 5"});
-
-	std::vector<Real> data_x2;
-	std::vector<Real> data_y2;
-	for (plotcpp::Real x = 0; x < 10*M_PI; x += 0.01) {
-		Real y = 2;
-		data_x2.push_back(x);
-		data_y2.push_back(y);
-	}
-	plot2d.Plot(data_x2, data_y2, {{0, 0, 255}, "6, 2"});
-
-	std::vector<Real> data_x3;
-	std::vector<Real> data_y3;
-	for (plotcpp::Real x = 0; x < 10*M_PI; x += 0.01) {
-		Real y = -(x-1)*(x-1)/3 + 2;
-		data_x3.push_back(x);
-		data_y3.push_back(y);
-	}
-	plot2d.Plot(data_x3, data_y3, {{255, 0, 0}});
-
-	plot2d.SetXRange(0, 10*M_PI);
-	plot2d.SetYRange(-1.5, 3);
+	plot2d.SetXRange(0, 10);
+	plot2d.SetYRange(-10, 10);
 
 	plot2d.Build();
 	std::string svg_str = plot2d.GetSVG();
