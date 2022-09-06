@@ -269,8 +269,9 @@ void Plot2D::DrawXLabel() {
         return;
     }
 
-    float x = static_cast<float>(m_width) / 2;
-    float y = (m_height * (1.0f - FRAME_BOTTOM_MARGIN_REL/4));
+    const float frame_bottom = m_frame_y + m_frame_h;
+    float x = m_frame_x + (m_frame_w / 2);
+    float y = frame_bottom + (0.75f)*(m_height - frame_bottom);
 
     auto node_ptr = m_svg.DrawText(svg::Text{m_x_label, x, y, 12, "arial"});
     svg::SetAttribute(node_ptr, "text-anchor", "middle");
@@ -281,8 +282,8 @@ void Plot2D::DrawYLabel() {
         return;
     }
 
-    float x = m_width * (FRAME_LEFT_MARGIN_REL / 4);
-    float y = static_cast<float>(m_height) / 2;
+    float x = (1 - 0.75f) * m_frame_x;
+    float y = m_frame_y + (m_frame_h / 2);
 
     auto node_ptr = m_svg.DrawText(svg::Text{m_y_label, 0, 0, 12, "arial"});
     svg::SetAttribute(node_ptr, "text-anchor", "middle");
