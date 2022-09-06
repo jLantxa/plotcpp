@@ -16,6 +16,9 @@
  * limitations under the License.
 */
 
+#include <fstream>
+#include <string>
+
 #include "Figure.hpp"
 
 namespace plotcpp {
@@ -53,6 +56,21 @@ unsigned int Figure::Height() const {
 
 std::string Figure::GetSVG() const {
 	return m_svg.GetText();
+}
+
+void Figure::Save(const std::string& filepath) const {
+	// TODO: Extract extension and call save function
+	//auto ext = filepath.find_last_of(".") + 1;
+	//if (filepath.substr(ext) == "ext")
+
+	// Default to svg
+	SaveSVG(filepath);
+}
+
+void Figure::SaveSVG(const std::string& filepath) const {
+	std::ofstream out_file(filepath);
+	out_file << m_svg.GetText();
+	out_file.close();
 }
 
 }  // namespace plotcpp

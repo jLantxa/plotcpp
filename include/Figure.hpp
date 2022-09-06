@@ -58,7 +58,7 @@ public:
 	void SetTitle(const std::string& title);
 
 	/**
-	 * \brief Returns the figure's title.
+* \brief Returns the figure's title.
 	 * \return title
 	 */
 	std::string Title() const;
@@ -107,6 +107,11 @@ private:
 	 * figure in case this has no title.
 	 */
 	static unsigned int m_figure_counter;
+
+	/**
+	 * \brief Save plot to svg format
+	 */
+	void SaveSVG(const std::string& filepath) const;
 };
 
 }  // namespace plotcpp

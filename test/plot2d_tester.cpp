@@ -27,13 +27,19 @@
 using plotcpp::Plot2D;
 using plotcpp::Real;
 
-int main() {
+int main(int argc, char* argv[]) {
+	if (argc != 2) {
+		std::cout << "Specify a path to save the plot" << std::endl;
+	}
+
+	const std::string filepath {argv[1]};
+
 	Plot2D plot2d;
 
 	plot2d.SetSize(800, 600);
-	plot2d.SetTitle("Beautiful plots");
-	plot2d.SetXLabel("x label");
-	plot2d.SetYLabel("y label");
+	plot2d.SetTitle("plotcpp test");
+	plot2d.SetXLabel("x");
+	plot2d.SetYLabel("f(x)");
 
 	std::vector<Real> data_x0;
 	std::vector<Real> data_y0;
@@ -48,9 +54,7 @@ int main() {
 	plot2d.SetYRange(-10, 10);
 
 	plot2d.Build();
-	std::string svg_str = plot2d.GetSVG();
-
-	std::cout << svg_str << std::endl;
+	plot2d.Save(filepath);
 
 	return 0;
 }
