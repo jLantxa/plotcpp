@@ -30,12 +30,9 @@
 namespace plotcpp {
 
 template <typename T>
-static void ClipInfinity(T& x) {
-    if (x == -std::numeric_limits<T>::infinity()) {
-        x = std::numeric_limits<T>::lowest();
-    } else if (x == std::numeric_limits<T>::infinity()) {
-        x = std::numeric_limits<T>::max();
-    }
+static bool IsInfinity(T x) {
+    return (x == std::numeric_limits<T>::infinity()) ||
+           (x == -std::numeric_limits<T>::infinity());
 }
 
 Plot2D::Plot2D() : Figure() {}
@@ -166,19 +163,23 @@ void Plot2D::CalculateFrame() {
 
     // Ranges
     Real min_x = std::numeric_limits<Real>::max();
-    Real max_x = std::numeric_limits<Real>::min();
+    Real max_x = std::numeric_limits<Real>::lowest();
     Real min_y = std::numeric_limits<Real>::max();
-    Real max_y = std::numeric_limits<Real>::min();
+    Real max_y = std::numeric_limits<Real>::lowest();
     for (auto& plot : m_data) {
         const std::size_t size = plot.x.size();
         for (std::size_t i = 0; i < size; ++i) {
             const Real x = plot.x[i];
             const Real y = plot.y[i];
 
-            min_x = std::min(x, min_x);
-            max_x = std::max(x, max_x);
-            min_y = std::min(y, min_y);
-            max_y = std::max(y, max_y);
+            if (!IsInfinity(x)) {
+                min_x = std::min(x, min_x);
+                max_x = std::max(x, max_x);
+            }
+            if (!IsInfinity(y)) {
+                min_y = std::min(y, min_y);
+                max_y = std::max(y, max_y);
+            }
         }
     }
     m_x_data_range = {min_x, max_x};
@@ -193,8 +194,8 @@ void Plot2D::CalculateFrame() {
 }
 
 std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
-    float tx = (m_zoom_x * (x + m_x_range.first)) + m_frame_x;
-    float ty = -(m_zoom_y * (y - m_y_range.first)) + m_frame_y + m_frame_h;
+    float tx = (m_zoom_x * (x - m_x_range.first)) + m_frame_x;
+    float ty = -(m_zoom_y * (y - m_y_range.first)) + (m_frame_y + m_frame_h);
     return {tx, ty};
 }
 
@@ -229,13 +230,14 @@ void Plot2D::DrawData() {
         const std::size_t size = data_x.size();
 
         for (std::size_t i = 0; i < size; ++i) {
-            const bool must_join_points = (i > 0);
-            const auto path_cmd = must_join_points? svg::PathCommand::Id::LINE : svg::PathCommand::Id::MOVE;
+             if (IsInfinity(data_y[i])) {
+                continue;
+            }
 
-            auto [x, y] = TranslateToFrame(data_x[i], data_y[i]);
-            ClipInfinity(x);
-            ClipInfinity(y);
-            path.Add({path_cmd, x, y});
+            const bool must_join_points = (i > 0) && !IsInfinity(data_y[i-1]);
+            const auto path_cmd = must_join_points? svg::PathCommand::Id::LINE : svg::PathCommand::Id::MOVE;
+            auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
+            path.Add({path_cmd, tx, ty});
         }
 
         auto path_node = m_svg.DrawPath(path);
