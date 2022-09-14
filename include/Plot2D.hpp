@@ -161,6 +161,7 @@ protected:
     static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.10f;
     static constexpr float FRAME_LEFT_MARGIN_REL = 0.10f;
     static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
+    static const std::string FRAME_RECT_CLIP_PATH_ID;
 
     void DrawBackground();
     void DrawFrame();

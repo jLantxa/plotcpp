@@ -35,6 +35,8 @@ static bool IsInfinity(T x) {
            (x == -std::numeric_limits<T>::infinity());
 }
 
+const std::string Plot2D::FRAME_RECT_CLIP_PATH_ID = {"rect-clip-path"};
+
 Plot2D::Plot2D() : Figure() {}
 
 void Plot2D::Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
@@ -214,6 +216,16 @@ void Plot2D::DrawFrame() {
     m_svg.DrawRect(frame_rect);
 
     // TODO: Add clip-path rectangle
+    auto defs_node = m_svg.Defs();
+    auto clip_path_node = svg::AppendNode(defs_node, "clipPath");
+    svg::SetAttribute(clip_path_node, "id", FRAME_RECT_CLIP_PATH_ID);
+    svg::Rect clip_rect {
+        .x = m_frame_x,
+        .y = m_frame_y,
+        .width = m_frame_w,
+        .height = m_frame_h
+    };
+    m_svg.DrawRect(clip_rect, clip_path_node);
 }
 
 void Plot2D::DrawData() {
@@ -241,6 +253,10 @@ void Plot2D::DrawData() {
         }
 
         auto path_node = m_svg.DrawPath(path);
+
+        std::stringstream clip_path_url_ss;
+        clip_path_url_ss << "url(#" << FRAME_RECT_CLIP_PATH_ID << ")";
+        svg::SetAttribute(path_node, "clip-path", clip_path_url_ss.str());
 
         svg::SetAttribute(path_node, "stroke-linecap", "round");
         if (!plot.style.dash_array.empty()) {
