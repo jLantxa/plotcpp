@@ -18,7 +18,7 @@ LIB_SOURCES += \
 	$(SRC)/svg.cpp
 
 
-.PHONY: doc
+.PHONY: doc compiledb syntax tests
 
 all: compiledb tests
 
@@ -37,6 +37,13 @@ clean:
 
 cloc:
 	@cloc $(INCLUDE) $(SRC) $(TEST)
+
+syntax: compiledb
+	$(CXX) $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
+		-I$(INCLUDE) \
+		$(LIB_SOURCES) \
+		-fsyntax-only
+
 
 TEST_SOURCES += \
 	$(TEST)/Plot2DTest.cpp \
