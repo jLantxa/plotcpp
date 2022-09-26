@@ -235,7 +235,7 @@ void Plot2D::DrawData() {
 
         svg::Path path;
         path.stroke_color = plot.style.color;
-        path.stroke_width = 2;
+        path.stroke_width = plot.style.stroke;
 
         const std::vector<Real>& data_x = plot.x;
         const std::vector<Real>& data_y = plot.y;

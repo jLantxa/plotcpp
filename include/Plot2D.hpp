@@ -35,11 +35,14 @@ namespace plotcpp {
  */
 class Plot2D : public Figure {
 public:
+    using Color = svg::RGB;
     using Range = std::pair<Real, Real>;
 
     struct Style {
-        svg::RGB color;
+        Color color;
+        float stroke;
         std::string dash_array;
+
     };
 
     Plot2D();
@@ -50,8 +53,9 @@ public:
      *
      * \param x_data x-axis data
      * \param y_data y-axis data
+     * \param PlotStyle style
      */
-    void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data, const Style& style={{0, 0, 0}});
+    void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data, const Style& style);
 
     /**
      * \brief Add a plot consisting of one y-axis sequence of size N. The x-axis
@@ -59,9 +63,9 @@ public:
      * 0 to N-1.
      *
      * \param x_data x-axis data
-     * \param y_data y-axis data
+     * \param PlotStyle style
      */
-    void Plot(const std::vector<Real>& y_data, const Style& style={{0, 0, 0}});
+    void Plot(const std::vector<Real>& y_data, const Style& style);
 
     /**
      * \brief Set hold on/off

@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 		data_x0.push_back(x);
 		data_y0.push_back(y);
 	}
-	plot2d.Plot(data_x0, data_y0);
+	plot2d.Plot(data_x0, data_y0, {{0, 0, 0}, 3, ""});
 
 	std::vector<Real> data_x1;
 	std::vector<Real> data_y1;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 		data_x1.push_back(x);
 		data_y1.push_back(y);
 	}
-	plot2d.Plot(data_x1, data_y1, {{255, 32, 32}, "10,5,2,5"});
+	plot2d.Plot(data_x1, data_y1, {{255, 32, 32}, 2, "10,5,2,5"});
 
 	std::vector<Real> data_x2;
 	std::vector<Real> data_y2;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 		data_x2.push_back(x);
 		data_y2.push_back(y);
 	}
-	plot2d.Plot(data_x2, data_y2, {{32, 255, 32}, "5,5"});
+	plot2d.Plot(data_x2, data_y2, {{32, 255, 32}, 2, "5,5"});
 
 	plot2d.SetYRange(-5, 5);
 
