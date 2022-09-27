@@ -11,7 +11,7 @@ LIBXML2_CFLAGS := $(shell xml2-config --cflags)
 CXX_FLAGS += \
 	-std=c++20 \
 	-O2 \
-	-Wall -Werror
+	-Wall -Werror -Wpedantic -Wconversion
 
 LIB_SOURCES += \
 	$(SRC)/Figure.cpp \

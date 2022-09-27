@@ -140,10 +140,10 @@ void Plot2D::Build() {
 
 void Plot2D::CalculateFrame() {
     // Frame rectangle
-    m_frame_x = m_width * FRAME_LEFT_MARGIN_REL;
-    m_frame_y = m_height * (FRAME_TOP_MARGIN_REL);
-    m_frame_w = m_width * (1.0f - FRAME_LEFT_MARGIN_REL - FRAME_RIGHT_MARGIN_REL);
-    m_frame_h = m_height * (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL);
+    m_frame_x = static_cast<float>(m_width) * FRAME_LEFT_MARGIN_REL;
+    m_frame_y = static_cast<float>(m_height) * (FRAME_TOP_MARGIN_REL);
+    m_frame_w = static_cast<float>(m_width) * (1.0f - FRAME_LEFT_MARGIN_REL - FRAME_RIGHT_MARGIN_REL);
+    m_frame_h = static_cast<float>(m_height) * (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL);
 
     // Ranges
     Real min_x = std::numeric_limits<Real>::max();
@@ -173,13 +173,13 @@ void Plot2D::CalculateFrame() {
     m_y_range = m_y_set_range.has_value()? m_y_set_range.value() : m_y_data_range;
 
     // Zoom factors
-    m_zoom_x = abs(m_frame_w / (m_x_range.second - m_x_range.first));
-    m_zoom_y = abs(m_frame_h / (m_y_range.second - m_y_range.first));
+    m_zoom_x = static_cast<float>(abs(m_frame_w / (m_x_range.second - m_x_range.first)));
+    m_zoom_y = static_cast<float>(abs(m_frame_h / (m_y_range.second - m_y_range.first)));
 }
 
 std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
-    float tx = (m_zoom_x * (x - m_x_range.first)) + m_frame_x;
-    float ty = -(m_zoom_y * (y - m_y_range.first)) + (m_frame_y + m_frame_h);
+    float tx = static_cast<float>((m_zoom_x * (x - m_x_range.first)) + m_frame_x);
+    float ty = static_cast<float>(-(m_zoom_y * (y - m_y_range.first)) + (m_frame_y + m_frame_h));
     return {tx, ty};
 }
 
@@ -254,8 +254,8 @@ void Plot2D::DrawTitle() {
         return;
     }
 
-    float x = static_cast<float>(m_width) / 2;
-    float y = (m_height * FRAME_TOP_MARGIN_REL) / 2;
+    float x = static_cast<float>(m_width / 2);
+    float y = static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL / 2;
 
     auto node_ptr = m_svg.DrawText(svg::Text{m_title, x, y, 20, "arial"});
     svg::SetAttribute(node_ptr, "font-weight", "bold");
@@ -269,7 +269,7 @@ void Plot2D::DrawXLabel() {
 
     const float frame_bottom = m_frame_y + m_frame_h;
     float x = m_frame_x + (m_frame_w / 2);
-    float y = frame_bottom + (0.75f)*(m_height - frame_bottom);
+    float y = frame_bottom + (0.75f)*(static_cast<float>(m_height) - frame_bottom);
 
     auto node_ptr = m_svg.DrawText(svg::Text{m_x_label, x, y, 12, "arial"});
     svg::SetAttribute(node_ptr, "text-anchor", "middle");
