@@ -23,22 +23,12 @@
 
 namespace plotcpp {
 
-unsigned int Figure::m_figure_counter = 0;
-
-Figure::Figure() {
-	m_figure_number = ++m_figure_counter;
-}
-
 void Figure::SetTitle(const std::string& title) {
 	m_title = title;
 }
 
 std::string Figure::Title() const {
 	return m_title;
-}
-
-unsigned int Figure::GetID() const {
-	return m_figure_number;
 }
 
 void Figure::SetSize(unsigned int width, unsigned int height) {

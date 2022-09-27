@@ -64,11 +64,6 @@ public:
 	std::string Title() const;
 
 	/**
-	 * \brief Returns the figure number.
-	 */
-	unsigned int GetID() const;
-
-	/**
 	 * \brief Set figure size in pixels.
 	 * \param width
 	 * \param height
@@ -100,14 +95,9 @@ protected:
 	/** String containing an XML description of an SVG image */
 	svg::Document m_svg;
 
-	explicit Figure();
+	explicit Figure() = default;
 
 private:
-	/** Static counter of figures. The figure number can be used to identify the
-	 * figure in case this has no title.
-	 */
-	static unsigned int m_figure_counter;
-
 	/**
 	 * \brief Save plot to svg format
 	 */

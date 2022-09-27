@@ -3,6 +3,7 @@ SRC := src
 TEST := test
 DOC := doc
 BUILD := build
+TARGET := plotcpp
 
 LIBXML2_LIBS := $(shell xml2-config --libs)
 LIBXML2_CFLAGS := $(shell xml2-config --cflags)
@@ -18,9 +19,9 @@ LIB_SOURCES += \
 	$(SRC)/svg.cpp
 
 
-.PHONY: doc compiledb syntax tests
+.PHONY: doc compiledb syntax library tests
 
-all: compiledb tests
+all: library
 
 compiledb: build_dir
 	compiledb make -n
@@ -44,23 +45,40 @@ syntax: compiledb
 		$(LIB_SOURCES) \
 		-fsyntax-only
 
-
 TEST_SOURCES += \
-	$(TEST)/Plot2DTest.cpp \
+	$(TEST)/Plot2DTest.cpp
 
-tests: build_dir
+tests: build_dir compiledb library
 	# Unit tests
 	$(CXX) $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
 		-I$(INCLUDE) \
-		$(LIB_SOURCES) $(TEST_SOURCES) \
+		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
 		$(LIBXML2_LIBS) -lgtest_main -lgtest \
+		$(TEST_SOURCES) \
 		-o $(BUILD)/tests
 
 	# plot2d tester
 	$(CXX) $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
 		-I$(INCLUDE) \
-		$(TEST)/plot2d_tester.cpp $(LIB_SOURCES) \
-		$(LIBXML2_LIBS) \
+		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
+		$(TEST)/plot2d_tester.cpp \
 		-o $(BUILD)/plot2d_tester
 
 	./$(BUILD)/tests
+
+
+SHARED_LIB := lib$(TARGET).so
+library: build_dir
+	$(CXX) -fPIC -shared $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
+		-I$(INCLUDE) \
+		$(LIBXML2_LIBS) \
+		$(LIB_SOURCES) \
+		-o $(BUILD)/$(SHARED_LIB)
+
+install:
+	cp -r $(INCLUDE) /usr/include/$(TARGET)
+	cp $(BUILD)/$(SHARED_LIB) /usr/lib64/$(SHARED_LIB)
+
+uninstall:
+	rm -r /usr/include/$(TARGET)
+	rm /usr/lib64/$(SHARED_LIB)
