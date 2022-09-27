@@ -128,24 +128,6 @@ void Plot2D::Build() {
     m_svg.Reset();
     m_svg.SetSize(m_width, m_height);
 
-    /* TODO(jLantxa):
-        * Generate graphic primitives from bottom to top:
-        * 1. Add title (if defined)
-        * 2. Add labels (if defined). [x label must be translated and rotated]
-        * 3. Add grid (if set)
-        * 4. Calculate ranges for the largest x and y scales
-        *   3.0. If N == 1: place point in the middle
-        *   3.1. Establish logarithmic range of data
-        *   3.2. Determine extreme integers
-        *      3.2.1. If range not set, set a default margin and draw data from the margins
-        *      3.2.2. If range set, y range leaves no margin, but the integer scale remains in place
-        *   3.3. Subdivide integer scale according to available space
-        *   3.4. Place markers in scale and order of magnitude
-        * 5. Add point path for each data pair (with different colours according to list)
-        * 6. Add legend (if set)
-        * 7. Generate SVG description from primitives
-    */
-
     CalculateFrame();
 
     DrawBackground();
@@ -215,7 +197,6 @@ void Plot2D::DrawFrame() {
     };
     m_svg.DrawRect(frame_rect);
 
-    // TODO: Add clip-path rectangle
     auto defs_node = m_svg.Defs();
     auto clip_path_node = svg::AppendNode(defs_node, "clipPath");
     svg::SetAttribute(clip_path_node, "id", FRAME_RECT_CLIP_PATH_ID);
@@ -265,7 +246,6 @@ void Plot2D::DrawData() {
 
         // TODO: Can further customize the paths with:
         // svg::SetAttribute(path_node, "stroke-linejoin", "bevel");
-        // svg::SetAttribute(path_node, "stroke-dasharray", "10,5,2,5");
     }
 }
 

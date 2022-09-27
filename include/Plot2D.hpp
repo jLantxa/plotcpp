@@ -53,7 +53,7 @@ public:
      *
      * \param x_data x-axis data
      * \param y_data y-axis data
-     * \param PlotStyle style
+     * \param Style style
      */
     void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data, const Style& style);
 
@@ -63,7 +63,7 @@ public:
      * 0 to N-1.
      *
      * \param x_data x-axis data
-     * \param PlotStyle style
+     * \param Style style
      */
     void Plot(const std::vector<Real>& y_data, const Style& style);
 
