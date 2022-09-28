@@ -14,19 +14,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 #ifndef _PLOTCPP_INCLUDE_SVG_HPP_
 #define _PLOTCPP_INCLUDE_SVG_HPP_
 
-#include <cstdint>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
+#include <cstdint>
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include <libxml/parser.h>
-#include <libxml/tree.h>
 
 namespace plotcpp {
 
@@ -34,123 +33,126 @@ namespace svg {
 
 xmlNode* AppendNode(xmlNode* parent, const std::string& name);
 
-void SetAttribute(xmlNode* node,
-			const std::string& name,
-			const std::string& value,
-			const std::string& unit = "");
+void SetAttribute(xmlNode* node, const std::string& name,
+                  const std::string& value, const std::string& unit = "");
 
 struct RGB {
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
 
-	std::string ToString() const;
+  std::string ToString() const;
 };
 
 struct Line {
-	float x1, y1, x2, y2;
-	RGB stroke_color {0, 0, 0};
-	float stroke_opacity = 1.0f;
-	float stroke_width = 1;
+  float x1, y1, x2, y2;
+  RGB stroke_color{0, 0, 0};
+  float stroke_opacity = 1.0f;
+  float stroke_width = 1;
 };
 
 struct Rect {
-	float x, y;
-	float width, height;
-	float rx = 0;
-	float ry = 0;
-	RGB stroke_color {0, 0, 0};
-	float stroke_opacity = 1.0f;
-	float stroke_width = 1;
-	RGB fill_color {255, 255, 255};
-	float fill_opacity = 1.0f;
-	bool fill_transparent = true;
+  float x, y;
+  float width, height;
+  float rx = 0;
+  float ry = 0;
+  RGB stroke_color{0, 0, 0};
+  float stroke_opacity = 1.0f;
+  float stroke_width = 1;
+  RGB fill_color{255, 255, 255};
+  float fill_opacity = 1.0f;
+  bool fill_transparent = true;
 };
 
 struct PathCommand {
-	enum class Id {
-		MOVE,
-		MOVE_R,
-		LINE,
-		LINE_R,
-		CLOSE,
-	};
+  enum class Id {
+    MOVE,
+    MOVE_R,
+    LINE,
+    LINE_R,
+    CLOSE,
+  };
 
-	Id id;
-	float x, y;
+  Id id;
+  float x, y;
 
-	std::string ToString() const;
+  std::string ToString() const;
 };
 
 struct Path {
-	std::vector<PathCommand> commands;
-	float stroke_width = 1;
-	RGB stroke_color {0, 0, 0};
-	float stroke_opacity = 1.0f;
-	RGB fill_color {0, 0, 0};
-	float fill_opacity = 1.0f;
-	bool fill_transparent = true;
+  std::vector<PathCommand> commands;
+  float stroke_width = 1;
+  RGB stroke_color{0, 0, 0};
+  float stroke_opacity = 1.0f;
+  RGB fill_color{0, 0, 0};
+  float fill_opacity = 1.0f;
+  bool fill_transparent = true;
 
-	void Add(const PathCommand& command);
-	void Clear();
+  void Add(const PathCommand& command);
+  void Clear();
 };
 
 struct Text {
-	std::string text;
-	float x, y;
-	float font_size = 12;
-	std::string font_family;
-	RGB color = {0, 0, 0};
+  std::string text;
+  float x, y;
+  float font_size = 12;
+  std::string font_family;
+  RGB color = {0, 0, 0};
 };
 
 /**
  * /brief An SVG document
  */
 class Document {
-public:
-	Document();
-	~Document();
+ public:
+  Document();
+  ~Document();
 
-	/** Return the xml text */
-	std::string GetText() const;
+  /** Return the xml text */
+  std::string GetText() const;
 
-	/** Clear all elements in this document */
-	void Reset();
+  /** Clear all elements in this document */
+  void Reset();
 
-	/**
-	 * \brief Set the Size object
-	 *
-	 * \param width Image width in px
-	 * \param height Image height in px
-	 */
-	void SetSize(unsigned int width, unsigned int height);
+  /**
+   * \brief Set the Size object
+   *
+   * \param width Image width in px
+   * \param height Image height in px
+   */
+  void SetSize(unsigned int width, unsigned int height);
 
-	/** Draw background color */
-	xmlNodePtr DrawBackground(RGB color);
+  /** Draw background color */
+  xmlNodePtr DrawBackground(RGB color);
 
-	/** Draw a line */
-	xmlNodePtr DrawLine(const Line& line, xmlNodePtr parent_node=nullptr, const std::string& id="");
+  /** Draw a line */
+  xmlNodePtr DrawLine(const Line& line, xmlNodePtr parent_node = nullptr,
+                      const std::string& id = "");
 
-	/** Draw a rectangle */
-	xmlNodePtr DrawRect(const Rect& rect, xmlNodePtr parent_node=nullptr, const std::string& id="");
+  /** Draw a rectangle */
+  xmlNodePtr DrawRect(const Rect& rect, xmlNodePtr parent_node = nullptr,
+                      const std::string& id = "");
 
-	/** Draw a path */
-	xmlNodePtr DrawPath(const Path& path, xmlNodePtr parent_node=nullptr, const std::string& id="");
+  /** Draw a path */
+  xmlNodePtr DrawPath(const Path& path, xmlNodePtr parent_node = nullptr,
+                      const std::string& id = "");
 
-	/** Draw text */
-	xmlNodePtr DrawText(const Text& text, xmlNodePtr parent_node=nullptr, const std::string& id="");
+  /** Draw text */
+  xmlNodePtr DrawText(const Text& text, xmlNodePtr parent_node = nullptr,
+                      const std::string& id = "");
 
-	/** Add a group node */
-	xmlNodePtr AddGroup(xmlNodePtr parent_node=nullptr, const std::string& id="");
+  /** Add a group node */
+  xmlNodePtr AddGroup(xmlNodePtr parent_node = nullptr,
+                      const std::string& id = "");
 
-	/** Get the <defs> node */
-	xmlNodePtr Defs();
+  /** Get the <defs> node */
+  xmlNodePtr Defs();
 
-private:
-	unsigned int m_width, m_height;
-	xmlDocPtr m_doc = nullptr;
-	xmlNodePtr m_root = nullptr;
-	xmlNodePtr m_defs = nullptr;
+ private:
+  unsigned int m_width, m_height;
+  xmlDocPtr m_doc = nullptr;
+  xmlNodePtr m_root = nullptr;
+  xmlNodePtr m_defs = nullptr;
 };
 
 }  // namespace svg

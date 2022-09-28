@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 #ifndef _PLOTCPP_INCLUDE_PLOTCPP_HPP_
 #define _PLOTCPP_INCLUDE_PLOTCPP_HPP_
@@ -29,39 +29,40 @@ namespace plotcpp {
 using Real = double;
 
 namespace adaptor {
-    /**
-     * \brief Convert any numeric type to the internal real representation
-     *
-     * \tparam T Custom type
-     * \param x Value
-     * \return Real Conversion from T to Real
-     */
-    template <typename T>
-    Real R(T x) {
-        return static_cast<Real>(x);
-    }
-
-    /**
-     * \brief Convert a vector of any numeric type to the internal real representation
-     *
-     * \tparam T Custom type
-     * \param v Vector
-     * \return std::vector<Real> Conversion from T to Real
-     */
-    template <typename T>
-    std::vector<Real> R(std::vector<T> v) {
-        const std::size_t size = v.size();
-
-        std::vector<Real> real_vector;
-        real_vector.resize(size);
-
-        for (std::size_t i = 0; i < size; ++i) {
-            real_vector[i] = R(v[i]);
-        }
-
-        return real_vector;
-    }
+/**
+ * \brief Convert any numeric type to the internal real representation
+ *
+ * \tparam T Custom type
+ * \param x Value
+ * \return Real Conversion from T to Real
+ */
+template <typename T>
+Real R(T x) {
+  return static_cast<Real>(x);
 }
+
+/**
+ * \brief Convert a vector of any numeric type to the internal real
+ * representation
+ *
+ * \tparam T Custom type
+ * \param v Vector
+ * \return std::vector<Real> Conversion from T to Real
+ */
+template <typename T>
+std::vector<Real> R(std::vector<T> v) {
+  const std::size_t size = v.size();
+
+  std::vector<Real> real_vector;
+  real_vector.resize(size);
+
+  for (std::size_t i = 0; i < size; ++i) {
+    real_vector[i] = R(v[i]);
+  }
+
+  return real_vector;
+}
+}  // namespace adaptor
 
 }  // namespace plotcpp
 

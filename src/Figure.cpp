@@ -14,53 +14,43 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
+
+#include "Figure.hpp"
 
 #include <fstream>
 #include <string>
 
-#include "Figure.hpp"
-
 namespace plotcpp {
 
-void Figure::SetTitle(const std::string& title) {
-	m_title = title;
-}
+void Figure::SetTitle(const std::string& title) { m_title = title; }
 
-std::string Figure::Title() const {
-	return m_title;
-}
+std::string Figure::Title() const { return m_title; }
 
 void Figure::SetSize(unsigned int width, unsigned int height) {
-	m_width = width;
-	m_height = height;
+  m_width = width;
+  m_height = height;
 }
 
-unsigned int Figure::Width() const {
-	return m_width;
-}
+unsigned int Figure::Width() const { return m_width; }
 
-unsigned int Figure::Height() const {
-	return m_height;
-}
+unsigned int Figure::Height() const { return m_height; }
 
-std::string Figure::GetSVG() const {
-	return m_svg.GetText();
-}
+std::string Figure::GetSVG() const { return m_svg.GetText(); }
 
 void Figure::Save(const std::string& filepath) const {
-	// TODO: Extract extension and call save function
-	//auto ext = filepath.find_last_of(".") + 1;
-	//if (filepath.substr(ext) == "ext")
+  // TODO: Extract extension and call save function
+  // auto ext = filepath.find_last_of(".") + 1;
+  // if (filepath.substr(ext) == "ext")
 
-	// Default to svg
-	SaveSVG(filepath);
+  // Default to svg
+  SaveSVG(filepath);
 }
 
 void Figure::SaveSVG(const std::string& filepath) const {
-	std::ofstream out_file(filepath);
-	out_file << m_svg.GetText();
-	out_file.close();
+  std::ofstream out_file(filepath);
+  out_file << m_svg.GetText();
+  out_file.close();
 }
 
 }  // namespace plotcpp

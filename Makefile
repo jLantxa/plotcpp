@@ -20,12 +20,16 @@ LIB_SOURCES += \
 	$(SRC)/svg.cpp
 
 
-.PHONY: doc compiledb syntax library tests
+.PHONY: doc compiledb format syntax library tests
 
 all: library
 
 compiledb: build_dir
 	compiledb make -n
+
+format:
+	clang-format -i --style=Google \
+		$(INCLUDE)/* $(SRC)/* $(TEST)/*
 
 build_dir:
 	mkdir -p $(BUILD)

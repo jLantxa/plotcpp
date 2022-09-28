@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 #ifndef _PLOTCPP_INCLUDE_FIGURE_HPP_
 #define _PLOTCPP_INCLUDE_FIGURE_HPP_
@@ -27,81 +27,81 @@
 namespace plotcpp {
 
 class Figure {
-public:
-	/**
-	 * \brief Build the figure with its current data and configuration. This sets the
-	 * figure ready to be displayed or saved.
-	 */
-	virtual void Build() = 0;
+ public:
+  /**
+   * \brief Build the figure with its current data and configuration. This sets
+   * the figure ready to be displayed or saved.
+   */
+  virtual void Build() = 0;
 
-	/**
-	 * \brief Render the figure on a window.
-	 */
-	void Show() const;
+  /**
+   * \brief Render the figure on a window.
+   */
+  void Show() const;
 
-	/**
-	 * \brief Render and save the figure to a file.
-	 * \param filepath Path to a file to save the figure.
-	 */
-	void Save(const std::string& filepath) const;
+  /**
+   * \brief Render and save the figure to a file.
+   * \param filepath Path to a file to save the figure.
+   */
+  void Save(const std::string& filepath) const;
 
-	/**
-	 * \brief Return the SVG representation of this Figure.
-	 * This function must be called after Build
-	 */
-	std::string GetSVG() const;
+  /**
+   * \brief Return the SVG representation of this Figure.
+   * This function must be called after Build
+   */
+  std::string GetSVG() const;
 
-	/**
-	 * \brief Set figure title.
-	 * \param title
-	 */
-	void SetTitle(const std::string& title);
+  /**
+   * \brief Set figure title.
+   * \param title
+   */
+  void SetTitle(const std::string& title);
 
-	/**
-* \brief Returns the figure's title.
-	 * \return title
-	 */
-	std::string Title() const;
+  /**
+   * \brief Returns the figure's title.
+   * \return title
+   */
+  std::string Title() const;
 
-	/**
-	 * \brief Set figure size in pixels.
-	 * \param width
-	 * \param height
-	 */
-	void SetSize(unsigned int width, unsigned int height);
+  /**
+   * \brief Set figure size in pixels.
+   * \param width
+   * \param height
+   */
+  void SetSize(unsigned int width, unsigned int height);
 
-	/**
-	 * \brief Returns the figure width in pixels.
-	 * \return width
-	 */
-	unsigned int Width() const;
+  /**
+   * \brief Returns the figure width in pixels.
+   * \return width
+   */
+  unsigned int Width() const;
 
-	/**
-	 * \brief Returns the figure height in pixels.
-	 * \return height
-	 */
-	unsigned int Height() const;
+  /**
+   * \brief Returns the figure height in pixels.
+   * \return height
+   */
+  unsigned int Height() const;
 
-protected:
-	unsigned int m_figure_number;
-	std::string m_title;
+ protected:
+  unsigned int m_figure_number;
+  std::string m_title;
 
-	static constexpr unsigned int DEFAULT_WIDTH = 800;
-	static constexpr unsigned int DEFAULT_HEIGHT = 600;
+  static constexpr unsigned int DEFAULT_WIDTH = 800;
+  static constexpr unsigned int DEFAULT_HEIGHT = 600;
 
-	unsigned int m_width = DEFAULT_WIDTH;
-	unsigned int m_height = DEFAULT_HEIGHT;
+  unsigned int m_width = DEFAULT_WIDTH;
+  unsigned int m_height = DEFAULT_HEIGHT;
 
-	/** String containing an XML description of an SVG image */
-	svg::Document m_svg;
+  /** String containing an XML description of an SVG image */
+  svg::Document m_svg;
 
-	explicit Figure() = default;
+  explicit Figure() = default;
 
-private:
-	/**
-	 * \brief Save plot to svg format
-	 */
-	void SaveSVG(const std::string& filepath) const;
+ private:
+  /**
+   * \brief Save plot to svg format
+   */
+  void SaveSVG(const std::string& filepath) const;
 };
 
 }  // namespace plotcpp
