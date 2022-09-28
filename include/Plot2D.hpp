@@ -168,6 +168,9 @@ class Plot2D : public Figure {
   static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
   static const std::string FRAME_RECT_CLIP_PATH_ID;
 
+  static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
+  static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
+
   void DrawBackground();
   void DrawFrame();
   void DrawData();

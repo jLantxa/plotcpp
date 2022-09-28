@@ -174,7 +174,7 @@ std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
   return {tx, ty};
 }
 
-void Plot2D::DrawBackground() { m_svg.DrawBackground(svg::RGB{255, 255, 255}); }
+void Plot2D::DrawBackground() { m_svg.DrawBackground(BACKGROUND_COLOR); }
 
 void Plot2D::DrawFrame() {
   svg::Rect frame_rect{
@@ -182,6 +182,7 @@ void Plot2D::DrawFrame() {
       .y = m_frame_y,
       .width = m_frame_w,
       .height = m_frame_h,
+      .stroke_color = FRAME_STROKE_COLOR,
       .fill_opacity = 0.0f,
   };
   m_svg.DrawRect(frame_rect);
@@ -240,7 +241,7 @@ void Plot2D::DrawTitle() {
     return;
   }
 
-  float x = static_cast<float>(m_width / 2);
+  float x = static_cast<float>(m_width) / 2;
   float y = static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL / 2;
 
   auto node_ptr = m_svg.DrawText(svg::Text{m_title, x, y, 20, "arial"});
