@@ -10,8 +10,9 @@ LIBXML2_CFLAGS := $(shell xml2-config --cflags)
 
 CXX_FLAGS += \
 	-std=c++20 \
-	-O2 \
-	-Wall -Werror -Wpedantic -Wconversion
+	-O3 \
+	-Wall -Werror \
+	-Wextra -Wpedantic -Wconversion -Winline
 
 LIB_SOURCES += \
 	$(SRC)/Figure.cpp \
@@ -40,7 +41,8 @@ cloc:
 	@cloc $(INCLUDE) $(SRC) $(TEST)
 
 syntax: compiledb
-	$(CXX) $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
+	$(CXX) $(CXX_FLAGS) \
+		$(LIBXML2_CFLAGS) \
 		-I$(INCLUDE) \
 		$(LIB_SOURCES) \
 		-fsyntax-only
@@ -50,7 +52,8 @@ TEST_SOURCES += \
 
 tests: build_dir compiledb library
 	# Unit tests
-	$(CXX) $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
+	$(CXX) $(CXX_FLAGS) \
+		$(LIBXML2_CFLAGS) \
 		-I$(INCLUDE) \
 		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
 		$(LIBXML2_LIBS) -lgtest_main -lgtest \
@@ -58,7 +61,8 @@ tests: build_dir compiledb library
 		-o $(BUILD)/tests
 
 	# plot2d tester
-	$(CXX) $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
+	$(CXX) $(CXX_FLAGS) \
+		$(LIBXML2_CFLAGS) \
 		-I$(INCLUDE) \
 		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
 		$(TEST)/plot2d_tester.cpp \
@@ -69,7 +73,9 @@ tests: build_dir compiledb library
 
 SHARED_LIB := lib$(TARGET).so
 library: build_dir
-	$(CXX) -fPIC -shared $(CXX_FLAGS) $(LIBXML2_CFLAGS) \
+	$(CXX) $(CXX_FLAGS) \
+		-fPIC -shared \
+		$(LIBXML2_CFLAGS) \
 		-I$(INCLUDE) \
 		$(LIBXML2_LIBS) \
 		$(LIB_SOURCES) \

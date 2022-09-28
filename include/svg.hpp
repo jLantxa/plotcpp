@@ -141,7 +141,7 @@ public:
 	xmlNodePtr DrawText(const Text& text, xmlNodePtr parent_node=nullptr, const std::string& id="");
 
 	/** Add a group node */
-	xmlNodePtr AddGroup(const Path& path, xmlNodePtr parent_node=nullptr, const std::string& id="");
+	xmlNodePtr AddGroup(xmlNodePtr parent_node=nullptr, const std::string& id="");
 
 	/** Get the <defs> node */
 	xmlNodePtr Defs();

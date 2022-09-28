@@ -120,9 +120,14 @@ void Document::SetSize(unsigned int width, unsigned int height) {
 	SetAttribute(m_root, "height", std::to_string(m_height));
 }
 
-xmlNodePtr Document::AddGroup(const Path& path, xmlNodePtr parent_node, const std::string& id) {
+xmlNodePtr Document::AddGroup(xmlNodePtr parent_node, const std::string& id) {
 	xmlNodePtr parent = parent_node==nullptr? m_root : parent_node;
 	auto* node = AppendNode(parent, "g");
+
+	if (!id.empty()) {
+		SetAttribute(node, "id", id);
+	}
+
 	return node;
 }
 
@@ -203,6 +208,10 @@ xmlNodePtr Document::DrawPath(const Path& path, xmlNodePtr parent_node, const st
 	xmlNodePtr parent = parent_node==nullptr? m_root : parent_node;
 	auto* node = AppendNode(parent, "path");
 
+	if (!id.empty()) {
+		SetAttribute(node, "id", id);
+	}
+
 	std::stringstream path_ss;
 	for (const PathCommand& cmd : path.commands) {
 		path_ss << cmd.ToString() << " ";
@@ -226,6 +235,10 @@ xmlNodePtr Document::DrawPath(const Path& path, xmlNodePtr parent_node, const st
 xmlNodePtr Document::DrawText(const Text& text, xmlNodePtr parent_node, const std::string& id) {
 	xmlNodePtr parent = parent_node==nullptr? m_root : parent_node;
 	auto* node = AppendNode(parent, "text");
+
+	if (!id.empty()) {
+		SetAttribute(node, "id", id);
+	}
 
 	xmlNodeSetContent(node, xchar(text.text.c_str()));
 	SetAttribute(node, "x", std::to_string(text.x));
