@@ -16,19 +16,24 @@
  * limitations under the License.
  */
 
-#include "range.hpp"
+#include "ranges.hpp"
 
 #include <vector>
 
 #include "plotcpp.hpp"
 
 namespace plotcpp {
-namespace range {
+namespace ranges {
 
 std::vector<Real> PartitionAxis(Real min, Real max, unsigned int num_values) {
+  // TODO
+  (void)min;
+  (void)max;
+  (void)num_values;
+
   std::vector<Real> values;
   return values;
 }
 
-}  // namespace range
+}  // namespace ranges
 }  // namespace plotcpp

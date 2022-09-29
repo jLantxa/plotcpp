@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "Figure.hpp"
+#include "ranges.hpp"
 
 namespace plotcpp {
 
@@ -36,7 +37,6 @@ namespace plotcpp {
 class Plot2D : public Figure {
  public:
   using Color = svg::RGB;
-  using Range = std::pair<Real, Real>;
 
   struct Style {
     Color color;
@@ -91,10 +91,10 @@ class Plot2D : public Figure {
   void SetYRange(Real y0, Real y1);
 
   /** Returns the x axis range. */
-  std::optional<Range> GetXRange() const;
+  std::optional<ranges::Range> GetXRange() const;
 
   /** Returns the x axis range. */
-  std::optional<Plot2D::Range> GetYRange() const;
+  std::optional<ranges::Range> GetYRange() const;
 
   /**
    * \brief Set a label for the x axis.
@@ -144,15 +144,15 @@ class Plot2D : public Figure {
   std::string m_y_label;
 
   std::vector<DataSeries> m_data;
-  Range m_x_data_range, m_y_data_range;
-  std::optional<Range> m_x_set_range, m_y_set_range;
-  Range m_x_range, m_y_range;
+  ranges::Range m_x_data_range, m_y_data_range;
+  std::optional<ranges::Range> m_x_set_range, m_y_set_range;
+  ranges::Range m_x_range, m_y_range;
   float m_zoom_x = 1.0f;
   float m_zoom_y = 1.0f;
   float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
 
-  std::pair<Range, Range> XDataRange() const;
-  std::pair<Range, Range> YDataRange() const;
+  std::pair<ranges::Range, ranges::Range> XDataRange() const;
+  std::pair<ranges::Range, ranges::Range> YDataRange() const;
 
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();

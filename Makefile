@@ -17,6 +17,7 @@ CXX_FLAGS += \
 LIB_SOURCES += \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
+	$(SRC)/ranges.cpp \
 	$(SRC)/svg.cpp
 
 

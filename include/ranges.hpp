@@ -24,11 +24,13 @@
 #include "plotcpp.hpp"
 
 namespace plotcpp {
-namespace range {
+namespace ranges {
+
+using Range = std::pair<Real, Real>;
 
 std::vector<Real> PartitionAxis(Real min, Real max, unsigned int num_values);
 
-}  // namespace range
+}  // namespace ranges
 }  // namespace plotcpp
 
 #endif  // _PLOTCPP_INCLUDE_RANGE_HPP_

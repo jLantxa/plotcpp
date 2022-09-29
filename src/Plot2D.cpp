@@ -72,18 +72,18 @@ void Plot2D::Plot(const std::vector<Real>& y_data, const Style& style) {
 void Plot2D::SetXRange(Real x0, Real x1) {
   const Real x_min = std::min(x0, x1);
   const Real x_max = std::max(x0, x1);
-  m_x_set_range = {x_min, x_max};
+  m_x_set_range = ranges::Range{x_min, x_max};
 }
 
 void Plot2D::SetYRange(Real y0, Real y1) {
   const Real y_min = std::min(y0, y1);
   const Real y_max = std::max(y0, y1);
-  m_y_set_range = {y_min, y_max};
+  m_y_set_range = ranges::Range{y_min, y_max};
 }
 
-std::optional<Plot2D::Range> Plot2D::GetXRange() const { return m_x_set_range; }
+std::optional<ranges::Range> Plot2D::GetXRange() const { return m_x_set_range; }
 
-std::optional<Plot2D::Range> Plot2D::GetYRange() const { return m_y_set_range; }
+std::optional<ranges::Range> Plot2D::GetYRange() const { return m_y_set_range; }
 
 void Plot2D::SetXLabel(const std::string& label) { m_x_label = label; }
 
