@@ -13,17 +13,25 @@ At the moment, `plotcpp` requires at least C++17 because is uses `std::optional`
 ### Dependencies
 `plotcpp` is based on the following dependencies:
 * [libxml2](https://github.com/GNOME/libxml2)
+* [fmt](https://fmt.dev/latest/index.html): Neither `clang` nor `gcc` support `<format>` yet, so fmt is a temporary workaround.
 
 # About this project
 ## Supported features
-Nothing yet, really; free time is quite scarce lately.
+### Plot2D
+The `Plot2D` figure can plot single variable functions. A number of features are lacking for this figure tipe:
+* Smart subdivision of axes
+* Grids
+* Scatter plots
+* Legend
+
+![Example](examples/Plot2D.png)
 
 ## Planned features
-* Plot2D
 * Scatter plot
+* Annotated heatmap
 * Histogram
 * Pie chart
-* Grouping and subplots
+* Grouping and subplot
 
 ## Why am I doing this?
 1. I'm bored sometimes.
