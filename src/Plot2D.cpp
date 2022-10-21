@@ -290,7 +290,7 @@ void Plot2D::DrawXAxis() {
   const unsigned int num_markers =
       std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 80));
   const std::vector<Real> markers =
-      ranges::PartitionRange(m_y_range, num_markers);
+      ranges::PartitionRange(m_x_range, num_markers);
 
   if (markers.size() <= 1) {
     // TODO: Draw marker in the middle

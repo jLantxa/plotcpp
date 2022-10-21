@@ -18,7 +18,7 @@ At the moment, `plotcpp` requires at least C++17 because is uses `std::optional`
 # About this project
 ## Supported features
 ### Plot2D
-The `Plot2D` figure can plot single variable functions. A number of features are lacking for this figure tipe:
+The `Plot2D` figure can plot single variable functions. A number of features are lacking for this figure type:
 * Smart subdivision of axes
 * Grids
 * Scatter plots
