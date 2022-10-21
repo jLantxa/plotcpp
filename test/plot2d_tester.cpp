@@ -67,7 +67,11 @@ int main(int argc, char* argv[]) {
   }
   plot2d.Plot(data_x2, data_y2, {{32, 255, 32}, 2, "5,5"});
 
-  plot2d.SetYRange(-5, 5);
+  plot2d.SetYRange(-5.0f, 5.0f);
+  plot2d.AddXMarker(3.14f);
+  plot2d.AddXMarker(-1.0f);
+  plot2d.AddYMarker(2.71f);
+  plot2d.AddYMarker(5.10f);
 
   plot2d.Build();
   plot2d.Save(filepath);

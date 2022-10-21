@@ -60,7 +60,8 @@ syntax: compiledb
 		-fsyntax-only
 
 TEST_SOURCES += \
-	$(TEST)/Plot2DTest.cpp
+	$(TEST)/Plot2DTest.cpp \
+	$(TEST)/RangesTest.cpp
 
 tests: build_dir compiledb library
 	# Unit tests

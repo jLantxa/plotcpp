@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <array>
 #include <optional>
+#include <set>
 #include <string>
 #include <utility>
 #include <vector>
@@ -96,6 +97,15 @@ class Plot2D : public Figure {
   /** Returns the x axis range. */
   std::optional<ranges::Range> GetYRange() const;
 
+  /** Adds a custom marker to the x axis */
+  void AddXMarker(Real x);
+
+  /** Adds a custom marker to the y axis */
+  void AddYMarker(Real y);
+
+  /** Clears all custom markers */
+  void ClearMarkers();
+
   /**
    * \brief Set a label for the x axis.
    * \param label
@@ -154,6 +164,11 @@ class Plot2D : public Figure {
   std::pair<ranges::Range, ranges::Range> XDataRange() const;
   std::pair<ranges::Range, ranges::Range> YDataRange() const;
 
+  std::set<Real> m_x_markers;
+  std::set<Real> m_y_markers;
+  std::set<Real> m_x_custom_markers;
+  std::set<Real> m_y_custom_markers;
+
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();
 
@@ -181,6 +196,7 @@ class Plot2D : public Figure {
   void DrawFrame();
   void DrawData();
   void DrawTitle();
+  void DrawAxes();
   void DrawXAxis();
   void DrawYAxis();
   void DrawXLabel();

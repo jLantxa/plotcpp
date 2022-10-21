@@ -19,7 +19,7 @@
 #ifndef _PLOTCPP_INCLUDE_RANGES_HPP_
 #define _PLOTCPP_INCLUDE_RANGES_HPP_
 
-#include <vector>
+#include <set>
 
 #include "plotcpp.hpp"
 
@@ -28,9 +28,18 @@ namespace ranges {
 
 using Range = std::pair<Real, Real>;
 
-std::vector<Real> TrivialPartitionRange(const Range& range,
-                                        unsigned int num_markers);
-std::vector<Real> PartitionRange(const Range& range, unsigned int num_markers);
+/**
+ * \brief Partitions a range into a number of intermediate values
+ * from the minumum value to the maximum value.
+ */
+std::set<Real> TrivialPartitionRange(const Range& range,
+                                     unsigned int num_markers);
+
+/**
+ * \brief Partitions a range into a number of intermediate values
+ * showing relevant values.
+ */
+std::set<Real> PartitionRange(const Range& range, unsigned int num_markers);
 
 }  // namespace ranges
 }  // namespace plotcpp

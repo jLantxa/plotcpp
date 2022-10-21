@@ -96,6 +96,10 @@ std::string Plot2D::GetXLabel() const { return m_x_label; }
 
 std::string Plot2D::GetYLabel() const { return m_y_label; }
 
+void Plot2D::AddXMarker(Real x) { m_x_custom_markers.insert(x); }
+
+void Plot2D::AddYMarker(Real y) { m_y_custom_markers.insert(y); }
+
 void Plot2D::SetHold(bool hold) { m_hold = hold; }
 
 void Plot2D::Clear() {
@@ -106,7 +110,15 @@ void Plot2D::Clear() {
   SetYLabel("");
   m_x_set_range.reset();
   m_y_set_range.reset();
+  ClearMarkers();
   m_svg.Reset();
+}
+
+void Plot2D::ClearMarkers() {
+  m_x_markers.clear();
+  m_y_markers.clear();
+  m_x_custom_markers.clear();
+  m_y_custom_markers.clear();
 }
 
 void Plot2D::ClearData() { m_data.clear(); }
@@ -121,10 +133,7 @@ void Plot2D::Build() {
   DrawData();
   DrawFrame();
   DrawTitle();
-  DrawXAxis();
-  DrawXLabel();
-  DrawYAxis();
-  DrawYLabel();
+  DrawAxes();
 }
 
 void Plot2D::CalculateFrame() {
@@ -170,6 +179,13 @@ void Plot2D::CalculateFrame() {
       static_cast<float>(abs(m_frame_w / (m_x_range.second - m_x_range.first)));
   m_zoom_y =
       static_cast<float>(abs(m_frame_h / (m_y_range.second - m_y_range.first)));
+
+  const unsigned int num_x_markers =
+      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 80));
+  m_x_markers = ranges::PartitionRange(m_x_range, num_x_markers);
+  const unsigned int num_y_markers =
+      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
+  m_y_markers = ranges::PartitionRange(m_y_range, num_y_markers);
 }
 
 std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
@@ -254,6 +270,13 @@ void Plot2D::DrawTitle() {
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 }
 
+void Plot2D::DrawAxes() {
+  DrawXAxis();
+  DrawXLabel();
+  DrawYAxis();
+  DrawYLabel();
+}
+
 void Plot2D::DrawXLabel() {
   if (m_x_label.empty()) {
     return;
@@ -287,20 +310,22 @@ void Plot2D::DrawYLabel() {
 }
 
 void Plot2D::DrawXAxis() {
-  const unsigned int num_markers =
-      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 80));
-  const std::vector<Real> markers =
-      ranges::PartitionRange(m_x_range, num_markers);
+  std::set<Real> markers;
+  markers.insert(m_x_markers.begin(), m_x_markers.end());
+  markers.insert(m_x_custom_markers.begin(), m_x_custom_markers.end());
 
   if (markers.size() <= 1) {
     // TODO: Draw marker in the middle
     return;
   }
 
-  const float interval = m_frame_w / static_cast<float>(num_markers - 1);
-  for (unsigned int i = 0; i < num_markers; ++i) {
-    const float x = m_frame_x + (static_cast<float>(i) * interval);
-    const float y = m_frame_y + m_frame_h;
+  for (const auto& marker : markers) {
+    if ((marker < m_x_range.first) || (marker > m_x_range.second)) {
+      continue;
+    }
+
+    const auto [x, _] = TranslateToFrame(marker, 0);
+    const auto y = m_frame_y + m_frame_h;
 
     svg::Line marker_line{.x1 = x,
                           .y1 = y,
@@ -311,7 +336,7 @@ void Plot2D::DrawXAxis() {
                           .stroke_width = 1};
     m_svg.DrawLine(marker_line);
 
-    const std::string marker_text = fmt::format("{:.2f}", markers[i]);
+    const std::string marker_text = fmt::format("{:.2f}", marker);
     const int text_size = 11;
     auto text_node = m_svg.DrawText(
         svg::Text{marker_text, x, y + MARKER_LENGTH, text_size, TEXT_FONT});
@@ -322,21 +347,22 @@ void Plot2D::DrawXAxis() {
 }
 
 void Plot2D::DrawYAxis() {
-  const unsigned int num_markers =
-      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
-  const std::vector<Real> markers =
-      ranges::PartitionRange(m_y_range, num_markers);
+  std::set<Real> markers;
+  markers.insert(m_y_markers.begin(), m_y_markers.end());
+  markers.insert(m_y_custom_markers.begin(), m_y_custom_markers.end());
 
   if (markers.size() <= 1) {
     // TODO: Draw marker in the middle
     return;
   }
 
-  const float interval = m_frame_h / static_cast<float>(num_markers - 1);
-  for (unsigned int i = 0; i < num_markers; ++i) {
+  for (const auto& marker : markers) {
+    if ((marker < m_y_range.first) || (marker > m_y_range.second)) {
+      continue;
+    }
+
+    const auto [_, y] = TranslateToFrame(0, marker);
     const float x = m_frame_x;
-    const float y =
-        (m_frame_y + m_frame_h) - (static_cast<float>(i) * interval);
 
     svg::Line marker_line{.x1 = x,
                           .y1 = y,
@@ -347,7 +373,7 @@ void Plot2D::DrawYAxis() {
                           .stroke_width = 1};
     m_svg.DrawLine(marker_line);
 
-    const std::string marker_text = fmt::format("{:.2f}", markers[i]);
+    const std::string marker_text = fmt::format("{:.2f}", marker);
     auto text_node = m_svg.DrawText(
         svg::Text{marker_text, x - 2 * MARKER_LENGTH, y, 11, TEXT_FONT});
     svg::SetAttribute(text_node, "text-anchor", "end");

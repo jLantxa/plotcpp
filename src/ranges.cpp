@@ -19,29 +19,29 @@
 #include "ranges.hpp"
 
 #include <algorithm>
-#include <vector>
+#include <set>
 
 #include "plotcpp.hpp"
 
 namespace plotcpp {
 namespace ranges {
 
-std::vector<Real> TrivialPartitionRange(const Range& range,
-                                        unsigned int num_markers) {
-  std::vector<Real> values;
+std::set<Real> TrivialPartitionRange(const Range& range,
+                                     unsigned int num_markers) {
+  std::set<Real> values;
 
   const Real min = std::min(range.first, range.second);
   const Real max = std::max(range.first, range.second);
   const Real interval = (max - min) / (num_markers - 1);
 
   for (Real marker = min; marker <= max; marker += interval) {
-    values.push_back(marker);
+    values.insert(marker);
   }
 
   return values;
 }
 
-std::vector<Real> PartitionRange(const Range& range, unsigned int num_markers) {
+std::set<Real> PartitionRange(const Range& range, unsigned int num_markers) {
   // TODO: Implement algorithm
   return TrivialPartitionRange(range, num_markers);
 }
