@@ -67,6 +67,7 @@ int main(int argc, char* argv[]) {
   }
   plot2d.Plot(data_x2, data_y2, {{32, 255, 32}, 2, "5,5"});
 
+  plot2d.SetGrid(true);
   plot2d.SetYRange(-5.0f, 5.0f);
   plot2d.AddXMarker(3.14f);
   plot2d.AddXMarker(-1.0f);

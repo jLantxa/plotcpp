@@ -100,6 +100,8 @@ void Plot2D::AddXMarker(Real x) { m_x_custom_markers.insert(x); }
 
 void Plot2D::AddYMarker(Real y) { m_y_custom_markers.insert(y); }
 
+void Plot2D::SetGrid(bool enable) { m_grid_enable = enable; }
+
 void Plot2D::SetHold(bool hold) { m_hold = hold; }
 
 void Plot2D::Clear() {
@@ -130,10 +132,10 @@ void Plot2D::Build() {
   CalculateFrame();
 
   DrawBackground();
-  DrawData();
-  DrawFrame();
   DrawTitle();
   DrawAxes();
+  DrawData();
+  DrawFrame();
 }
 
 void Plot2D::CalculateFrame() {
@@ -343,6 +345,18 @@ void Plot2D::DrawXAxis() {
     svg::SetAttribute(text_node, "text-anchor", "middle");
     svg::SetAttribute(text_node, "baseline-shift", std::to_string(-text_size),
                       "pt");
+
+    if (m_grid_enable) {
+      svg::Line grid_line{.x1 = x,
+                          .y1 = m_frame_y,
+                          .x2 = x,
+                          .y2 = m_frame_y + m_frame_h,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 0.75f};
+      auto grid_line_node = m_svg.DrawLine(grid_line);
+      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
+    }
   }
 }
 
@@ -377,6 +391,18 @@ void Plot2D::DrawYAxis() {
     auto text_node = m_svg.DrawText(
         svg::Text{marker_text, x - 2 * MARKER_LENGTH, y, 11, TEXT_FONT});
     svg::SetAttribute(text_node, "text-anchor", "end");
+
+    if (m_grid_enable) {
+      svg::Line grid_line{.x1 = m_frame_x,
+                          .y1 = y,
+                          .x2 = m_frame_x + m_frame_w,
+                          .y2 = y,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 0.75f};
+      auto grid_line_node = m_svg.DrawLine(grid_line);
+      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
+    }
   }
 }
 

@@ -75,6 +75,9 @@ class Plot2D : public Figure {
    */
   void SetHold(bool hold_on);
 
+  /** Enable / disable the grid */
+  void SetGrid(bool enable);
+
   /**
    * \brief Set a range for the x axis
    *
@@ -168,6 +171,8 @@ class Plot2D : public Figure {
   std::set<Real> m_y_markers;
   std::set<Real> m_x_custom_markers;
   std::set<Real> m_y_custom_markers;
+
+  bool m_grid_enable = false;
 
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();
