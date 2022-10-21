@@ -32,13 +32,3 @@ The `Plot2D` figure can plot single variable functions. A number of features are
 * Histogram
 * Pie chart
 * Grouping and subplot
-
-## Why am I doing this?
-1. I'm bored sometimes.
-2. I enjoy writing small tools and libraries that can make my life easier.
-3. This was an old project idea that I wanted to try for a long time.
-4. Because why not?
-
-For all these reasons there is a non-negligible probability that I abandon this project whenever I lose interest in it :)
-<br>
-It's free software, you can fork it and continue if you want.
