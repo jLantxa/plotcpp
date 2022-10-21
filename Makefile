@@ -14,6 +14,13 @@ CXX_FLAGS += \
 	-Wall -Werror \
 	-Wextra -Wpedantic -Wconversion -Winline
 
+LIB_CXXFLAGS += \
+	$(LIBXML2_CFLAGS)
+
+LIB_LDFLAGS += \
+	$(LIBXML2_LIBS) \
+	-lfmt
+
 LIB_SOURCES += \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
@@ -47,7 +54,7 @@ cloc:
 
 syntax: compiledb
 	$(CXX) $(CXX_FLAGS) \
-		$(LIBXML2_CFLAGS) \
+		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
 		$(LIB_SOURCES) \
 		-fsyntax-only
@@ -58,16 +65,16 @@ TEST_SOURCES += \
 tests: build_dir compiledb library
 	# Unit tests
 	$(CXX) $(CXX_FLAGS) \
-		$(LIBXML2_CFLAGS) \
+		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
 		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
-		$(LIBXML2_LIBS) -lgtest_main -lgtest \
+		$(LIB_LDFLAGS) -lgtest_main -lgtest \
 		$(TEST_SOURCES) \
 		-o $(BUILD)/tests
 
 	# plot2d tester
 	$(CXX) $(CXX_FLAGS) \
-		$(LIBXML2_CFLAGS) \
+		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
 		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
 		$(TEST)/plot2d_tester.cpp \
@@ -80,9 +87,9 @@ SHARED_LIB := lib$(TARGET).so
 library: build_dir
 	$(CXX) $(CXX_FLAGS) \
 		-fPIC -shared \
-		$(LIBXML2_CFLAGS) \
+		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		$(LIBXML2_LIBS) \
+		$(LIB_LDFLAGS) \
 		$(LIB_SOURCES) \
 		-o $(BUILD)/$(SHARED_LIB)
 

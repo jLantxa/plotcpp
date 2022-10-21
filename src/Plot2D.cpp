@@ -18,6 +18,8 @@
 
 #include "Plot2D.hpp"
 
+#include <fmt/format.h>
+
 #include <algorithm>
 #include <limits>
 #include <numeric>
@@ -26,6 +28,7 @@
 #include <utility>
 #include <vector>
 
+#include "ranges.hpp"
 #include "svg.hpp"
 
 namespace plotcpp {
@@ -118,7 +121,9 @@ void Plot2D::Build() {
   DrawData();
   DrawFrame();
   DrawTitle();
+  DrawXAxis();
   DrawXLabel();
+  DrawYAxis();
   DrawYLabel();
 }
 
@@ -244,7 +249,7 @@ void Plot2D::DrawTitle() {
   float x = static_cast<float>(m_width) / 2;
   float y = static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL / 2;
 
-  auto node_ptr = m_svg.DrawText(svg::Text{m_title, x, y, 20, "arial"});
+  auto node_ptr = m_svg.DrawText(svg::Text{m_title, x, y, 20, TEXT_FONT});
   svg::SetAttribute(node_ptr, "font-weight", "bold");
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 }
@@ -259,7 +264,7 @@ void Plot2D::DrawXLabel() {
   float y =
       frame_bottom + (0.75f) * (static_cast<float>(m_height) - frame_bottom);
 
-  auto node_ptr = m_svg.DrawText(svg::Text{m_x_label, x, y, 12, "arial"});
+  auto node_ptr = m_svg.DrawText(svg::Text{m_x_label, x, y, 12, TEXT_FONT});
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 }
 
@@ -271,7 +276,7 @@ void Plot2D::DrawYLabel() {
   float x = (1 - 0.75f) * m_frame_x;
   float y = m_frame_y + (m_frame_h / 2);
 
-  auto node_ptr = m_svg.DrawText(svg::Text{m_y_label, 0, 0, 12, "arial"});
+  auto node_ptr = m_svg.DrawText(svg::Text{m_y_label, 0, 0, 12, TEXT_FONT});
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 
   std::stringstream trans_ss;
@@ -279,6 +284,74 @@ void Plot2D::DrawYLabel() {
            << ") "
            << "rotate(-90)";
   svg::SetAttribute(node_ptr, "transform", trans_ss.str());
+}
+
+void Plot2D::DrawXAxis() {
+  const unsigned int num_markers =
+      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 100));
+  const std::vector<Real> markers =
+      ranges::PartitionRange(m_y_range, num_markers);
+
+  if (markers.size() <= 1) {
+    // TODO: Draw marker in the middle
+    return;
+  }
+
+  const float interval = m_frame_w / static_cast<float>(num_markers - 1);
+  for (unsigned int i = 0; i < num_markers; ++i) {
+    const float x = m_frame_x + (static_cast<float>(i) * interval);
+    const float y = m_frame_y + m_frame_h;
+
+    svg::Line marker_line{.x1 = x,
+                          .y1 = y,
+                          .x2 = x,
+                          .y2 = y + MARKER_LENGTH,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 1};
+    m_svg.DrawLine(marker_line);
+
+    const std::string marker_text = fmt::format("{:.2f}", markers[i]);
+    const int text_size = 11;
+    auto text_node = m_svg.DrawText(
+        svg::Text{marker_text, x, y + MARKER_LENGTH, text_size, TEXT_FONT});
+    svg::SetAttribute(text_node, "text-anchor", "middle");
+    svg::SetAttribute(text_node, "baseline-shift", std::to_string(-text_size),
+                      "pt");
+  }
+}
+
+void Plot2D::DrawYAxis() {
+  const unsigned int num_markers =
+      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 100));
+  const std::vector<Real> markers =
+      ranges::PartitionRange(m_y_range, num_markers);
+
+  if (markers.size() <= 1) {
+    // TODO: Draw marker in the middle
+    return;
+  }
+
+  const float interval = m_frame_h / static_cast<float>(num_markers - 1);
+  for (unsigned int i = 0; i < num_markers; ++i) {
+    const float x = m_frame_x;
+    const float y =
+        (m_frame_y + m_frame_h) - (static_cast<float>(i) * interval);
+
+    svg::Line marker_line{.x1 = x,
+                          .y1 = y,
+                          .x2 = x - MARKER_LENGTH,
+                          .y2 = y,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 1};
+    m_svg.DrawLine(marker_line);
+
+    const std::string marker_text = fmt::format("{:.2f}", markers[i]);
+    auto text_node = m_svg.DrawText(
+        svg::Text{marker_text, x - 2 * MARKER_LENGTH, y, 11, TEXT_FONT});
+    svg::SetAttribute(text_node, "text-anchor", "end");
+  }
 }
 
 }  // namespace plotcpp

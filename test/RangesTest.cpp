@@ -16,23 +16,21 @@
  * limitations under the License.
  */
 
-#ifndef _PLOTCPP_INCLUDE_RANGES_HPP_
-#define _PLOTCPP_INCLUDE_RANGES_HPP_
+#include <gmock/gmock-matchers.h>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <vector>
-
-#include "plotcpp.hpp"
+#include "ranges.hpp"
 
 namespace plotcpp {
-namespace ranges {
 
-using Range = std::pair<Real, Real>;
+using ::testing::ElementsAreArray;
 
-std::vector<Real> TrivialPartitionRange(const Range& range,
-                                        unsigned int num_markers);
-std::vector<Real> PartitionRange(const Range& range, unsigned int num_markers);
+TEST(RangesTest, TrivialPartitionRange) {
+  EXPECT_THAT(ranges::TrivialPartitionRange({0, 10}, 5),
+              ElementsAreArray({0.0f, 2.5f, 5.0f, 7.5f, 10.0f}));
+  EXPECT_THAT(ranges::TrivialPartitionRange({-10, 10}, 5),
+              ElementsAreArray({-10.0f, -5.0f, 0.0f, 5.0f, 10.0f}));
+}
 
-}  // namespace ranges
 }  // namespace plotcpp
-
-#endif  // _PLOTCPP_INCLUDE_RANGES_HPP_
