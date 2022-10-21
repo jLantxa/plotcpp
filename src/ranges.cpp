@@ -18,6 +18,7 @@
 
 #include "ranges.hpp"
 
+#include <algorithm>
 #include <vector>
 
 #include "plotcpp.hpp"
@@ -25,14 +26,24 @@
 namespace plotcpp {
 namespace ranges {
 
-std::vector<Real> PartitionAxis(Real min, Real max, unsigned int num_values) {
-  // TODO
-  (void)min;
-  (void)max;
-  (void)num_values;
-
+std::vector<Real> TrivialPartitionRange(const Range& range,
+                                        unsigned int num_markers) {
   std::vector<Real> values;
+
+  const Real min = std::min(range.first, range.second);
+  const Real max = std::max(range.first, range.second);
+  const Real interval = (max - min) / (num_markers - 1);
+
+  for (Real marker = min; marker <= max; marker += interval) {
+    values.push_back(marker);
+  }
+
   return values;
+}
+
+std::vector<Real> PartitionRange(const Range& range, unsigned int num_markers) {
+  // TODO: Implement algorithm
+  return TrivialPartitionRange(range, num_markers);
 }
 
 }  // namespace ranges

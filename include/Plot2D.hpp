@@ -171,10 +171,18 @@ class Plot2D : public Figure {
   static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
+  const std::string TEXT_FONT{"arial"};
+
+  static constexpr float MARKER_LENGTH = 5.0f;
+  static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
+  static constexpr unsigned int MAX_NUM_X_MARKERS = 10;
+
   void DrawBackground();
   void DrawFrame();
   void DrawData();
   void DrawTitle();
+  void DrawXAxis();
+  void DrawYAxis();
   void DrawXLabel();
   void DrawYLabel();
 };

@@ -36,9 +36,9 @@ int main(int argc, char* argv[]) {
   Plot2D plot2d;
 
   plot2d.SetSize(800, 600);
-  plot2d.SetTitle("plotcpp test");
-  plot2d.SetXLabel("x");
-  plot2d.SetYLabel("f(x)");
+  plot2d.SetTitle("Test plot");
+  plot2d.SetXLabel("x axis");
+  plot2d.SetYLabel("y axis");
 
   std::vector<Real> data_x0;
   std::vector<Real> data_y0;
