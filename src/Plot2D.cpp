@@ -288,7 +288,7 @@ void Plot2D::DrawYLabel() {
 
 void Plot2D::DrawXAxis() {
   const unsigned int num_markers =
-      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 100));
+      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 80));
   const std::vector<Real> markers =
       ranges::PartitionRange(m_y_range, num_markers);
 
@@ -323,7 +323,7 @@ void Plot2D::DrawXAxis() {
 
 void Plot2D::DrawYAxis() {
   const unsigned int num_markers =
-      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 100));
+      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
   const std::vector<Real> markers =
       ranges::PartitionRange(m_y_range, num_markers);
 

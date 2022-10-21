@@ -163,8 +163,8 @@ class Plot2D : public Figure {
 
   // Constraints
   static constexpr float FRAME_TOP_MARGIN_REL = 0.10f;
-  static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.10f;
-  static constexpr float FRAME_LEFT_MARGIN_REL = 0.10f;
+  static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.12f;
+  static constexpr float FRAME_LEFT_MARGIN_REL = 0.12f;
   static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
   static const std::string FRAME_RECT_CLIP_PATH_ID;
 

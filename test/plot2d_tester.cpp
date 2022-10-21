@@ -35,8 +35,8 @@ int main(int argc, char* argv[]) {
 
   Plot2D plot2d;
 
-  plot2d.SetSize(800, 600);
-  plot2d.SetTitle("Test plot");
+  plot2d.SetSize(600, 450);
+  plot2d.SetTitle("Plot2D");
   plot2d.SetXLabel("x axis");
   plot2d.SetYLabel("y axis");
 

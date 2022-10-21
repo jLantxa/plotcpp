@@ -29,8 +29,8 @@ using plotcpp::ranges::Range;
 TEST(Plot2DTest, Constructor) {
   Plot2D plot1;
   EXPECT_EQ(plot1.Title(), "");
-  EXPECT_EQ(plot1.Width(), 800);
-  EXPECT_EQ(plot1.Height(), 600);
+  EXPECT_EQ(plot1.Width(), 600);
+  EXPECT_EQ(plot1.Height(), 450);
 }
 
 TEST(Plot2DTest, BuilderOptions) {
