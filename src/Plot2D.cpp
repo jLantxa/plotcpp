@@ -467,7 +467,7 @@ void Plot2D::DrawLegend() {
   };
   auto box_rect_node = m_svg.DrawRect(box_rect);
   svg::SetAttribute(box_rect_node, "fill", "white");
-  svg::SetAttribute(box_rect_node, "fill-opacity", "0.8f");
+  svg::SetAttribute(box_rect_node, "fill-opacity", "0.9");
   svg::SetAttribute(box_rect_node, "rx", "4", "px");
   svg::SetAttribute(box_rect_node, "ry", "4", "px");
 
