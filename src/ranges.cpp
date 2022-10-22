@@ -46,7 +46,8 @@ std::vector<Real> Range(Real start, Real end, Real step) {
   }
 
   std::vector<Real> range;
-  range.reserve(1 + static_cast<std::size_t>((end - start) / step));
+  range.reserve(
+      1 + static_cast<std::size_t>(std::ceil(std::abs((end - start) / step))));
 
   while (cmp(start, end)) {
     range.push_back(start);
