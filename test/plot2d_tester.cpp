@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "Plot2D.hpp"
+#include "ranges.hpp"
 
 using plotcpp::Plot2D;
 using plotcpp::Real;
@@ -40,29 +41,26 @@ int main(int argc, char* argv[]) {
   plot2d.SetXLabel("x axis");
   plot2d.SetYLabel("y axis");
 
-  std::vector<Real> data_x0;
+  std::vector<Real> data_x0 = plotcpp::ranges::Range(0, 10, 0.001);
   std::vector<Real> data_y0;
-  for (plotcpp::Real x = 0; x <= 10; x += 0.001) {
+  for (auto& x : data_x0) {
     Real y = std::sin(2 * M_PI * x) * exp(-x);
-    data_x0.push_back(x);
     data_y0.push_back(y);
   }
   plot2d.Plot(data_x0, data_y0, {{0, 0, 0}, 3, ""});
 
-  std::vector<Real> data_x1;
+  std::vector<Real> data_x1 = plotcpp::ranges::Range(0, 10, 0.01);
   std::vector<Real> data_y1;
-  for (plotcpp::Real x = 0; x <= 10; x += 0.001) {
+  for (auto& x : data_x1) {
     Real y = 1 / x;
-    data_x1.push_back(x);
     data_y1.push_back(y);
   }
   plot2d.Plot(data_x1, data_y1, {{255, 32, 32}, 2, "10,5,2,5"});
 
-  std::vector<Real> data_x2;
+  std::vector<Real> data_x2 = plotcpp::ranges::Range(10, 0, -0.01);
   std::vector<Real> data_y2;
-  for (plotcpp::Real x = 0; x <= 10; x += 0.001) {
+  for (auto& x : data_x2) {
     Real y = std::pow(x - 5, 3);
-    data_x2.push_back(x);
     data_y2.push_back(y);
   }
   plot2d.Plot(data_x2, data_y2, {{32, 255, 32}, 2, "5,5"});

@@ -26,20 +26,26 @@
 namespace plotcpp {
 namespace ranges {
 
-using Range = std::pair<Real, Real>;
+using Interval = std::pair<Real, Real>;
+
+/**
+ * \brief Returns a vector of Real numbers from a to b in equally spaced
+ * intervals except, maybe, the last interval.
+ */
+std::vector<Real> Range(Real start, Real end, Real step);
 
 /**
  * \brief Partitions a range into a number of intermediate values
  * from the minumum value to the maximum value.
  */
-std::set<Real> TrivialPartitionRange(const Range& range,
+std::set<Real> TrivialPartitionRange(const Interval& range,
                                      unsigned int num_markers);
 
 /**
  * \brief Partitions a range into a number of intermediate values
  * showing relevant values.
  */
-std::set<Real> PartitionRange(const Range& range, unsigned int num_markers);
+std::set<Real> PartitionRange(const Interval& range, unsigned int num_markers);
 
 }  // namespace ranges
 }  // namespace plotcpp

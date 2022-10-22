@@ -33,4 +33,19 @@ TEST(RangesTest, TrivialPartitionRange) {
               ElementsAreArray({-10.0f, -5.0f, 0.0f, 5.0f, 10.0f}));
 }
 
+TEST(RangesTest, RangeGenerator) {
+  EXPECT_THAT(ranges::Range(0, 10, 1),
+              ElementsAreArray({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+  EXPECT_THAT(ranges::Range(10, 0, -1),
+              ElementsAreArray({10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}));
+  EXPECT_THAT(ranges::Range(-1.0f, 2.7f, 0.5f),
+              ElementsAreArray(
+                  {-1.0f, -0.5f, 0.0f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 2.7f}));
+  EXPECT_THAT(ranges::Range(3.0f, 0.1f, -0.5f),
+              ElementsAreArray({3.0f, 2.5f, 2.0f, 1.5f, 1.0f, 0.5f, 0.1f}));
+  EXPECT_THAT(ranges::Range(-5, 5, -0.1),
+              ElementsAreArray(std::vector<Real>{}));
+  EXPECT_THAT(ranges::Range(5, -5, 0.1), ElementsAreArray(std::vector<Real>{}));
+}
+
 }  // namespace plotcpp

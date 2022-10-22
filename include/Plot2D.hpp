@@ -95,10 +95,10 @@ class Plot2D : public Figure {
   void SetYRange(Real y0, Real y1);
 
   /** Returns the x axis range. */
-  std::optional<ranges::Range> GetXRange() const;
+  std::optional<ranges::Interval> GetXRange() const;
 
   /** Returns the x axis range. */
-  std::optional<ranges::Range> GetYRange() const;
+  std::optional<ranges::Interval> GetYRange() const;
 
   /** Adds a custom marker to the x axis */
   void AddXMarker(Real x);
@@ -157,15 +157,15 @@ class Plot2D : public Figure {
   std::string m_y_label;
 
   std::vector<DataSeries> m_data;
-  ranges::Range m_x_data_range, m_y_data_range;
-  std::optional<ranges::Range> m_x_set_range, m_y_set_range;
-  ranges::Range m_x_range, m_y_range;
+  ranges::Interval m_x_data_range, m_y_data_range;
+  std::optional<ranges::Interval> m_x_set_range, m_y_set_range;
+  ranges::Interval m_x_range, m_y_range;
   float m_zoom_x = 1.0f;
   float m_zoom_y = 1.0f;
   float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
 
-  std::pair<ranges::Range, ranges::Range> XDataRange() const;
-  std::pair<ranges::Range, ranges::Range> YDataRange() const;
+  std::pair<ranges::Interval, ranges::Interval> XDataRange() const;
+  std::pair<ranges::Interval, ranges::Interval> YDataRange() const;
 
   std::set<Real> m_x_markers;
   std::set<Real> m_y_markers;

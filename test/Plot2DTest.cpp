@@ -24,7 +24,7 @@
 
 using plotcpp::Plot2D;
 using plotcpp::Real;
-using plotcpp::ranges::Range;
+using plotcpp::ranges::Interval;
 
 TEST(Plot2DTest, Constructor) {
   Plot2D plot1;
