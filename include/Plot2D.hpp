@@ -109,6 +109,10 @@ class Plot2D : public Figure {
   /** Clears all custom markers */
   void ClearMarkers();
 
+  void SetLegend(const std::vector<std::string>& labels);
+
+  void ClearLegend();
+
   /**
    * \brief Set a label for the x axis.
    * \param label
@@ -149,6 +153,7 @@ class Plot2D : public Figure {
     std::vector<Real> x;
     std::vector<Real> y;
     Style style;
+    std::string label;
   };
 
   bool m_hold = true;
@@ -173,6 +178,7 @@ class Plot2D : public Figure {
   std::set<Real> m_y_custom_markers;
 
   bool m_grid_enable = false;
+  bool m_legend_enable = false;
 
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();
@@ -206,6 +212,7 @@ class Plot2D : public Figure {
   void DrawYAxis();
   void DrawXLabel();
   void DrawYLabel();
+  void DrawLegend();
 };
 
 }  // namespace plotcpp

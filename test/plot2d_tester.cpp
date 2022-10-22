@@ -72,6 +72,8 @@ int main(int argc, char* argv[]) {
   plot2d.AddYMarker(2.71f);
   plot2d.AddYMarker(5.10f);
 
+  plot2d.SetLegend({"Exp sine", "Hyperbola", "Cubic"});
+
   plot2d.Build();
   plot2d.Save(filepath);
 

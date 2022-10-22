@@ -28,6 +28,7 @@
 #include <utility>
 #include <vector>
 
+#include "fonts.hpp"
 #include "ranges.hpp"
 #include "svg.hpp"
 
@@ -108,6 +109,25 @@ void Plot2D::SetGrid(bool enable) { m_grid_enable = enable; }
 
 void Plot2D::SetHold(bool hold) { m_hold = hold; }
 
+void Plot2D::SetLegend(const std::vector<std::string>& labels) {
+  if (labels.empty()) {
+    return;
+  }
+
+  m_legend_enable = true;
+  const std::size_t num_legends = std::min(labels.size(), m_data.size());
+  for (std::size_t i = 0; i < num_legends; ++i) {
+    m_data[i].label = labels[i];
+  }
+}
+
+void Plot2D::ClearLegend() {
+  m_legend_enable = false;
+  for (auto& data_series : m_data) {
+    data_series.label.clear();
+  }
+}
+
 void Plot2D::Clear() {
   ClearData();
   SetTitle("");
@@ -140,6 +160,7 @@ void Plot2D::Build() {
   DrawAxes();
   DrawData();
   DrawFrame();
+  DrawLegend();
 }
 
 void Plot2D::CalculateFrame() {
@@ -210,9 +231,9 @@ void Plot2D::DrawFrame() {
       .width = m_frame_w,
       .height = m_frame_h,
       .stroke_color = FRAME_STROKE_COLOR,
-      .fill_opacity = 0.0f,
   };
-  m_svg.DrawRect(frame_rect);
+  auto frame_node = m_svg.DrawRect(frame_rect);
+  svg::SetAttribute(frame_node, "fill", "none");
 
   auto defs_node = m_svg.Defs();
   auto clip_path_node = svg::AppendNode(defs_node, "clipPath");
@@ -343,12 +364,12 @@ void Plot2D::DrawXAxis() {
     m_svg.DrawLine(marker_line);
 
     const std::string marker_text = fmt::format("{:.2f}", marker);
-    const int text_size = 11;
+    static constexpr int text_size = 11;
+    static constexpr float font_em = text_size / 12.0f;
     auto text_node = m_svg.DrawText(
-        svg::Text{marker_text, x, y + MARKER_LENGTH, text_size, TEXT_FONT});
+        svg::Text{marker_text, x, y + MARKER_LENGTH + fonts::EmToPx(font_em),
+                  text_size, TEXT_FONT});
     svg::SetAttribute(text_node, "text-anchor", "middle");
-    svg::SetAttribute(text_node, "baseline-shift", std::to_string(-text_size),
-                      "pt");
 
     if (m_grid_enable) {
       svg::Line grid_line{.x1 = x,
@@ -407,6 +428,67 @@ void Plot2D::DrawYAxis() {
       auto grid_line_node = m_svg.DrawLine(grid_line);
       svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
     }
+  }
+}
+
+void Plot2D::DrawLegend() {
+  if (!m_legend_enable) {
+    return;
+  }
+
+  static constexpr float font_size = 12.0f;
+  static constexpr float box_margin_px = 5.0f;
+  static constexpr float font_em = font_size / 12.0f;
+  static constexpr float font_margin_em = 0.5f * font_em;
+  static constexpr float dash_length_em = 2.0f * font_em;
+  static constexpr float spacing_em = 0.5f * font_em;
+
+  // Calculate sizes
+  float max_font_width_em = 0;
+  for (const auto& data_series : m_data) {
+    const auto [w, _] =
+        fonts::CalculateTextSize(data_series.label, TEXT_FONT, font_size);
+    max_font_width_em = std::max(max_font_width_em, w);
+  }
+
+  const std::size_t num_labels = m_data.size();
+  const float box_w = fonts::EmToPx(2 * font_margin_em + dash_length_em +
+                                    spacing_em + max_font_width_em);
+  const float box_x = (m_frame_x + m_frame_w) - box_margin_px - box_w;
+  const float box_y = m_frame_y + box_margin_px;
+  const float box_h = fonts::EmToPx(static_cast<float>(num_labels) * font_em +
+                                    2 * font_margin_em);
+
+  svg::Rect box_rect = {
+      .x = box_x,
+      .y = box_y,
+      .width = box_w,
+      .height = box_h,
+  };
+  auto box_rect_node = m_svg.DrawRect(box_rect);
+  svg::SetAttribute(box_rect_node, "fill", "white");
+  svg::SetAttribute(box_rect_node, "fill-opacity", "0.8f");
+  svg::SetAttribute(box_rect_node, "rx", "4", "px");
+  svg::SetAttribute(box_rect_node, "ry", "4", "px");
+
+  for (std::size_t i = 0; i < num_labels; ++i) {
+    const std::string& label = m_data[i].label;
+    const Style& style = m_data[i].style;
+    const float x = box_x + fonts::EmToPx(font_margin_em);
+    const float y = box_y + fonts::EmToPx(font_em / 2 + font_margin_em +
+                                          static_cast<float>(i) * font_em);
+    svg::Line dash = {.x1 = x,
+                      .y1 = y,
+                      .x2 = x + fonts::EmToPx(dash_length_em),
+                      .y2 = y,
+                      .stroke_color = style.color,
+                      .stroke_width = 2.0f};
+    auto line_node = m_svg.DrawLine(dash);
+    svg::SetAttribute(line_node, "stroke-dasharray", style.dash_array);
+
+    const float text_x = x + fonts::EmToPx(dash_length_em + spacing_em);
+    const float text_y = y + fonts::EmToPx(font_em / 4);
+    m_svg.DrawText(svg::Text{label, text_x, text_y, font_size, TEXT_FONT});
   }
 }
 

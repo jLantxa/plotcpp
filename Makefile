@@ -25,6 +25,7 @@ LIB_SOURCES += \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
 	$(SRC)/ranges.cpp \
+	$(SRC)/fonts.cpp \
 	$(SRC)/svg.cpp
 
 
