@@ -28,7 +28,7 @@ namespace fonts {
 static const float DEFAULT_WIDTH_EM = 0.48f;
 
 static const std::map<std::string, FontData> FONT_DATA = {
-    {"arial", {.width_em = 0.40f}},
+    {"monospace", {.width_em = 0.46f}},
 };
 
 float EmToPx(float em) { return em * 16.0f; }

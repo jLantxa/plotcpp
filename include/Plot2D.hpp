@@ -197,7 +197,7 @@ class Plot2D : public Figure {
   static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
-  const std::string TEXT_FONT{"arial"};
+  const std::string TEXT_FONT{"monospace"};
 
   static constexpr float MARKER_LENGTH = 5.0f;
   static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
