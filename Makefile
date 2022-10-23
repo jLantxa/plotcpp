@@ -64,9 +64,9 @@ TEST_SOURCES += \
 	$(TEST)/Plot2DTest.cpp \
 	$(TEST)/RangesTest.cpp
 
-tests: build_dir compiledb library
+tests: build_dir compiledb
 	# Unit tests
-	$(CXX) $(CXX_FLAGS) \
+	$(CXX) $(CXX_FLAGS) -g \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
 		$(LIB_LDFLAGS) -lgtest_main -lgtest \
@@ -75,10 +75,11 @@ tests: build_dir compiledb library
 		-o $(BUILD)/tests
 
 	# plot2d tester
-	$(CXX) $(CXX_FLAGS) \
+	$(CXX) $(CXX_FLAGS) -g \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		-l$(TARGET) \
+		$(LIB_LDFLAGS) \
+		$(LIB_SOURCES) \
 		$(TEST)/plot2d_tester.cpp \
 		-o $(BUILD)/plot2d_tester
 

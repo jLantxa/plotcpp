@@ -69,6 +69,17 @@ class Plot2D : public Figure {
   void Plot(const std::vector<Real>& y_data, const Style& style);
 
   /**
+   * \brief Add an categorical plot with discrete text labels on the x axis and
+   * Real numbers on the y axis.
+   *
+   * \param x_data categorical x
+   * \param y_data y-axis data axis
+   * \param style style
+   */
+  void Plot(const std::vector<std::string>& x_data,
+            const std::vector<Real>& y_data, const Style& style);
+
+  /**
    * \brief Set hold on/off
    * Setting the hold on allows multiple data series to be plotted. If hold is
    * off, plotting overwrites the plot data.
@@ -156,17 +167,40 @@ class Plot2D : public Figure {
     std::string label;
   };
 
+  struct CategoricalDataSeries {
+    std::vector<std::string> x;
+    std::vector<Real> y;
+    Style style;
+
+    void Clear() {
+      x.clear();
+      y.clear();
+      style = {};
+    }
+  };
+
   bool m_hold = true;
 
   std::string m_x_label;
   std::string m_y_label;
 
-  std::vector<DataSeries> m_data;
+  enum class DataType {
+    NUMERIC,
+    CATEGORICAL,
+  };
+  DataType m_data_type = DataType::NUMERIC;
+
+  // Numeric data series
+  std::vector<DataSeries> m_numeric_data;
   ranges::Interval m_x_data_range, m_y_data_range;
   std::optional<ranges::Interval> m_x_set_range, m_y_set_range;
   ranges::Interval m_x_range, m_y_range;
   float m_zoom_x = 1.0f;
   float m_zoom_y = 1.0f;
+
+  // Categorical data series
+  CategoricalDataSeries m_categorical_data;
+
   float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
 
   std::pair<ranges::Interval, ranges::Interval> XDataRange() const;
@@ -179,9 +213,6 @@ class Plot2D : public Figure {
 
   bool m_grid_enable = false;
   bool m_legend_enable = false;
-
-  /** Calculate all frame parameters needed to draw the plots. */
-  void CalculateFrame();
 
   /** Translate the (x, y) coordinates from the plot function to (x, y) in the
    * svg image */
@@ -203,15 +234,28 @@ class Plot2D : public Figure {
   static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
   static constexpr unsigned int MAX_NUM_X_MARKERS = 10;
 
+  /** Calculate all frame parameters needed to draw the plots. */
+  void CalculateFrame();
+  void CalculateNumericFrame();
+  void CalculateCategoricalFrame();
+
   void DrawBackground();
   void DrawFrame();
+
   void DrawData();
+  void DrawNumericData();
+  void DrawCategoricalData();
+
   void DrawTitle();
+
   void DrawAxes();
-  void DrawXAxis();
+  void DrawNumericXAxis();
+  void DrawCategoricalXAxis();
   void DrawYAxis();
+
   void DrawXLabel();
   void DrawYLabel();
+
   void DrawLegend();
 };
 

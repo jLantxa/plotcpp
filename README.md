@@ -22,7 +22,8 @@ The `Plot2D` figure can plot single variable functions. A number of features are
 * Smart subdivision of axes
 * Scatter plots
 
-![Example](examples/Plot2D.png)
+![Example](examples/numeric_plot2d.png)
+![Example](examples/categorical_plot2d.png)
 
 ## Planned features
 * Scatter plot

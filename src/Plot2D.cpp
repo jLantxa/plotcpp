@@ -46,23 +46,18 @@ Plot2D::Plot2D() : Figure() {}
 
 void Plot2D::Plot(const std::vector<Real>& x_data,
                   const std::vector<Real>& y_data, const Style& style) {
-  const std::size_t size = x_data.size();
-
   if (x_data.size() != y_data.size()) {
     return;
   }
 
   if (m_hold == false) {
-    m_data.clear();
+    m_numeric_data.clear();
   }
 
-  DataSeries data_series;
-  data_series.x.resize(size);
-  data_series.y.resize(size);
-  data_series.style = style;
-  std::copy(x_data.begin(), x_data.end(), data_series.x.begin());
-  std::copy(y_data.begin(), y_data.end(), data_series.y.begin());
-  m_data.emplace_back(data_series);
+  m_numeric_data.emplace_back(DataSeries{x_data, y_data, style, {}});
+
+  m_data_type = DataType::NUMERIC;
+  m_categorical_data.Clear();
 }
 
 void Plot2D::Plot(const std::vector<Real>& y_data, const Style& style) {
@@ -71,6 +66,18 @@ void Plot2D::Plot(const std::vector<Real>& y_data, const Style& style) {
 
   std::iota(x_data.begin(), x_data.end(), 1.0f);
   Plot(x_data, y_data, style);
+}
+
+void Plot2D::Plot(const std::vector<std::string>& x_data,
+                  const std::vector<Real>& y_data, const Style& style) {
+  if (x_data.size() != y_data.size()) {
+    return;
+  }
+
+  m_categorical_data = {x_data, y_data, style};
+  m_numeric_data.clear();
+  m_data_type = DataType::CATEGORICAL;
+  m_legend_enable = false;
 }
 
 void Plot2D::SetXRange(Real x0, Real x1) {
@@ -115,15 +122,16 @@ void Plot2D::SetLegend(const std::vector<std::string>& labels) {
   }
 
   m_legend_enable = true;
-  const std::size_t num_legends = std::min(labels.size(), m_data.size());
+  const std::size_t num_legends =
+      std::min(labels.size(), m_numeric_data.size());
   for (std::size_t i = 0; i < num_legends; ++i) {
-    m_data[i].label = labels[i];
+    m_numeric_data[i].label = labels[i];
   }
 }
 
 void Plot2D::ClearLegend() {
   m_legend_enable = false;
-  for (auto& data_series : m_data) {
+  for (auto& data_series : m_numeric_data) {
     data_series.label.clear();
   }
 }
@@ -147,7 +155,7 @@ void Plot2D::ClearMarkers() {
   m_y_custom_markers.clear();
 }
 
-void Plot2D::ClearData() { m_data.clear(); }
+void Plot2D::ClearData() { m_numeric_data.clear(); }
 
 void Plot2D::Build() {
   m_svg.Reset();
@@ -172,12 +180,25 @@ void Plot2D::CalculateFrame() {
   m_frame_h = static_cast<float>(m_height) *
               (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL);
 
+  switch (m_data_type) {
+    case DataType::NUMERIC:
+      CalculateNumericFrame();
+      break;
+    case DataType::CATEGORICAL:
+      CalculateCategoricalFrame();
+      break;
+    default:
+      break;
+  }
+}
+
+void Plot2D::CalculateNumericFrame() {
   // Ranges
   Real min_x = std::numeric_limits<Real>::max();
   Real max_x = std::numeric_limits<Real>::lowest();
   Real min_y = std::numeric_limits<Real>::max();
   Real max_y = std::numeric_limits<Real>::lowest();
-  for (auto& plot : m_data) {
+  for (auto& plot : m_numeric_data) {
     const std::size_t size = plot.x.size();
     for (std::size_t i = 0; i < size; ++i) {
       const Real x = plot.x[i];
@@ -222,6 +243,30 @@ std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
   return {tx, ty};
 }
 
+void Plot2D::CalculateCategoricalFrame() {
+  // Ranges
+  Real min_y = std::numeric_limits<Real>::max();
+  Real max_y = std::numeric_limits<Real>::lowest();
+  for (const auto& y : m_categorical_data.y) {
+    if (!IsInfinity(y)) {
+      min_y = std::min(y, min_y);
+      max_y = std::max(y, max_y);
+    }
+  }
+  m_y_data_range = {min_y, max_y};
+
+  m_y_range =
+      m_y_set_range.has_value() ? m_y_set_range.value() : m_y_data_range;
+
+  // Zoom factor
+  m_zoom_y =
+      static_cast<float>(abs(m_frame_h / (m_y_range.second - m_y_range.first)));
+
+  const unsigned int num_y_markers =
+      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
+  m_y_markers = ranges::PartitionRange(m_y_range, num_y_markers);
+}
+
 void Plot2D::DrawBackground() { m_svg.DrawBackground(BACKGROUND_COLOR); }
 
 void Plot2D::DrawFrame() {
@@ -244,9 +289,22 @@ void Plot2D::DrawFrame() {
 }
 
 void Plot2D::DrawData() {
-  const std::size_t num_plots = m_data.size();
+  switch (m_data_type) {
+    case DataType::NUMERIC:
+      DrawNumericData();
+      break;
+    case DataType::CATEGORICAL:
+      DrawCategoricalData();
+      break;
+    default:
+      break;
+  }
+}
+
+void Plot2D::DrawNumericData() {
+  const std::size_t num_plots = m_numeric_data.size();
   for (std::size_t p = 0; p < num_plots; ++p) {
-    const DataSeries& plot = m_data[p];
+    const DataSeries& plot = m_numeric_data[p];
 
     svg::Path path;
     path.stroke_color = plot.style.color;
@@ -264,7 +322,7 @@ void Plot2D::DrawData() {
       const bool must_join_points = (i > 0) && !IsInfinity(data_y[i - 1]);
       const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
                                              : svg::PathCommand::Id::MOVE;
-      auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
+      const auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
       path.Add({path_cmd, tx, ty});
     }
 
@@ -284,6 +342,43 @@ void Plot2D::DrawData() {
   }
 }
 
+void Plot2D::DrawCategoricalData() {
+  const CategoricalDataSeries& plot = m_categorical_data;
+
+  svg::Path path;
+  path.stroke_color = plot.style.color;
+  path.stroke_width = plot.style.stroke;
+
+  const std::vector<std::string>& data_x = plot.x;
+  const std::vector<Real>& data_y = plot.y;
+  const std::size_t size = data_x.size();
+
+  for (std::size_t i = 0; i < size; ++i) {
+    if (IsInfinity(data_y[i])) {
+      continue;
+    }
+
+    const bool must_join_points = (i > 0) && !IsInfinity(data_y[i - 1]);
+    const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
+                                           : svg::PathCommand::Id::MOVE;
+    const auto [_, ty] = TranslateToFrame(0, data_y[i]);
+    const float tx = m_frame_x + static_cast<float>(i) *
+                                     (m_frame_w / static_cast<float>(size - 1));
+    path.Add({path_cmd, tx, ty});
+  }
+
+  auto path_node = m_svg.DrawPath(path);
+
+  std::stringstream clip_path_url_ss;
+  clip_path_url_ss << "url(#" << FRAME_RECT_CLIP_PATH_ID << ")";
+  svg::SetAttribute(path_node, "clip-path", clip_path_url_ss.str());
+
+  svg::SetAttribute(path_node, "stroke-linecap", "round");
+  if (!plot.style.dash_array.empty()) {
+    svg::SetAttribute(path_node, "stroke-dasharray", plot.style.dash_array);
+  }
+}
+
 void Plot2D::DrawTitle() {
   if (m_title.empty()) {
     return;
@@ -298,7 +393,16 @@ void Plot2D::DrawTitle() {
 }
 
 void Plot2D::DrawAxes() {
-  DrawXAxis();
+  switch (m_data_type) {
+    case DataType::NUMERIC:
+      DrawNumericXAxis();
+      break;
+    case DataType::CATEGORICAL:
+      DrawCategoricalXAxis();
+      break;
+    default:
+      break;
+  }
   DrawXLabel();
   DrawYAxis();
   DrawYLabel();
@@ -336,7 +440,7 @@ void Plot2D::DrawYLabel() {
   svg::SetAttribute(node_ptr, "transform", trans_ss.str());
 }
 
-void Plot2D::DrawXAxis() {
+void Plot2D::DrawNumericXAxis() {
   std::set<Real> markers;
   markers.insert(m_x_markers.begin(), m_x_markers.end());
   markers.insert(m_x_custom_markers.begin(), m_x_custom_markers.end());
@@ -364,6 +468,51 @@ void Plot2D::DrawXAxis() {
     m_svg.DrawLine(marker_line);
 
     const std::string marker_text = fmt::format("{:.2f}", marker);
+    static constexpr int text_size = 11;
+    static constexpr float font_em = text_size / 12.0f;
+    auto text_node = m_svg.DrawText(
+        svg::Text{marker_text, x, y + MARKER_LENGTH + fonts::EmToPx(font_em),
+                  text_size, TEXT_FONT});
+    svg::SetAttribute(text_node, "text-anchor", "middle");
+
+    if (m_grid_enable) {
+      svg::Line grid_line{.x1 = x,
+                          .y1 = m_frame_y,
+                          .x2 = x,
+                          .y2 = m_frame_y + m_frame_h,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 0.75f};
+      auto grid_line_node = m_svg.DrawLine(grid_line);
+      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
+    }
+  }
+}
+
+void Plot2D::DrawCategoricalXAxis() {
+  const std::vector<std::string>& labels = m_categorical_data.x;
+  const std::size_t num_labels = labels.size();
+  if (num_labels <= 1) {
+    // TODO: Draw marker in the middle
+    return;
+  }
+
+  for (std::size_t i = 0; i < num_labels; ++i) {
+    const auto x =
+        m_frame_x + static_cast<float>(i) *
+                        (m_frame_w / static_cast<float>(num_labels - 1));
+    const auto y = m_frame_y + m_frame_h;
+
+    svg::Line marker_line{.x1 = x,
+                          .y1 = y,
+                          .x2 = x,
+                          .y2 = y + MARKER_LENGTH,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 1};
+    m_svg.DrawLine(marker_line);
+
+    const std::string marker_text = labels[i];
     static constexpr int text_size = 11;
     static constexpr float font_em = text_size / 12.0f;
     auto text_node = m_svg.DrawText(
@@ -445,13 +594,13 @@ void Plot2D::DrawLegend() {
 
   // Calculate sizes
   float max_font_width_em = 0;
-  for (const auto& data_series : m_data) {
+  for (const auto& data_series : m_numeric_data) {
     const auto [w, _] =
         fonts::CalculateTextSize(data_series.label, TEXT_FONT, font_size);
     max_font_width_em = std::max(max_font_width_em, w);
   }
 
-  const std::size_t num_labels = m_data.size();
+  const std::size_t num_labels = m_numeric_data.size();
   const float box_w = fonts::EmToPx(2 * font_margin_em + dash_length_em +
                                     spacing_em + max_font_width_em);
   const float box_x = (m_frame_x + m_frame_w) - box_margin_px - box_w;
@@ -472,8 +621,8 @@ void Plot2D::DrawLegend() {
   svg::SetAttribute(box_rect_node, "ry", "4", "px");
 
   for (std::size_t i = 0; i < num_labels; ++i) {
-    const std::string& label = m_data[i].label;
-    const Style& style = m_data[i].style;
+    const std::string& label = m_numeric_data[i].label;
+    const Style& style = m_numeric_data[i].style;
     const float x = box_x + fonts::EmToPx(font_margin_em);
     const float y = box_y + fonts::EmToPx(font_em / 2 + font_margin_em +
                                           static_cast<float>(i) * font_em);

@@ -83,7 +83,6 @@ class Figure {
   unsigned int Height() const;
 
  protected:
-  unsigned int m_figure_number;
   std::string m_title;
 
   static constexpr unsigned int DEFAULT_WIDTH = 600;

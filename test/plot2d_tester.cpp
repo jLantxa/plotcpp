@@ -21,19 +21,14 @@
 #include <string>
 #include <vector>
 
-#include <plotcpp/Plot2D.hpp>
-#include <plotcpp/ranges.hpp>
+#include "Plot2D.hpp"
+#include "ranges.hpp"
 
 using plotcpp::Plot2D;
 using plotcpp::Real;
 
-int main(int argc, char* argv[]) {
-  if (argc != 2) {
-    std::cout << "Specify a path to save the plot" << std::endl;
-  }
-
-  const std::string filepath{argv[1]};
-
+static void NumericPlot() {
+  static const std::string NUMERIC_PLOT_FILENAME{"numeric_plot2d.svg"};
   Plot2D plot2d;
 
   plot2d.SetSize(600, 450);
@@ -75,7 +70,31 @@ int main(int argc, char* argv[]) {
   plot2d.SetLegend({"Exp sine", "Hyperbola", "Cubic"});
 
   plot2d.Build();
-  plot2d.Save(filepath);
+  plot2d.Save(NUMERIC_PLOT_FILENAME);
+}
+
+void CategoricalPlot() {
+  static const std::string CATEGORICAL_PLOT_FILENAME{"categorical_plot2d.svg"};
+
+  Plot2D plot2d;
+  const std::vector<std::string> x_annotated_data{"Cat. 1", "Cat. 2", "Cat. 3"};
+  const std::vector<Real> y_annotated_data{-1, 1, 5};
+
+  plot2d.Plot(x_annotated_data, y_annotated_data, {{128, 128, 255}, 2, ""});
+
+  plot2d.SetSize(600, 450);
+  plot2d.SetTitle("Categorical Plot2D");
+  plot2d.SetXLabel("Categories");
+  plot2d.SetYLabel("y axis");
+  plot2d.SetGrid(true);
+
+  plot2d.Build();
+  plot2d.Save(CATEGORICAL_PLOT_FILENAME);
+}
+
+int main() {
+  NumericPlot();
+  CategoricalPlot();
 
   return 0;
 }
