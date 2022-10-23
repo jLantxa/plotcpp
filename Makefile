@@ -12,7 +12,7 @@ CXX_FLAGS += \
 	-std=c++20 \
 	-O3 \
 	-Wall -Werror \
-	-Wextra -Wpedantic -Wconversion -Winline
+	-Wextra -Wpedantic -Wconversion
 
 LIB_CXXFLAGS += \
 	$(LIBXML2_CFLAGS)
