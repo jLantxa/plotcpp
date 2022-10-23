@@ -21,8 +21,8 @@
 #include <string>
 #include <vector>
 
-#include "Plot2D.hpp"
-#include "ranges.hpp"
+#include <plotcpp/Plot2D.hpp>
+#include <plotcpp/ranges.hpp>
 
 using plotcpp::Plot2D;
 using plotcpp::Real;

@@ -69,16 +69,16 @@ tests: build_dir compiledb library
 	$(CXX) $(CXX_FLAGS) \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
 		$(LIB_LDFLAGS) -lgtest_main -lgtest \
 		$(TEST_SOURCES) \
+		$(LIB_SOURCES) \
 		-o $(BUILD)/tests
 
 	# plot2d tester
 	$(CXX) $(CXX_FLAGS) \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		-L$(LD_LIBRARY_PATH) -l$(TARGET) \
+		-l$(TARGET) \
 		$(TEST)/plot2d_tester.cpp \
 		-o $(BUILD)/plot2d_tester
 
