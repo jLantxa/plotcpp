@@ -37,50 +37,50 @@ class Figure {
   /**
    * \brief Render the figure on a window.
    */
-  virtual void Show() const;
+  void Show() const;
 
   /**
    * \brief Render and save the figure to a file.
    * \param filepath Path to a file to save the figure.
    */
-  virtual void Save(const std::string& filepath) const;
+  void Save(const std::string& filepath) const;
 
   /**
    * \brief Return the SVG representation of this Figure.
    * This function must be called after Build
    */
-  virtual std::string GetSVG() const;
+  std::string GetSVG() const;
 
   /**
    * \brief Set figure title.
    * \param title
    */
-  virtual void SetTitle(const std::string& title);
+  void SetTitle(const std::string& title);
 
   /**
    * \brief Returns the figure's title.
    * \return title
    */
-  virtual std::string Title() const;
+  std::string Title() const;
 
   /**
    * \brief Set figure size in pixels.
    * \param width
    * \param height
    */
-  virtual void SetSize(unsigned int width, unsigned int height);
+  void SetSize(unsigned int width, unsigned int height);
 
   /**
    * \brief Returns the figure width in pixels.
    * \return width
    */
-  virtual unsigned int Width() const;
+  unsigned int Width() const;
 
   /**
    * \brief Returns the figure height in pixels.
    * \return height
    */
-  virtual unsigned int Height() const;
+  unsigned int Height() const;
 
  protected:
   unsigned int m_figure_number;
