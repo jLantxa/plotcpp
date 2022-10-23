@@ -37,8 +37,8 @@ namespace adaptor {
  * \return Real Conversion from T to Real
  */
 template <typename T>
-Real R(T x) {
-  return static_cast<Real>(x);
+Real Real(T x) {
+  return static_cast<::plotcpp::Real>(x);
 }
 
 /**
@@ -50,14 +50,14 @@ Real R(T x) {
  * \return std::vector<Real> Conversion from T to Real
  */
 template <typename T>
-std::vector<Real> R(std::vector<T> v) {
+std::vector<::plotcpp::Real> Real(std::vector<T> v) {
   const std::size_t size = v.size();
 
-  std::vector<Real> real_vector;
+  std::vector<::plotcpp::Real> real_vector;
   real_vector.resize(size);
 
   for (std::size_t i = 0; i < size; ++i) {
-    real_vector[i] = R(v[i]);
+    real_vector[i] = Real(v[i]);
   }
 
   return real_vector;
