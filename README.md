@@ -8,7 +8,7 @@
 Internally, `plotcpp` represents all visual elements using an SVG description. This allows plots to be scalable as well as to potentially support an infinity of visual styles while looking nice.
 
 ## Requirements
-At the moment, `plotcpp` requires at least C++17 because is uses `std::optional`. It is hard to find a balance between supporting a broader set of compiler standards and providing modern language features. As stated before, this library is targeted for use in modern C++ projects.
+At the moment, `plotcpp` requires at least C++20. It is hard to find a balance between supporting a broader set of compiler standards and providing modern language features. As stated before, this library is targeted for use in modern C++ projects.
 
 ### Dependencies
 `plotcpp` is based on the following dependencies:
