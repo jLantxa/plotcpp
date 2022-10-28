@@ -37,12 +37,8 @@ static void NumericPlot() {
   plot2d.SetYLabel("y axis");
 
   std::vector<Real> data_x0 = plotcpp::ranges::Range(0, 10, 0.001);
-  std::vector<Real> data_y0;
-  for (auto& x : data_x0) {
-    Real y = std::sin(2 * M_PI * x) * exp(-x);
-    data_y0.push_back(y);
-  }
-  plot2d.Plot(data_x0, data_y0, {{0, 0, 0}, 3, ""});
+  plot2d.Plot(data_x0, [](auto x) { return std::sin(2 * M_PI * x) * exp(-x); },
+              {{0, 0, 0}, 3, ""});
 
   std::vector<Real> data_x1 = plotcpp::ranges::Range(0, 10, 0.01);
   std::vector<Real> data_y1;

@@ -129,8 +129,17 @@ class Plot2D : public Figure {
   /** Clears all custom markers */
   void ClearMarkers();
 
+  /**
+   * \brief Set the legend text for all plots.
+   * \param labels Vector of labels, in the same order they were `plotted`, that
+   * will appear in the legend box.
+   * Excess labels will be ignored. If not enough labels are provided, the
+   * corresponding plots will not shot a label. Calling this function deletes
+   * all previously set labels.
+   */
   void SetLegend(const std::vector<std::string>& labels);
 
+  /** Clear all legend labels */
   void ClearLegend();
 
   /**
