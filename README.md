@@ -39,7 +39,7 @@ From this point, you can use `plotcpp` in your code, provided that you link your
 
 ``make doc``
 
-This will generate a series of `html` files located at `plotcpp/doc/html`. To access the documentation, open `plotcpp/doc/html/index` on your browser. These pages will be useful if you need to understand the `plotcpp` API to include plots in your program. 
+This will generate a series of `html` files located at `plotcpp/doc/html`. To access the documentation, open `plotcpp/doc/html/index.html` on your browser. These pages will be useful if you need to understand the `plotcpp` API to include plots in your program. 
 
 ## Using plotcpp in your program
 In order to use `plotcpp` inside your program you will need to `#include` the `plotcpp` headers. For example, to include the `Plot2D.hpp` header you need the following:
