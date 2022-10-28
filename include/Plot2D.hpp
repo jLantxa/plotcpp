@@ -21,6 +21,7 @@
 
 #include <algorithm>
 #include <array>
+#include <functional>
 #include <optional>
 #include <set>
 #include <string>
@@ -67,6 +68,14 @@ class Plot2D : public Figure {
    * \param Style style
    */
   void Plot(const std::vector<Real>& y_data, const Style& style);
+
+  /**
+   * \brief Add a plot using a vector as x axis values and a lambda function
+   * such that y=function(x) \param x x values \param function A function such
+   * that y=function(x) \param style A style for the plot
+   */
+  void Plot(const std::vector<Real>& x_data,
+            const std::function<Real(Real)>& function, const Style& style);
 
   /**
    * \brief Add an categorical plot with discrete text labels on the x axis and

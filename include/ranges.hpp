@@ -19,6 +19,7 @@
 #ifndef _PLOTCPP_INCLUDE_RANGES_HPP_
 #define _PLOTCPP_INCLUDE_RANGES_HPP_
 
+#include <functional>
 #include <set>
 
 #include "plotcpp.hpp"
@@ -46,6 +47,15 @@ std::set<Real> TrivialPartitionRange(const Interval& range,
  * showing relevant values.
  */
 std::set<Real> PartitionRange(const Interval& range, unsigned int num_markers);
+
+/**
+ * \brief Generates a vector of Real y as a function of a vector of Real x.
+ * \param x Input vector
+ * \param function A function f such that y=f(x)
+ * \return A vector y such that y=function(x)
+ */
+std::vector<Real> Generate(const std::vector<Real>& x,
+                           const std::function<Real(Real)>& function);
 
 }  // namespace ranges
 }  // namespace plotcpp

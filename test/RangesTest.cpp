@@ -48,4 +48,12 @@ TEST(RangesTest, RangeGenerator) {
   EXPECT_THAT(ranges::Range(5, -5, 0.1), ElementsAreArray(std::vector<Real>{}));
 }
 
+TEST(RangesTest, FunctionGenerator) {
+  const auto x = ranges::Range(0, 10, 1);
+  const auto f = [](Real x) { return 2 * x; };
+  const auto y_expected = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20};
+  const auto y_generated = ranges::Generate(x, f);
+  EXPECT_THAT(y_generated, ElementsAreArray(y_expected));
+}
+
 }  // namespace plotcpp

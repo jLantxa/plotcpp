@@ -21,6 +21,7 @@
 #include <fmt/format.h>
 
 #include <algorithm>
+#include <functional>
 #include <limits>
 #include <numeric>
 #include <optional>
@@ -65,6 +66,13 @@ void Plot2D::Plot(const std::vector<Real>& y_data, const Style& style) {
   x_data.resize(y_data.size());
 
   std::iota(x_data.begin(), x_data.end(), 1.0f);
+  Plot(x_data, y_data, style);
+}
+
+void Plot2D::Plot(const std::vector<Real>& x_data,
+                  const std::function<Real(Real)>& function,
+                  const Style& style) {
+  const auto y_data = ranges::Generate(x_data, function);
   Plot(x_data, y_data, style);
 }
 

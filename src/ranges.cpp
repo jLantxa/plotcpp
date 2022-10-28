@@ -82,5 +82,22 @@ std::set<Real> PartitionRange(const Interval& range, unsigned int num_markers) {
   return TrivialPartitionRange(range, num_markers);
 }
 
+std::vector<Real> Generate(const std::vector<Real>& x,
+                           const std::function<Real(Real)>& function) {
+  const std::size_t size = x.size();
+  if (size == 0) {
+    return {};
+  }
+
+  std::vector<Real> y;
+  y.resize(size);
+
+  for (std::size_t i = 0; i < size; ++i) {
+    y[i] = function(x[i]);
+  }
+
+  return y;
+}
+
 }  // namespace ranges
 }  // namespace plotcpp
