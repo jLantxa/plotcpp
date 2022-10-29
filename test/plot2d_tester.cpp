@@ -22,7 +22,7 @@
 #include <vector>
 
 #include "Plot2D.hpp"
-#include "ranges.hpp"
+#include "utility.hpp"
 
 using plotcpp::Plot2D;
 using plotcpp::Real;
@@ -36,11 +36,13 @@ static void NumericPlot() {
   plot2d.SetXLabel("x axis");
   plot2d.SetYLabel("y axis");
 
-  std::vector<Real> data_x0 = plotcpp::ranges::Range(0, 10, 0.001);
+  std::vector<Real> data_x0 =
+      plotcpp::ranges::MakeRange<Real>(0.0f, 10.0f, 0.001f);
   plot2d.Plot(data_x0, [](auto x) { return std::sin(2 * M_PI * x) * exp(-x); },
               {{0, 0, 0}, 3, ""});
 
-  std::vector<Real> data_x1 = plotcpp::ranges::Range(0, 10, 0.01);
+  std::vector<Real> data_x1 =
+      plotcpp::ranges::MakeRange<Real>(0.0f, 10.0f, 0.01f);
   std::vector<Real> data_y1;
   for (auto& x : data_x1) {
     Real y = 1 / x;
@@ -48,7 +50,8 @@ static void NumericPlot() {
   }
   plot2d.Plot(data_x1, data_y1, {{255, 32, 32}, 2, "10,5,2,5"});
 
-  std::vector<Real> data_x2 = plotcpp::ranges::Range(10, 0, -0.01);
+  std::vector<Real> data_x2 =
+      plotcpp::ranges::MakeRange<Real>(10.0f, 0.0f, -0.01f);
   std::vector<Real> data_y2;
   for (auto& x : data_x2) {
     Real y = std::pow(x - 5, 3);

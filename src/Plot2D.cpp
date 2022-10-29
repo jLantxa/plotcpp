@@ -30,8 +30,8 @@
 #include <vector>
 
 #include "fonts.hpp"
-#include "ranges.hpp"
 #include "svg.hpp"
+#include "utility.hpp"
 
 namespace plotcpp {
 
@@ -91,20 +91,20 @@ void Plot2D::Plot(const std::vector<std::string>& x_data,
 void Plot2D::SetXRange(Real x0, Real x1) {
   const Real x_min = std::min(x0, x1);
   const Real x_max = std::max(x0, x1);
-  m_x_set_range = ranges::Interval{x_min, x_max};
+  m_x_set_range = ranges::Interval<Real>{x_min, x_max};
 }
 
 void Plot2D::SetYRange(Real y0, Real y1) {
   const Real y_min = std::min(y0, y1);
   const Real y_max = std::max(y0, y1);
-  m_y_set_range = ranges::Interval{y_min, y_max};
+  m_y_set_range = ranges::Interval<Real>{y_min, y_max};
 }
 
-std::optional<ranges::Interval> Plot2D::GetXRange() const {
+std::optional<ranges::Interval<Real>> Plot2D::GetXRange() const {
   return m_x_set_range;
 }
 
-std::optional<ranges::Interval> Plot2D::GetYRange() const {
+std::optional<ranges::Interval<Real>> Plot2D::GetYRange() const {
   return m_y_set_range;
 }
 

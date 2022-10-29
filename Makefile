@@ -24,7 +24,6 @@ LIB_LDFLAGS += \
 LIB_SOURCES += \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
-	$(SRC)/ranges.cpp \
 	$(SRC)/fonts.cpp \
 	$(SRC)/svg.cpp
 
@@ -62,7 +61,7 @@ syntax: compiledb
 
 TEST_SOURCES += \
 	$(TEST)/Plot2DTest.cpp \
-	$(TEST)/RangesTest.cpp
+	$(TEST)/UtilityTest.cpp
 
 tests: build_dir compiledb
 	# Unit tests

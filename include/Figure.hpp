@@ -21,8 +21,8 @@
 
 #include <string>
 
-#include "plotcpp.hpp"
 #include "svg.hpp"
+#include "utility.hpp"
 
 namespace plotcpp {
 
