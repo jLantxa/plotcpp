@@ -24,7 +24,7 @@
 
 namespace plotcpp {
 
-static const char* HEADER_VERSION = "v0.0.0";
+static const char* HEADER_VERSION = "v0.1.0";
 
 const char* GetBuildVersion();
 
