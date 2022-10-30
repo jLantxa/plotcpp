@@ -36,7 +36,9 @@ unsigned int Figure::Width() const { return m_width; }
 
 unsigned int Figure::Height() const { return m_height; }
 
-std::string Figure::GetSVG() const { return m_svg.GetText(); }
+std::string Figure::GetSVGText() const { return m_svg.GetText(); }
+
+svg::Document& Figure::GetSVGDocument() { return m_svg; }
 
 void Figure::Save(const std::string& filepath) const {
   // TODO: Extract extension and call save function

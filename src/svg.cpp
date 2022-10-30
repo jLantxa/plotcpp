@@ -46,6 +46,8 @@ Document::Document() {
 
 Document::~Document() { xmlFreeDoc(m_doc); }
 
+xmlDocPtr Document::GetDoc() { return m_doc; }
+
 std::string Document::GetText() const {
   xmlChar* xml_str;
   xmlDocDumpFormatMemory(m_doc, &xml_str, nullptr, 1);
@@ -109,6 +111,8 @@ void Document::SetSize(unsigned int width, unsigned int height) {
   SetAttribute(m_root, "width", std::to_string(m_width));
   SetAttribute(m_root, "height", std::to_string(m_height));
 }
+
+void Document::Append(xmlNodePtr node) { xmlAddChild(m_root, node); }
 
 xmlNodePtr Document::AddGroup(xmlNodePtr parent_node, const std::string& id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;

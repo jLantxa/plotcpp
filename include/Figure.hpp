@@ -49,7 +49,9 @@ class Figure {
    * \brief Return the SVG representation of this Figure.
    * This function must be called after Build
    */
-  std::string GetSVG() const;
+  std::string GetSVGText() const;
+
+  svg::Document& GetSVGDocument();
 
   /**
    * \brief Set figure title.

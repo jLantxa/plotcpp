@@ -21,9 +21,11 @@
 #include <string>
 #include <vector>
 
+#include "GroupFigure.hpp"
 #include "Plot2D.hpp"
 #include "utility.hpp"
 
+using plotcpp::GroupFigure;
 using plotcpp::Plot2D;
 using plotcpp::Real;
 
@@ -91,9 +93,33 @@ void CategoricalPlot() {
   plot2d.Save(CATEGORICAL_PLOT_FILENAME);
 }
 
+void GroupPlot() {
+  static const std::string GROUP_PLOT_FILENAME = "group.svg";
+
+  GroupFigure<2, 2> group;
+  Plot2D p00;
+  Plot2D p10;
+  Plot2D p01;
+  Plot2D p11;
+
+  const auto range = plotcpp::ranges::MakeRange<Real>(0, 10, 0.01);
+  p00.Plot(range, [](Real x) { return std::sin(x); }, {{0, 0, 0}, 2, ""});
+  p10.Plot(range, [](Real x) { return std::exp(-x); }, {{255, 0, 0}, 2, ""});
+  p01.Plot(range, [](Real x) { return x * x; }, {{0, 255, 0}, 2, ""});
+  p11.Plot(range, [](Real x) { return x; }, {{0, 0, 255}, 2, ""});
+
+  group.Subplot(&p00, 0, 0);
+  group.Subplot(&p10, 1, 0);
+  group.Subplot(&p01, 0, 1);
+  group.Subplot(&p11, 1, 1);
+  group.Build();
+  group.Save(GROUP_PLOT_FILENAME);
+}
+
 int main() {
   NumericPlot();
   CategoricalPlot();
+  GroupPlot();
 
   return 0;
 }

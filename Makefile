@@ -61,7 +61,7 @@ syntax: compiledb
 
 TEST_SOURCES += \
 	$(TEST)/Plot2DTest.cpp \
-	$(TEST)/UtilityTest.cpp
+	$(TEST)/UtilityTest.cpp \
 
 tests: build_dir compiledb
 	# Unit tests
@@ -79,8 +79,8 @@ tests: build_dir compiledb
 		-I$(INCLUDE) \
 		$(LIB_LDFLAGS) \
 		$(LIB_SOURCES) \
-		$(TEST)/plot2d_tester.cpp \
-		-o $(BUILD)/plot2d_tester
+		$(TEST)/figure_tester.cpp \
+		-o $(BUILD)/figure_tester
 
 	./$(BUILD)/tests
 

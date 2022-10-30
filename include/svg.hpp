@@ -106,6 +106,7 @@ struct Text {
 class Document {
  public:
   Document();
+
   ~Document();
 
   /** Return the xml text */
@@ -114,6 +115,8 @@ class Document {
   /** Clear all elements in this document */
   void Reset();
 
+  xmlDocPtr GetDoc();
+
   /**
    * \brief Set the Size object
    *
@@ -121,6 +124,8 @@ class Document {
    * \param height Image height in px
    */
   void SetSize(unsigned int width, unsigned int height);
+
+  void Append(xmlNodePtr node);
 
   /** Draw background color */
   xmlNodePtr DrawBackground(RGB color);

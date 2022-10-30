@@ -39,14 +39,14 @@ From this point, you can use `plotcpp` in your code, provided that you link your
 
 ``make doc``
 
-This will generate a series of `html` files located at `plotcpp/doc/html`. To access the documentation, open `plotcpp/doc/html/index.html` on your browser. These pages will be useful if you need to understand the `plotcpp` API to include plots in your program. 
+This will generate a series of `html` files located at `plotcpp/doc/html`. To access the documentation, open `plotcpp/doc/html/index.html` on your browser. These pages will be useful if you need to understand the `plotcpp` API to include plots in your program.
 
 ## Using plotcpp in your program
 In order to use `plotcpp` inside your program you will need to `#include` the `plotcpp` headers. For example, to include the `Plot2D.hpp` header you need the following:
 
 ``#include <plotcpp/Plot2D.hpp>``
 
-To compile your program you will need to link the shared library you installed earlier. Use the `-lplotcpp` linker flag to achieve that. In some distributions, the `libxml2` headers are not located at `/usr/include/libxml2`. Normally, the `libxml2` package contains a helper binary that provides such information. Try running `xml2-config`. This is an example of a command to do all this: 
+To compile your program you will need to link the shared library you installed earlier. Use the `-lplotcpp` linker flag to achieve that. In some distributions, the `libxml2` headers are not located at `/usr/include/libxml2`. Normally, the `libxml2` package contains a helper binary that provides such information. Try running `xml2-config`. This is an example of a command to do all this:
 
 ``clang++ -std=c++20 `xml2-config --cflags` -lplotcpp <sources> -o <target>``
 
@@ -59,9 +59,29 @@ The `Plot2D` figure can plot single variable functions. A number of features are
 ![Example](examples/numeric_plot2d.png)
 ![Example](examples/categorical_plot2d.png)
 
+### GroupFigure
+A `GroupFigure` is simply a group of figures (or subplots). The number of rows and columns are specified as template arguments `GroupFigure<rows, cols>`. Subplots are added by calling `Subplot()`:
+
+```C++
+plotcpp::Plot2D top;
+plotcpp::Plot2D bottom;
+
+// ...
+
+plotcpp::GroupFigure<2, 1> group;
+group.Subplot(&top, 0, 0);
+group.Subplot(&bottom, 1, 0);
+group.Build();
+
+// ...
+```
+
+Subplots added to the group can still be modified independently, but be aware that calling `Build()` on the group will modify the size of the plot.
+
+![Example](examples/group.png)
+
 # Planned features
 * Scatter plot
 * Annotated heatmap
 * Histogram
 * Pie chart
-* Grouping and subplot
