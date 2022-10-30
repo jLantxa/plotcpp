@@ -24,6 +24,7 @@
 #include "GroupFigure.hpp"
 #include "Plot2D.hpp"
 #include "utility.hpp"
+#include "version.hpp"
 
 using plotcpp::GroupFigure;
 using plotcpp::Plot2D;
@@ -117,6 +118,8 @@ void GroupPlot() {
 }
 
 int main() {
+  std::cout << plotcpp::HEADER_VERSION << std::endl;
+
   NumericPlot();
   CategoricalPlot();
   GroupPlot();

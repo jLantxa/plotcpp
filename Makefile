@@ -22,6 +22,7 @@ LIB_LDFLAGS += \
 	-lfmt
 
 LIB_SOURCES += \
+	$(SRC)/version.cpp \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
 	$(SRC)/fonts.cpp \
