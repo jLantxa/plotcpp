@@ -30,6 +30,9 @@ namespace plotcpp {
 
 template <std::size_t _rows, std::size_t _cols>
 class GroupFigure : public Figure {
+  static_assert(_rows > 0);
+  static_assert(_cols > 0);
+
  public:
   GroupFigure() = default;
 
@@ -58,23 +61,28 @@ class GroupFigure : public Figure {
   void Build() override {
     m_svg.DrawBackground({255, 255, 255});
 
-    const unsigned int subplot_width = m_width / _cols;
-    const unsigned int subplot_height = m_height / _rows;
+    const unsigned int subplot_width =
+        (m_width - (_cols - 1) * HORIZONTAL_MARGIN) / _cols;
+    const unsigned int subplot_height =
+        (m_height - (_rows - 1) * VERTICAL_MARGIN) / _rows;
 
-    for (std::size_t i = 0; i < _rows; ++i) {
-      for (std::size_t j = 0; j < _cols; ++j) {
+    for (unsigned int i = 0; i < _rows; ++i) {
+      for (unsigned int j = 0; j < _cols; ++j) {
         Figure* figure = GetFigure(i, j);
         if (figure == nullptr) {
           continue;
         }
+
+        const unsigned int x = j * subplot_width + j * HORIZONTAL_MARGIN;
+        const unsigned int y = i * subplot_height + i * VERTICAL_MARGIN;
 
         figure->SetSize(subplot_width, subplot_height);
         figure->Build();
         xmlDocPtr original_doc = figure->GetSVGDocument().GetDoc();
         xmlNodePtr original_root = xmlDocGetRootElement(original_doc);
         xmlNodePtr cloned_root = xmlCopyNode(original_root, 1);
-        svg::SetAttribute(cloned_root, "x", std::to_string(j * subplot_width));
-        svg::SetAttribute(cloned_root, "y", std::to_string(i * subplot_height));
+        svg::SetAttribute(cloned_root, "x", std::to_string(x));
+        svg::SetAttribute(cloned_root, "y", std::to_string(y));
         m_svg.Append(cloned_root);
       }
     }
@@ -82,6 +90,9 @@ class GroupFigure : public Figure {
 
  protected:
   std::array<Figure*, _rows * _cols> m_figures;
+
+  static constexpr unsigned int HORIZONTAL_MARGIN = 20;
+  static constexpr unsigned int VERTICAL_MARGIN = 20;
 
 };  // namespace plotcpp
 
