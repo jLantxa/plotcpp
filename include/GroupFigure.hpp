@@ -34,7 +34,11 @@ class GroupFigure : public Figure {
   static_assert(_cols > 0);
 
  public:
-  GroupFigure() = default;
+  GroupFigure() {
+    for (auto& figure_ptr : m_figures) {
+      figure_ptr = nullptr;
+    }
+  };
 
   /**
    * \brief Add a subplot at the specified location in the group.
@@ -61,10 +65,8 @@ class GroupFigure : public Figure {
   void Build() override {
     m_svg.DrawBackground({255, 255, 255});
 
-    const unsigned int subplot_width =
-        (m_width - (_cols - 1) * HORIZONTAL_MARGIN) / _cols;
-    const unsigned int subplot_height =
-        (m_height - (_rows - 1) * VERTICAL_MARGIN) / _rows;
+    const unsigned int subplot_width = m_width / _cols;
+    const unsigned int subplot_height = m_height / _rows;
 
     for (unsigned int i = 0; i < _rows; ++i) {
       for (unsigned int j = 0; j < _cols; ++j) {
@@ -73,8 +75,8 @@ class GroupFigure : public Figure {
           continue;
         }
 
-        const unsigned int x = j * subplot_width + j * HORIZONTAL_MARGIN;
-        const unsigned int y = i * subplot_height + i * VERTICAL_MARGIN;
+        const unsigned int x = j * subplot_width;
+        const unsigned int y = i * subplot_height;
 
         figure->SetSize(subplot_width, subplot_height);
         figure->Build();

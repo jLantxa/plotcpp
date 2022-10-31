@@ -198,6 +198,28 @@ void Plot2D::CalculateFrame() {
     default:
       break;
   }
+
+  // Calculate markers
+  const unsigned int num_x_markers =
+      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 80));
+  m_x_markers = ranges::PartitionRange(m_x_range, num_x_markers);
+  const unsigned int num_y_markers =
+      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
+  m_y_markers = ranges::PartitionRange(m_y_range, num_y_markers);
+
+  // Calculate font sizes
+  const std::string DUMMY_TEXT = "-000.00";
+  const float y_axis_font_size =
+      fonts::ConstrainedFontSize(BASE_AXIS_FONT_SIZE, DUMMY_TEXT, TEXT_FONT,
+                                 (3.0f * m_frame_x / 4.0f) - MARKER_LENGTH,
+                                 m_frame_h / static_cast<float>(num_y_markers));
+  // const float x_axis_font_size = fonts::ConstrainedFontSize(
+  //     BASE_AXIS_FONT_SIZE, DUMMY_TEXT, TEXT_FONT, m_frame_w,
+  //     (static_cast<float>(m_height) * FRAME_BOTTOM_MARGIN_REL -
+  //     MARKER_LENGTH) /
+  //         2.0f);
+
+  m_axis_font_size = std::min({y_axis_font_size});
 }
 
 void Plot2D::CalculateNumericFrame() {
@@ -235,13 +257,6 @@ void Plot2D::CalculateNumericFrame() {
       static_cast<float>(abs(m_frame_w / (m_x_range.second - m_x_range.first)));
   m_zoom_y =
       static_cast<float>(abs(m_frame_h / (m_y_range.second - m_y_range.first)));
-
-  const unsigned int num_x_markers =
-      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 80));
-  m_x_markers = ranges::PartitionRange(m_x_range, num_x_markers);
-  const unsigned int num_y_markers =
-      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
-  m_y_markers = ranges::PartitionRange(m_y_range, num_y_markers);
 }
 
 std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
@@ -392,10 +407,15 @@ void Plot2D::DrawTitle() {
     return;
   }
 
-  float x = static_cast<float>(m_width) / 2;
-  float y = static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL / 2;
+  const float x = static_cast<float>(m_width) / 2;
+  const float y = static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL / 2;
 
-  auto node_ptr = m_svg.DrawText(svg::Text{m_title, x, y, 20, TEXT_FONT});
+  const float font_size = fonts::ConstrainedFontSize(
+      BASE_TITLE_FONT_SIZE, m_title, TEXT_FONT, static_cast<float>(m_width),
+      static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL);
+
+  auto node_ptr =
+      m_svg.DrawText(svg::Text{m_title, x, y, font_size, TEXT_FONT});
   svg::SetAttribute(node_ptr, "font-weight", "bold");
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 }
@@ -426,7 +446,8 @@ void Plot2D::DrawXLabel() {
   float y =
       frame_bottom + (0.75f) * (static_cast<float>(m_height) - frame_bottom);
 
-  auto node_ptr = m_svg.DrawText(svg::Text{m_x_label, x, y, 12, TEXT_FONT});
+  auto node_ptr =
+      m_svg.DrawText(svg::Text{m_x_label, x, y, m_axis_font_size, TEXT_FONT});
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 }
 
@@ -438,7 +459,8 @@ void Plot2D::DrawYLabel() {
   float x = (1 - 0.75f) * m_frame_x;
   float y = m_frame_y + (m_frame_h / 2);
 
-  auto node_ptr = m_svg.DrawText(svg::Text{m_y_label, 0, 0, 12, TEXT_FONT});
+  auto node_ptr =
+      m_svg.DrawText(svg::Text{m_y_label, 0, 0, m_axis_font_size, TEXT_FONT});
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 
   std::stringstream trans_ss;
@@ -475,12 +497,11 @@ void Plot2D::DrawNumericXAxis() {
                           .stroke_width = 1};
     m_svg.DrawLine(marker_line);
 
-    const std::string marker_text = fmt::format("{:.2f}", marker);
-    static constexpr int text_size = 11;
-    static constexpr float font_em = text_size / 12.0f;
+    const std::string marker_text = fmt::format("{:.2g}", marker);
+    float font_em = m_axis_font_size / 12.0f;
     auto text_node = m_svg.DrawText(
         svg::Text{marker_text, x, y + MARKER_LENGTH + fonts::EmToPx(font_em),
-                  text_size, TEXT_FONT});
+                  m_axis_font_size, TEXT_FONT});
     svg::SetAttribute(text_node, "text-anchor", "middle");
 
     if (m_grid_enable) {
@@ -521,11 +542,10 @@ void Plot2D::DrawCategoricalXAxis() {
     m_svg.DrawLine(marker_line);
 
     const std::string marker_text = labels[i];
-    static constexpr int text_size = 11;
-    static constexpr float font_em = text_size / 12.0f;
+    float font_em = m_axis_font_size / 12.0f;
     auto text_node = m_svg.DrawText(
         svg::Text{marker_text, x, y + MARKER_LENGTH + fonts::EmToPx(font_em),
-                  text_size, TEXT_FONT});
+                  m_axis_font_size, TEXT_FONT});
     svg::SetAttribute(text_node, "text-anchor", "middle");
 
     if (m_grid_enable) {
@@ -570,8 +590,8 @@ void Plot2D::DrawYAxis() {
     m_svg.DrawLine(marker_line);
 
     const std::string marker_text = fmt::format("{:.2f}", marker);
-    auto text_node = m_svg.DrawText(
-        svg::Text{marker_text, x - 2 * MARKER_LENGTH, y, 11, TEXT_FONT});
+    auto text_node = m_svg.DrawText(svg::Text{
+        marker_text, x - 2 * MARKER_LENGTH, y, m_axis_font_size, TEXT_FONT});
     svg::SetAttribute(text_node, "text-anchor", "end");
 
     if (m_grid_enable) {

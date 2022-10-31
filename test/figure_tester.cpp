@@ -97,29 +97,33 @@ void CategoricalPlot() {
 void GroupPlot() {
   static const std::string GROUP_PLOT_FILENAME = "group.svg";
 
-  GroupFigure<2, 2> group;
-  Plot2D p00;
-  Plot2D p10;
-  Plot2D p01;
-  Plot2D p11;
+  GroupFigure<2, 1> group;
+  Plot2D p0;
+  Plot2D p1;
 
-  const auto range = plotcpp::ranges::MakeRange<Real>(0, 10, 0.01);
-  p00.Plot(range, [](Real x) { return std::sin(x); }, {{0, 0, 0}, 2, ""});
-  p10.Plot(range, [](Real x) { return std::exp(-x); }, {{255, 0, 0}, 2, ""});
-  p01.Plot(range, [](Real x) { return x * x; }, {{0, 255, 0}, 2, ""});
-  p11.Plot(range, [](Real x) { return x; }, {{0, 0, 255}, 2, ""});
+  const auto x0 = plotcpp::ranges::MakeRange<Real>(0.0, 2 * M_PI, 0.01);
+  p0.Plot(x0, [](Real x) { return std::sin(x); }, {{0, 0, 0}, 2, ""});
+  p0.SetTitle("Sine");
+  p0.SetXLabel("x");
+  p0.SetYLabel("y = sin(x)");
 
-  group.Subplot(&p00, 0, 0);
-  group.Subplot(&p10, 1, 0);
-  group.Subplot(&p01, 0, 1);
-  group.Subplot(&p11, 1, 1);
+  p1.SetHold(true);
+  const auto x1 = plotcpp::ranges::MakeRange<Real>(1, 6, 0.01);
+  p1.Plot(x1, [](Real x) { return x * x; }, {{255, 0, 0}, 2, ""});
+  p1.Plot(x1, [](Real x) { return x; }, {{0, 255, 0}, 2, ""});
+  p1.Plot(x1, [](Real x) { return std::log2(x); }, {{0, 0, 255}, 2, ""});
+  p1.SetXLabel("x");
+  p1.SetYLabel("y");
+  p1.SetGrid(true);
+  p1.SetLegend({"x^2", "x", "log2(x)"});
+
+  group.Subplot(&p0, 0, 0);
+  group.Subplot(&p1, 1, 0);
   group.Build();
   group.Save(GROUP_PLOT_FILENAME);
 }
 
 int main() {
-  std::cout << plotcpp::HEADER_VERSION << std::endl;
-
   NumericPlot();
   CategoricalPlot();
   GroupPlot();

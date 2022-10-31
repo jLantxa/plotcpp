@@ -239,7 +239,7 @@ class Plot2D : public Figure {
   // Constraints
   static constexpr float FRAME_TOP_MARGIN_REL = 0.10f;
   static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.12f;
-  static constexpr float FRAME_LEFT_MARGIN_REL = 0.12f;
+  static constexpr float FRAME_LEFT_MARGIN_REL = 0.15f;
   static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
   static const std::string FRAME_RECT_CLIP_PATH_ID;
 
@@ -247,10 +247,14 @@ class Plot2D : public Figure {
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
   const std::string TEXT_FONT{"monospace"};
+  float m_axis_font_size;
 
   static constexpr float MARKER_LENGTH = 5.0f;
   static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
   static constexpr unsigned int MAX_NUM_X_MARKERS = 10;
+
+  static constexpr float BASE_TITLE_FONT_SIZE = 20.0f;
+  static constexpr float BASE_AXIS_FONT_SIZE = 11.0f;
 
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();

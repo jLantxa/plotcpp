@@ -34,7 +34,7 @@ struct FontData {
 float EmToPx(float em);
 
 /**
- * \brief Calculate an approximation of the bounding box of a text.
+ * \brief Calculate an approximation of the bounding box of a text in em.
  * \param text Text string
  * \param font Font family
  * \param size Font size
@@ -42,6 +42,9 @@ float EmToPx(float em);
  */
 std::pair<float, float> CalculateTextSize(const std::string& text,
                                           const std::string& font, float size);
+
+float ConstrainedFontSize(float base_size, const std::string& text,
+                          const std::string& font, float width, float height);
 
 }  // namespace fonts
 }  // namespace plotcpp

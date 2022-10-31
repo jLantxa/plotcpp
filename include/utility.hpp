@@ -147,6 +147,10 @@ std::set<T> TrivialPartitionRange(const Interval<T>& range,
   const T max = std::max(range.first, range.second);
   const T interval = (max - min) / (num_markers - 1);
 
+  if (interval == 0) {
+    return {min, max};
+  }
+
   for (T marker = min; marker <= max; marker += interval) {
     values.insert(marker);
   }
