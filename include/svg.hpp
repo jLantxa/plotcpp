@@ -64,6 +64,12 @@ struct Rect {
   bool fill_transparent = true;
 };
 
+struct Circle {
+  float cx, cy;
+  float r;
+  RGB fill_color{0, 0, 0};
+};
+
 struct PathCommand {
   enum class Id {
     MOVE,
@@ -137,6 +143,10 @@ class Document {
   /** Draw a rectangle */
   xmlNodePtr DrawRect(const Rect& rect, xmlNodePtr parent_node = nullptr,
                       const std::string& id = "");
+
+  /** Draw a circle */
+  xmlNodePtr DrawCircle(const Circle& circle, xmlNodePtr parent_node = nullptr,
+                        const std::string& id = "");
 
   /** Draw a path */
   xmlNodePtr DrawPath(const Path& path, xmlNodePtr parent_node = nullptr,

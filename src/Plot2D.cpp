@@ -46,7 +46,8 @@ const std::string Plot2D::FRAME_RECT_CLIP_PATH_ID = {"rect-clip-path"};
 Plot2D::Plot2D() : Figure() {}
 
 void Plot2D::Plot(const std::vector<Real>& x_data,
-                  const std::vector<Real>& y_data, const Style& style) {
+                  const std::vector<Real>& y_data, const Color& color,
+                  const float stroke_width, const std::string& dash_array) {
   if (x_data.size() != y_data.size()) {
     return;
   }
@@ -55,29 +56,32 @@ void Plot2D::Plot(const std::vector<Real>& x_data,
     m_numeric_data.clear();
   }
 
+  const Style style = {color, stroke_width, dash_array, false};
   m_numeric_data.emplace_back(DataSeries{x_data, y_data, style});
 
   m_data_type = DataType::NUMERIC;
   m_categorical_data.clear();
 }
 
-void Plot2D::Plot(const std::vector<Real>& y_data, const Style& style) {
+void Plot2D::Plot(const std::vector<Real>& y_data, const Color& color,
+                  const float stroke_width, const std::string& dash_array) {
   std::vector<Real> x_data;
   x_data.resize(y_data.size());
 
   std::iota(x_data.begin(), x_data.end(), 1.0f);
-  Plot(x_data, y_data, style);
+  Plot(x_data, y_data, color, stroke_width, dash_array);
 }
 
 void Plot2D::Plot(const std::vector<Real>& x_data,
-                  const std::function<Real(Real)>& function,
-                  const Style& style) {
+                  const std::function<Real(Real)>& function, const Color& color,
+                  const float stroke_width, const std::string& dash_array) {
   const auto y_data = ranges::Generate(x_data, function);
-  Plot(x_data, y_data, style);
+  Plot(x_data, y_data, color, stroke_width, dash_array);
 }
 
 void Plot2D::Plot(const std::vector<std::string>& x_data,
-                  const std::vector<Real>& y_data, const Style& style) {
+                  const std::vector<Real>& y_data, const Color& color,
+                  const float stroke_width, const std::string& dash_array) {
   if (x_data.size() != y_data.size()) {
     return;
   }
@@ -89,6 +93,45 @@ void Plot2D::Plot(const std::vector<std::string>& x_data,
     m_categorical_labels = x_data;
   }
 
+  const Style style = {color, stroke_width, dash_array, false};
+  m_categorical_data.emplace_back(CategoricalDataSeries{y_data, style});
+  m_numeric_data.clear();
+  m_data_type = DataType::CATEGORICAL;
+}
+
+void Plot2D::Scatter(const std::vector<Real>& x_data,
+                     const std::vector<Real>& y_data, const Color& color,
+                     const float radius) {
+  if (x_data.size() != y_data.size()) {
+    return;
+  }
+
+  if (m_hold == false) {
+    m_numeric_data.clear();
+  }
+
+  const Style style = {color, radius, "", true};
+  m_numeric_data.emplace_back(DataSeries{x_data, y_data, style});
+
+  m_data_type = DataType::NUMERIC;
+  m_categorical_data.clear();
+}
+
+void Plot2D::Scatter(const std::vector<std::string>& x_data,
+                     const std::vector<Real>& y_data, const Color& color,
+                     const float radius) {
+  if (x_data.size() != y_data.size()) {
+    return;
+  }
+
+  // Reset data if labels are different
+  const bool labels_are_equal = (x_data == m_categorical_labels);
+  if (!labels_are_equal) {
+    m_categorical_data.clear();
+    m_categorical_labels = x_data;
+  }
+
+  const Style style = {color, radius, "", true};
   m_categorical_data.emplace_back(CategoricalDataSeries{y_data, style});
   m_numeric_data.clear();
   m_data_type = DataType::CATEGORICAL;
@@ -342,82 +385,139 @@ void Plot2D::DrawData() {
 }
 
 void Plot2D::DrawNumericData() {
-  const std::size_t num_plots = m_numeric_data.size();
-  for (std::size_t p = 0; p < num_plots; ++p) {
-    const DataSeries& plot = m_numeric_data[p];
+  for (const auto& plot : m_numeric_data) {
+    if (plot.style.scatter == false) {
+      DrawNumericPath(plot);
+    } else {
+      DrawNumericScatter(plot);
+    }
+  }
+}
 
-    svg::Path path;
-    path.stroke_color = plot.style.color;
-    path.stroke_width = plot.style.stroke;
+void Plot2D::DrawNumericPath(const DataSeries& plot) {
+  svg::Path path;
+  path.stroke_color = plot.style.color;
+  path.stroke_width = plot.style.stroke;
 
-    const std::vector<Real>& data_x = plot.x;
-    const std::vector<Real>& data_y = plot.y;
-    const std::size_t size = data_x.size();
+  const std::vector<Real>& data_x = plot.x;
+  const std::vector<Real>& data_y = plot.y;
+  const std::size_t size = data_x.size();
 
-    for (std::size_t i = 0; i < size; ++i) {
-      if (IsInfinity(data_y[i])) {
-        continue;
-      }
-
-      const bool must_join_points = (i > 0) && !IsInfinity(data_y[i - 1]);
-      const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
-                                             : svg::PathCommand::Id::MOVE;
-      const auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
-      path.Add({path_cmd, tx, ty});
+  for (std::size_t i = 0; i < size; ++i) {
+    if (IsInfinity(data_y[i])) {
+      continue;
     }
 
-    auto path_node = m_svg.DrawPath(path);
+    const bool must_join_points = (i > 0) && !IsInfinity(data_y[i - 1]);
+    const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
+                                           : svg::PathCommand::Id::MOVE;
+    const auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
+    path.Add({path_cmd, tx, ty});
+  }
+
+  auto path_node = m_svg.DrawPath(path);
+
+  std::stringstream clip_path_url_ss;
+  clip_path_url_ss << "url(#" << FRAME_RECT_CLIP_PATH_ID << ")";
+  svg::SetAttribute(path_node, "clip-path", clip_path_url_ss.str());
+
+  svg::SetAttribute(path_node, "stroke-linecap", "round");
+  if (!plot.style.dash_array.empty()) {
+    svg::SetAttribute(path_node, "stroke-dasharray", plot.style.dash_array);
+  }
+
+  // TODO: Can further customize the paths with:
+  // svg::SetAttribute(path_node, "stroke-linejoin", "bevel");
+}
+
+void Plot2D::DrawNumericScatter(const DataSeries& plot) {
+  const std::vector<Real>& data_x = plot.x;
+  const std::vector<Real>& data_y = plot.y;
+  const std::size_t size = data_x.size();
+
+  for (std::size_t i = 0; i < size; ++i) {
+    if (IsInfinity(data_y[i])) {
+      continue;
+    }
+    const auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
+
+    auto circle_node =
+        m_svg.DrawCircle({tx, ty, plot.style.stroke, plot.style.color});
 
     std::stringstream clip_path_url_ss;
     clip_path_url_ss << "url(#" << FRAME_RECT_CLIP_PATH_ID << ")";
-    svg::SetAttribute(path_node, "clip-path", clip_path_url_ss.str());
-
-    svg::SetAttribute(path_node, "stroke-linecap", "round");
-    if (!plot.style.dash_array.empty()) {
-      svg::SetAttribute(path_node, "stroke-dasharray", plot.style.dash_array);
-    }
-
-    // TODO: Can further customize the paths with:
-    // svg::SetAttribute(path_node, "stroke-linejoin", "bevel");
+    svg::SetAttribute(circle_node, "clip-path", clip_path_url_ss.str());
   }
 }
 
 void Plot2D::DrawCategoricalData() {
-  const std::vector<std::string>& data_x = m_categorical_labels;
-
   for (const auto& plot : m_categorical_data) {
-    svg::Path path;
-    path.stroke_color = plot.style.color;
-    path.stroke_width = plot.style.stroke;
+    if (plot.style.scatter == false) {
+      DrawCategoricalPath(plot);
+    } else {
+      DrawCategoricalScatter(plot);
+    }
+  }
+}
 
-    const std::vector<Real>& data_y = plot.y;
-    const std::size_t size = data_x.size();
+void Plot2D::DrawCategoricalPath(const CategoricalDataSeries& plot) {
+  svg::Path path;
+  path.stroke_color = plot.style.color;
+  path.stroke_width = plot.style.stroke;
 
-    for (std::size_t i = 0; i < size; ++i) {
-      if (IsInfinity(data_y[i])) {
-        continue;
-      }
+  const std::vector<Real>& data_y = plot.y;
+  const std::size_t size = data_y.size();
 
-      const bool must_join_points = (i > 0) && !IsInfinity(data_y[i - 1]);
-      const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
-                                             : svg::PathCommand::Id::MOVE;
-      const auto [_, ty] = TranslateToFrame(0, data_y[i]);
-      const float tx =
-          m_frame_x +
-          static_cast<float>(i) * (m_frame_w / static_cast<float>(size - 1));
-      path.Add({path_cmd, tx, ty});
+  for (std::size_t i = 0; i < size; ++i) {
+    if (IsInfinity(data_y[i])) {
+      continue;
     }
 
-    auto path_node = m_svg.DrawPath(path);
+    const bool must_join_points = (i > 0) && !IsInfinity(data_y[i - 1]);
+    const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
+                                           : svg::PathCommand::Id::MOVE;
+    const auto [_, ty] = TranslateToFrame(0, data_y[i]);
+    const float tx = m_frame_x + static_cast<float>(i) *
+                                     (m_frame_w / static_cast<float>(size - 1));
+    path.Add({path_cmd, tx, ty});
+  }
+
+  auto path_node = m_svg.DrawPath(path);
+
+  std::stringstream clip_path_url_ss;
+  clip_path_url_ss << "url(#" << FRAME_RECT_CLIP_PATH_ID << ")";
+  svg::SetAttribute(path_node, "clip-path", clip_path_url_ss.str());
+
+  svg::SetAttribute(path_node, "stroke-linecap", "round");
+  if (!plot.style.dash_array.empty()) {
+    svg::SetAttribute(path_node, "stroke-dasharray", plot.style.dash_array);
+  }
+}
+
+void Plot2D::DrawCategoricalScatter(const CategoricalDataSeries& plot) {
+  const std::vector<Real>& data_y = plot.y;
+  const std::size_t size = data_y.size();
+
+  for (std::size_t i = 0; i < size; ++i) {
+    if (IsInfinity(data_y[i])) {
+      continue;
+    }
+
+    const auto [_, ty] = TranslateToFrame(0, data_y[i]);
+    const float tx = m_frame_x + static_cast<float>(i) *
+                                     (m_frame_w / static_cast<float>(size - 1));
+
+    svg::Circle circle{
+        .cx = tx,
+        .cy = ty,
+        .r = plot.style.stroke,
+        .fill_color = plot.style.color,
+    };
+    auto circle_node = m_svg.DrawCircle(circle);
 
     std::stringstream clip_path_url_ss;
     clip_path_url_ss << "url(#" << FRAME_RECT_CLIP_PATH_ID << ")";
-    svg::SetAttribute(path_node, "clip-path", clip_path_url_ss.str());
-
-    svg::SetAttribute(path_node, "stroke-linecap", "round");
-    if (!plot.style.dash_array.empty()) {
-      svg::SetAttribute(path_node, "stroke-dasharray", plot.style.dash_array);
-    }
+    svg::SetAttribute(circle_node, "clip-path", clip_path_url_ss.str());
   }
 }
 
@@ -688,14 +788,25 @@ void Plot2D::DrawLegend() {
     const float x = box_x + fonts::EmToPx(font_margin_em);
     const float y = box_y + fonts::EmToPx(font_em / 2 + font_margin_em +
                                           static_cast<float>(i) * font_em);
-    svg::Line dash = {.x1 = x,
-                      .y1 = y,
-                      .x2 = x + fonts::EmToPx(dash_length_em),
-                      .y2 = y,
-                      .stroke_color = style.color,
-                      .stroke_width = 2.0f};
-    auto line_node = m_svg.DrawLine(dash);
-    svg::SetAttribute(line_node, "stroke-dasharray", style.dash_array);
+
+    if (style.scatter == false) {
+      svg::Line dash = {.x1 = x,
+                        .y1 = y,
+                        .x2 = x + fonts::EmToPx(dash_length_em),
+                        .y2 = y,
+                        .stroke_color = style.color,
+                        .stroke_width = 2.0f};
+      auto line_node = m_svg.DrawLine(dash);
+      svg::SetAttribute(line_node, "stroke-dasharray", style.dash_array);
+    } else {
+      svg::Circle circle{
+          .cx = x + (fonts::EmToPx(dash_length_em) / 2.0f),
+          .cy = y,
+          .r = fonts::EmToPx(font_em / 3.0f),
+          .fill_color = style.color,
+      };
+      m_svg.DrawCircle(circle);
+    }
 
     const float text_x = x + fonts::EmToPx(dash_length_em + spacing_em);
     const float text_y = y + fonts::EmToPx(font_em / 4);

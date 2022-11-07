@@ -44,6 +44,7 @@ class Plot2D : public Figure {
     Color color;
     float stroke;
     std::string dash_array;
+    bool scatter;
   };
 
   Plot2D();
@@ -54,10 +55,14 @@ class Plot2D : public Figure {
    *
    * \param x_data x-axis data
    * \param y_data y-axis data
-   * \param Style style
+   * \param color Stroke color
+   * \param stroke_width Line width
+   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
    */
   void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
-            const Style& style);
+            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
+            const std::string& dash_array = {});
 
   /**
    * \brief Add a plot consisting of one y-axis sequence of size N. The x-axis
@@ -65,28 +70,76 @@ class Plot2D : public Figure {
    * 0 to N-1.
    *
    * \param x_data x-axis data
-   * \param Style style
+   * \param color Stroke color
+   * \param stroke_width Line width
+   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
    */
-  void Plot(const std::vector<Real>& y_data, const Style& style);
+  void Plot(const std::vector<Real>& y_data,
+            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
+            const std::string& dash_array = {});
 
   /**
    * \brief Add a plot using a vector as x axis values and a lambda function
-   * such that y=function(x) \param x x values \param function A function such
-   * that y=function(x) \param style A style for the plot
+   * such that y=function(x)
+   *
+   * \param x x values
+   * \param function A function such that y=function(x)
+   * \param color Stroke color
+   * \param stroke_width Line width
+   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
    */
   void Plot(const std::vector<Real>& x_data,
-            const std::function<Real(Real)>& function, const Style& style);
+            const std::function<Real(Real)>& function,
+            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
+            const std::string& dash_array = {});
 
   /**
-   * \brief Add an categorical plot with discrete text labels on the x axis and
+   * \brief Add a categorical plot with discrete text labels on the x axis and
    * Real numbers on the y axis.
    *
    * \param x_data categorical x
    * \param y_data y-axis data axis
-   * \param style style
+   * \param color Stroke color
+   * \param stroke_width Line width
+   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
    */
   void Plot(const std::vector<std::string>& x_data,
-            const std::vector<Real>& y_data, const Style& style);
+            const std::vector<Real>& y_data,
+            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
+            const std::string& dash_array = {});
+
+  /**
+   * \brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
+   * x-axis sequence will be automatically deduced as an 1-increment sequence
+   * from 0 to N-1.
+   *
+   * \param x_data categorical x
+   * \param y_data y-axis data axis
+   * \param color Stroke color
+   * \param stroke_width Line width
+   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Scatter(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
+               const Color& color = Color{0, 0, 0}, const float radius = 2);
+
+  /**
+   * \brief Add a categorical SCATTER plot with discrete text labels on the x
+   * axis and Real numbers on the y axis.
+   *
+   * \param x_data categorical x
+   * \param y_data y-axis data axis
+   * \param color Stroke color
+   * \param stroke_width Line width
+   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Scatter(const std::vector<std::string>& x_data,
+               const std::vector<Real>& y_data,
+               const Color& color = Color{0, 0, 0}, const float radius = 2);
 
   /**
    * \brief Set hold on/off
@@ -261,7 +314,11 @@ class Plot2D : public Figure {
 
   void DrawData();
   void DrawNumericData();
+  void DrawNumericPath(const DataSeries& plot);
+  void DrawNumericScatter(const DataSeries& plot);
   void DrawCategoricalData();
+  void DrawCategoricalPath(const CategoricalDataSeries& plot);
+  void DrawCategoricalScatter(const CategoricalDataSeries& plot);
 
   void DrawTitle();
 

@@ -16,8 +16,10 @@
  * limitations under the License.
  */
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -30,6 +32,9 @@ using plotcpp::GroupFigure;
 using plotcpp::Plot2D;
 using plotcpp::Real;
 
+std::random_device rd;
+std::mt19937 gen(rd());
+
 static void NumericPlot() {
   static const std::string NUMERIC_PLOT_FILENAME{"numeric_plot2d.svg"};
   Plot2D plot2d;
@@ -41,8 +46,9 @@ static void NumericPlot() {
 
   std::vector<Real> data_x0 =
       plotcpp::ranges::MakeRange<Real>(0.0f, 10.0f, 0.001f);
-  plot2d.Plot(data_x0, [](auto x) { return std::sin(2 * M_PI * x) * exp(-x); },
-              {{0, 0, 0}, 3, ""});
+  plot2d.Plot(
+      data_x0, [](auto x) { return std::sin(2 * M_PI * x) * exp(-x); },
+      {0, 0, 0}, 3, "");
 
   std::vector<Real> data_x1 =
       plotcpp::ranges::MakeRange<Real>(0.0f, 10.0f, 0.01f);
@@ -51,7 +57,7 @@ static void NumericPlot() {
     Real y = 1 / x;
     data_y1.push_back(y);
   }
-  plot2d.Plot(data_x1, data_y1, {{255, 32, 32}, 2, "10,5,2,5"});
+  plot2d.Plot(data_x1, data_y1, {255, 32, 32}, 2, "10,5,2,5");
 
   std::vector<Real> data_x2 =
       plotcpp::ranges::MakeRange<Real>(10.0f, 0.0f, -0.01f);
@@ -60,7 +66,19 @@ static void NumericPlot() {
     Real y = std::pow(x - 5, 3);
     data_y2.push_back(y);
   }
-  plot2d.Plot(data_x2, data_y2, {{32, 255, 32}, 2, "5,5"});
+  plot2d.Plot(data_x2, data_y2, {32, 255, 32}, 2, "5,5");
+
+  std::vector<Real> scatter_x;
+  std::vector<Real> scatter_y;
+  const Real scatter_x0 = 4.0f;
+  const Real scatter_y0 = 2.71f;
+  static std::normal_distribution<Real> distr(0.0f, 1.0f);
+  static std::default_random_engine re;
+  for (std::size_t i = 0; i < 11; ++i) {
+    scatter_x.push_back(scatter_x0 + distr(gen));
+    scatter_y.push_back(scatter_y0 + distr(gen));
+  }
+  plot2d.Scatter(scatter_x, scatter_y, {64, 64, 192}, 5);
 
   plot2d.SetGrid(true);
   plot2d.SetYRange(-5.0f, 5.0f);
@@ -69,7 +87,7 @@ static void NumericPlot() {
   plot2d.AddYMarker(2.71f);
   plot2d.AddYMarker(5.10f);
 
-  plot2d.SetLegend({"Exp sine", "Hyperbola", "Cubic"});
+  plot2d.SetLegend({"Exp sine", "Hyperbola", "Cubic", "Scatter"});
 
   plot2d.Build();
   plot2d.Save(NUMERIC_PLOT_FILENAME);
@@ -83,8 +101,8 @@ void CategoricalPlot() {
   const std::vector<Real> y0_annotated_data{-1, 1, 5};
   const std::vector<Real> y1_annotated_data{0, 2, 4};
 
-  plot2d.Plot(x_annotated_data, y0_annotated_data, {{128, 128, 255}, 2, ""});
-  plot2d.Plot(x_annotated_data, y1_annotated_data, {{255, 128, 128}, 2, ""});
+  plot2d.Plot(x_annotated_data, y0_annotated_data, {128, 128, 255}, 2, "");
+  plot2d.Plot(x_annotated_data, y1_annotated_data, {255, 128, 128}, 2, "");
 
   plot2d.SetSize(600, 450);
   plot2d.SetTitle("Categorical Plot2D");
@@ -105,16 +123,20 @@ void GroupPlot() {
   Plot2D p1;
 
   const auto x0 = plotcpp::ranges::MakeRange<Real>(0.0, 2 * M_PI, 0.01);
-  p0.Plot(x0, [](Real x) { return std::sin(x); }, {{0, 0, 0}, 2, ""});
+  p0.Plot(
+      x0, [](Real x) { return std::sin(x); }, {0, 0, 0}, 2, "");
   p0.SetTitle("Sine");
   p0.SetXLabel("x");
   p0.SetYLabel("y = sin(x)");
 
   p1.SetHold(true);
   const auto x1 = plotcpp::ranges::MakeRange<Real>(1, 6, 0.01);
-  p1.Plot(x1, [](Real x) { return x * x; }, {{255, 0, 0}, 2, ""});
-  p1.Plot(x1, [](Real x) { return x; }, {{0, 255, 0}, 2, ""});
-  p1.Plot(x1, [](Real x) { return std::log2(x); }, {{0, 0, 255}, 2, ""});
+  p1.Plot(
+      x1, [](Real x) { return x * x; }, {255, 0, 0}, 2, "");
+  p1.Plot(
+      x1, [](Real x) { return x; }, {0, 255, 0}, 2, "");
+  p1.Plot(
+      x1, [](Real x) { return std::log2(x); }, {0, 0, 255}, 2, "");
   p1.SetXLabel("x");
   p1.SetYLabel("y");
   p1.SetGrid(true);

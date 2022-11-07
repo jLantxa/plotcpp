@@ -198,6 +198,23 @@ xmlNodePtr Document::DrawRect(const Rect& rect, xmlNodePtr parent_node,
   return node;
 }
 
+xmlNodePtr Document::DrawCircle(const Circle& circle, xmlNodePtr parent_node,
+                                const std::string& id) {
+  xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
+  auto* node = AppendNode(parent, "circle");
+
+  if (!id.empty()) {
+    SetAttribute(node, "id", id);
+  }
+
+  SetAttribute(node, "cx", std::to_string(circle.cx));
+  SetAttribute(node, "cy", std::to_string(circle.cy));
+  SetAttribute(node, "r", std::to_string(circle.r));
+  SetAttribute(node, "fill", circle.fill_color.ToString());
+
+  return node;
+}
+
 xmlNodePtr Document::DrawPath(const Path& path, xmlNodePtr parent_node,
                               const std::string& id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
