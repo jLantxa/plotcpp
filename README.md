@@ -54,7 +54,6 @@ To compile your program you will need to link the shared library you installed e
 ### Plot2D
 The `Plot2D` figure can plot single variable functions. A number of features are lacking for this figure type:
 * Smart subdivision of axes
-* Scatter plots
 
 ![Example](examples/numeric_plot2d.png)
 ![Example](examples/categorical_plot2d.png)
