@@ -182,19 +182,11 @@ class Plot2D : public Figure {
     std::vector<Real> x;
     std::vector<Real> y;
     Style style;
-    std::string label;
   };
 
   struct CategoricalDataSeries {
-    std::vector<std::string> x;
     std::vector<Real> y;
     Style style;
-
-    void Clear() {
-      x.clear();
-      y.clear();
-      style = {};
-    }
   };
 
   bool m_hold = true;
@@ -217,7 +209,10 @@ class Plot2D : public Figure {
   float m_zoom_y = 1.0f;
 
   // Categorical data series
-  CategoricalDataSeries m_categorical_data;
+  std::vector<std::string> m_categorical_labels;
+  std::vector<CategoricalDataSeries> m_categorical_data;
+
+  std::vector<std::string> m_legend_labels;
 
   float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
 

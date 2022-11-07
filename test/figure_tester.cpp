@@ -80,15 +80,18 @@ void CategoricalPlot() {
 
   Plot2D plot2d;
   const std::vector<std::string> x_annotated_data{"Cat. 1", "Cat. 2", "Cat. 3"};
-  const std::vector<Real> y_annotated_data{-1, 1, 5};
+  const std::vector<Real> y0_annotated_data{-1, 1, 5};
+  const std::vector<Real> y1_annotated_data{0, 2, 4};
 
-  plot2d.Plot(x_annotated_data, y_annotated_data, {{128, 128, 255}, 2, ""});
+  plot2d.Plot(x_annotated_data, y0_annotated_data, {{128, 128, 255}, 2, ""});
+  plot2d.Plot(x_annotated_data, y1_annotated_data, {{255, 128, 128}, 2, ""});
 
   plot2d.SetSize(600, 450);
   plot2d.SetTitle("Categorical Plot2D");
   plot2d.SetXLabel("Categories");
   plot2d.SetYLabel("y axis");
   plot2d.SetGrid(true);
+  plot2d.SetLegend({"Plot 1", "Plot 2"});
 
   plot2d.Build();
   plot2d.Save(CATEGORICAL_PLOT_FILENAME);
