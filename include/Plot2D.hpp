@@ -40,13 +40,6 @@ class Plot2D : public Figure {
  public:
   using Color = svg::RGB;
 
-  struct Style {
-    Color color;
-    float stroke;
-    std::string dash_array;
-    bool scatter;
-  };
-
   Plot2D();
 
   /**
@@ -232,6 +225,13 @@ class Plot2D : public Figure {
   void Build() override;
 
  protected:
+  struct Style {
+    Color color;
+    float stroke;
+    std::string dash_array;
+    bool scatter;
+  };
+
   struct DataSeries {
     std::vector<Real> x;
     std::vector<Real> y;
