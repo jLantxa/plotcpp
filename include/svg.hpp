@@ -118,10 +118,10 @@ class Document {
   xmlDocPtr GetDoc();
 
   /**
-   * \brief Set the Size object
+   * @brief Set the Size object
    *
-   * \param width Image width in px
-   * \param height Image height in px
+   * @param width Image width in px
+   * @param height Image height in px
    */
   void SetSize(unsigned int width, unsigned int height);
 

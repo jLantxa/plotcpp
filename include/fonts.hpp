@@ -34,12 +34,12 @@ struct FontData {
 float EmToPx(float em);
 
 /**
- * \brief Calculate an approximation of the bounding box of a text in em.
+ * @brief Calculate an approximation of the bounding box of a text in em.
  *
- * \param text Text string
- * \param font Font family
- * \param size Font size
- * \return A std::pair with the width and height of the bounding box.
+ * @param text Text string
+ * @param font Font family
+ * @param size Font size
+ * @return A std::pair with the width and height of the bounding box.
  */
 std::pair<float, float> CalculateTextSize(const std::string& text,
                                           const std::string& font, float size);

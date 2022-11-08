@@ -38,11 +38,11 @@ struct Color {
 
 namespace adaptor {
 /**
- * \brief Convert any numeric type to the internal real representation
+ * @brief Convert any numeric type to the internal real representation
  *
- * \tparam T Custom numeric type
- * \param x Value
- * \return Real Conversion from T to Real
+ * @tparam T Custom numeric type
+ * @param x Value
+ * @return Real Conversion from T to Real
  */
 template <typename T>
 Real Real(T x) {
@@ -50,12 +50,12 @@ Real Real(T x) {
 }
 
 /**
- * \brief Convert a vector of any numeric type to the internal real
+ * @brief Convert a vector of any numeric type to the internal real
  * representation
  *
- * \tparam T Custom numeric type
- * \param v Vector
- * \return std::vector<Real> Conversion from T to Real
+ * @tparam T Custom numeric type
+ * @param v Vector
+ * @return std::vector<Real> Conversion from T to Real
  */
 template <typename T>
 std::vector<::plotcpp::Real> Real(std::vector<T> v) {
@@ -79,10 +79,10 @@ template <typename T>
 using Interval = std::pair<T, T>;
 
 /**
- * \brief Returns a vector of Real numbers from a to b in equally spaced
+ * @brief Returns a vector of Real numbers from a to b in equally spaced
  * intervals except, maybe, the last interval.
  *
- * \tparam T Custom numeric type
+ * @tparam T Custom numeric type
  */
 template <typename T>
 std::vector<T> MakeRange(T start, T end, T step) {
@@ -119,11 +119,11 @@ std::vector<T> MakeRange(T start, T end, T step) {
 }
 
 /**
- * \brief Generates a vector of Real y as a function of a vector of Real x.
+ * @brief Generates a vector of Real y as a function of a vector of Real x.
  *
- * \param x Input vector
- * \param function A function f such that y=f(x)
- * \return A vector y such that y=function(x)
+ * @param x Input vector
+ * @param function A function f such that y=f(x)
+ * @return A vector y such that y=function(x)
  */
 template <typename T>
 std::vector<T> Generate(const std::vector<T>& x,
@@ -144,7 +144,7 @@ std::vector<T> Generate(const std::vector<T>& x,
 }
 
 /**
- * \brief Partitions a range into a number of intermediate values
+ * @brief Partitions a range into a number of intermediate values
  * from the minumum value to the maximum value.
  */
 template <typename T>
@@ -168,7 +168,7 @@ std::set<T> TrivialPartitionRange(const Interval<T>& range,
 }
 
 /**
- * \brief Partitions a range into a number of intermediate values
+ * @brief Partitions a range into a number of intermediate values
  * showing relevant values.
  */
 template <typename T>

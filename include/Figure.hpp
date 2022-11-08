@@ -29,25 +29,25 @@ namespace plotcpp {
 class Figure {
  public:
   /**
-   * \brief Build the figure with its current data and configuration. This sets
+   * @brief Build the figure with its current data and configuration. This sets
    * the figure ready to be displayed or saved.
    */
   virtual void Build() = 0;
 
   /**
-   * \brief Render the figure on a window.
+   * @brief Render the figure on a window.
    */
   void Show() const;
 
   /**
-   * \brief Render and save the figure to a file.
+   * @brief Render and save the figure to a file.
    *
-   * \param filepath Path to a file to save the figure.
+   * @param filepath Path to a file to save the figure.
    */
   void Save(const std::string& filepath) const;
 
   /**
-   * \brief Return the SVG representation of this Figure.
+   * @brief Return the SVG representation of this Figure.
    * This function must be called after Build
    */
   std::string GetSVGText() const;
@@ -55,38 +55,38 @@ class Figure {
   svg::Document& GetSVGDocument();
 
   /**
-   * \brief Set figure title.
+   * @brief Set figure title.
    *
-   * \param title
+   * @param title
    */
   void SetTitle(const std::string& title);
 
   /**
-   * \brief Returns the figure's title.
+   * @brief Returns the figure's title.
    *
-   * \return title
+   * @return title
    */
   std::string Title() const;
 
   /**
-   * \brief Set figure size in pixels.
+   * @brief Set figure size in pixels.
    *
-   * \param width
-   * \param height
+   * @param width
+   * @param height
    */
   void SetSize(unsigned int width, unsigned int height);
 
   /**
-   * \brief Returns the figure width in pixels.
+   * @brief Returns the figure width in pixels.
    *
-   * \return width
+   * @return width
    */
   unsigned int Width() const;
 
   /**
-   * \brief Returns the figure height in pixels.
+   * @brief Returns the figure height in pixels.
    *
-   * \return height
+   * @return height
    */
   unsigned int Height() const;
 
@@ -106,7 +106,7 @@ class Figure {
 
  private:
   /**
-   * \brief Save plot to svg format
+   * @brief Save plot to svg format
    */
   void SaveSVG(const std::string& filepath) const;
 };

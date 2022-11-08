@@ -34,21 +34,21 @@
 namespace plotcpp {
 
 /**
- * \brief A 2D plot consisting of one or more 2D sets of points
+ * @brief A 2D plot consisting of one or more 2D sets of points
  */
 class Plot2D : public Figure {
  public:
   Plot2D();
 
   /**
-   * \brief Add a plot consisting of an x-axis sequence and a y-axis sequence
+   * @brief Add a plot consisting of an x-axis sequence and a y-axis sequence
    * of the same length
    *
-   * \param x_data x-axis data
-   * \param y_data y-axis data
-   * \param color Stroke color
-   * \param stroke_width Line width
-   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * @param x_data x-axis data
+   * @param y_data y-axis data
+   * @param color Stroke color
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
   void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
@@ -56,14 +56,14 @@ class Plot2D : public Figure {
             const std::string& dash_array = {});
 
   /**
-   * \brief Add a plot consisting of one y-axis sequence of size N. The x-axis
+   * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
    * sequence will be automatically deduced as an 1-increment sequence from
    * 0 to N-1.
    *
-   * \param x_data x-axis data
-   * \param color Stroke color
-   * \param stroke_width Line width
-   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * @param x_data x-axis data
+   * @param color Stroke color
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
   void Plot(const std::vector<Real>& y_data,
@@ -71,14 +71,14 @@ class Plot2D : public Figure {
             const std::string& dash_array = {});
 
   /**
-   * \brief Add a plot using a vector as x axis values and a lambda function
+   * @brief Add a plot using a vector as x axis values and a lambda function
    * such that y=function(x)
    *
-   * \param x x values
-   * \param function A function such that y=function(x)
-   * \param color Stroke color
-   * \param stroke_width Line width
-   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * @param x x values
+   * @param function A function such that y=function(x)
+   * @param color Stroke color
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
   void Plot(const std::vector<Real>& x_data,
@@ -87,14 +87,14 @@ class Plot2D : public Figure {
             const std::string& dash_array = {});
 
   /**
-   * \brief Add a categorical plot with discrete text labels on the x axis and
+   * @brief Add a categorical plot with discrete text labels on the x axis and
    * Real numbers on the y axis.
    *
-   * \param x_data categorical x
-   * \param y_data y-axis data axis
-   * \param color Stroke color
-   * \param stroke_width Line width
-   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * @param x_data categorical x
+   * @param y_data y-axis data axis
+   * @param color Stroke color
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
   void Plot(const std::vector<std::string>& x_data,
@@ -103,29 +103,29 @@ class Plot2D : public Figure {
             const std::string& dash_array = {});
 
   /**
-   * \brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
+   * @brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
    * x-axis sequence will be automatically deduced as an 1-increment sequence
    * from 0 to N-1.
    *
-   * \param x_data categorical x
-   * \param y_data y-axis data axis
-   * \param color Stroke color
-   * \param stroke_width Line width
-   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * @param x_data categorical x
+   * @param y_data y-axis data axis
+   * @param color Stroke color
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
   void Scatter(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
                const Color& color = Color{0, 0, 0}, const float radius = 2);
 
   /**
-   * \brief Add a categorical SCATTER plot with discrete text labels on the x
+   * @brief Add a categorical SCATTER plot with discrete text labels on the x
    * axis and Real numbers on the y axis.
    *
-   * \param x_data categorical x
-   * \param y_data y-axis data axis
-   * \param color Stroke color
-   * \param stroke_width Line width
-   * \param dash_array Dash array (length of draw / no-draw segments in pt
+   * @param x_data categorical x
+   * @param y_data y-axis data axis
+   * @param color Stroke color
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
   void Scatter(const std::vector<std::string>& x_data,
@@ -133,7 +133,7 @@ class Plot2D : public Figure {
                const Color& color = Color{0, 0, 0}, const float radius = 2);
 
   /**
-   * \brief Set hold on/off
+   * @brief Set hold on/off
    * Setting the hold on allows multiple data series to be plotted. If hold is
    * off, plotting overwrites the plot data.
    */
@@ -143,18 +143,18 @@ class Plot2D : public Figure {
   void SetGrid(bool enable);
 
   /**
-   * \brief Set a range for the x axis
+   * @brief Set a range for the x axis
    *
-   * \param x0 Minimum value
-   * \param x1 Maximum value
+   * @param x0 Minimum value
+   * @param x1 Maximum value
    */
   void SetXRange(Real x0, Real x1);
 
   /**
-   * \brief Set a range for the y axis
+   * @brief Set a range for the y axis
    *
-   * \param y0 Minimum value
-   * \param y1 Maximum value
+   * @param y0 Minimum value
+   * @param y1 Maximum value
    */
   void SetYRange(Real y0, Real y1);
 
@@ -174,9 +174,9 @@ class Plot2D : public Figure {
   void ClearMarkers();
 
   /**
-   * \brief Set the legend text for all plots.
+   * @brief Set the legend text for all plots.
    *
-   * \param labels Vector of labels, in the same order they were `plotted`, that
+   * @param labels Vector of labels, in the same order they were `plotted`, that
    * will appear in the legend box.
    * Excess labels will be ignored. If not enough labels are provided, the
    * corresponding plots will not shot a label. Calling this function deletes
@@ -188,28 +188,28 @@ class Plot2D : public Figure {
   void ClearLegend();
 
   /**
-   * \brief Set a label for the x axis.
-   * \param label
+   * @brief Set a label for the x axis.
+   * @param label
    */
   void SetXLabel(const std::string& label);
 
   /**
-   * \brief Set a label for the y axis.
-   * \param label
+   * @brief Set a label for the y axis.
+   * @param label
    */
   void SetYLabel(const std::string& label);
 
   /**
-   * \brief Returns the x axis label
+   * @brief Returns the x axis label
    *
-   * \return x axis label
+   * @return x axis label
    */
   std::string GetXLabel() const;
 
   /**
-   * \brief Returns the y axis label
+   * @brief Returns the y axis label
    *
-   * \return y axis label
+   * @return y axis label
    */
   std::string GetYLabel() const;
 

@@ -41,11 +41,11 @@ class GroupFigure : public Figure {
   };
 
   /**
-   * \brief Add a subplot at the specified location in the group.
+   * @brief Add a subplot at the specified location in the group.
    *
-   * \param figure A pointer to a figure.
-   * \param row Row
-   * \param col Column
+   * @param figure A pointer to a figure.
+   * @param row Row
+   * @param col Column
    */
   void Subplot(Figure* figure, std::size_t row, std::size_t col) {
     if ((row >= _rows) && (col >= _cols)) {
@@ -56,11 +56,11 @@ class GroupFigure : public Figure {
   }
 
   /**
-   * \brief Returns a pointer to the figure at the specified location in the
+   * @brief Returns a pointer to the figure at the specified location in the
    * group.
    *
-   * \param row Row
-   * \param col Column
+   * @param row Row
+   * @param col Column
    */
   Figure* GetFigure(std::size_t row, std::size_t col) {
     return m_figures[_cols * row + col];
