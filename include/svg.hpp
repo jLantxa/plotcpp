@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+#include "utility.hpp"
+
 namespace plotcpp {
 
 namespace svg {
@@ -36,17 +38,9 @@ xmlNode* AppendNode(xmlNode* parent, const std::string& name);
 void SetAttribute(xmlNode* node, const std::string& name,
                   const std::string& value, const std::string& unit = "");
 
-struct RGB {
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
-
-  std::string ToString() const;
-};
-
 struct Line {
   float x1, y1, x2, y2;
-  RGB stroke_color{0, 0, 0};
+  Color stroke_color{0, 0, 0};
   float stroke_opacity = 1.0f;
   float stroke_width = 1;
 };
@@ -56,10 +50,10 @@ struct Rect {
   float width, height;
   float rx = 0;
   float ry = 0;
-  RGB stroke_color{0, 0, 0};
+  Color stroke_color{0, 0, 0};
   float stroke_opacity = 1.0f;
   float stroke_width = 1;
-  RGB fill_color{255, 255, 255};
+  Color fill_color{255, 255, 255};
   float fill_opacity = 1.0f;
   bool fill_transparent = true;
 };
@@ -67,7 +61,7 @@ struct Rect {
 struct Circle {
   float cx, cy;
   float r;
-  RGB fill_color{0, 0, 0};
+  Color fill_color{0, 0, 0};
 };
 
 struct PathCommand {
@@ -88,9 +82,9 @@ struct PathCommand {
 struct Path {
   std::vector<PathCommand> commands;
   float stroke_width = 1;
-  RGB stroke_color{0, 0, 0};
+  Color stroke_color{0, 0, 0};
   float stroke_opacity = 1.0f;
-  RGB fill_color{0, 0, 0};
+  Color fill_color{0, 0, 0};
   float fill_opacity = 1.0f;
   bool fill_transparent = true;
 
@@ -103,7 +97,7 @@ struct Text {
   float x, y;
   float font_size = 12;
   std::string font_family;
-  RGB color = {0, 0, 0};
+  Color color = {0, 0, 0};
 };
 
 /**
@@ -134,7 +128,7 @@ class Document {
   void Append(xmlNodePtr node);
 
   /** Draw background color */
-  xmlNodePtr DrawBackground(RGB color);
+  xmlNodePtr DrawBackground(Color color);
 
   /** Draw a line */
   xmlNodePtr DrawLine(const Line& line, xmlNodePtr parent_node = nullptr,

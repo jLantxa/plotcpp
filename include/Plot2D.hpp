@@ -38,8 +38,6 @@ namespace plotcpp {
  */
 class Plot2D : public Figure {
  public:
-  using Color = svg::RGB;
-
   Plot2D();
 
   /**

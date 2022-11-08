@@ -20,6 +20,7 @@
 #define _PLOTCPP_INCLUDE_UTILITY_HPP_
 
 #include <cmath>
+#include <cstdint>
 #include <functional>
 #include <set>
 #include <vector>
@@ -28,6 +29,12 @@ namespace plotcpp {
 
 /** Internal real number type */
 using Real = double;
+
+struct Color {
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
+};
 
 namespace adaptor {
 /**

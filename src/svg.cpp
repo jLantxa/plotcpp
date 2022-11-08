@@ -54,10 +54,10 @@ std::string Document::GetText() const {
   return std::string{(char*)xml_str};
 }
 
-std::string RGB::ToString() const {
+static std::string ColorToString(const Color& color) {
   std::stringstream ss;
-  ss << "RGB(" << std::to_string(r) << ", " << std::to_string(g) << ", "
-     << std::to_string(b) << ")";
+  ss << "RGB(" << std::to_string(color.r) << ", " << std::to_string(color.g)
+     << ", " << std::to_string(color.b) << ")";
   return ss.str();
 }
 
@@ -127,7 +127,7 @@ xmlNodePtr Document::AddGroup(xmlNodePtr parent_node, const std::string& id) {
 
 xmlNodePtr Document::Defs() { return m_defs; }
 
-xmlNodePtr Document::DrawBackground(RGB color) {
+xmlNodePtr Document::DrawBackground(Color color) {
   auto* node = AppendNode(m_root, "rect");
 
   SetAttribute(node, "id", "_background");
@@ -141,9 +141,7 @@ xmlNodePtr Document::DrawBackground(RGB color) {
   style_value_ss << "stroke-opacity:"
                  << "1.0"
                  << "; "
-                 << "fill: RGB(" << std::to_string(color.r) << ", "
-                 << std::to_string(color.g) << ", " << std::to_string(color.b)
-                 << ");";
+                 << "fill: " << ColorToString(color) << ";";
   SetAttribute(node, "style", style_value_ss.str());
 
   return node;
@@ -162,7 +160,7 @@ xmlNodePtr Document::DrawLine(const Line& line, xmlNodePtr parent_node,
   SetAttribute(node, "y1", std::to_string(line.y1));
   SetAttribute(node, "x2", std::to_string(line.x2));
   SetAttribute(node, "y2", std::to_string(line.y2));
-  SetAttribute(node, "stroke", line.stroke_color.ToString());
+  SetAttribute(node, "stroke", ColorToString(line.stroke_color));
   SetAttribute(node, "stroke-width", std::to_string(line.stroke_width));
   SetAttribute(node, "stroke-opacity", std::to_string(line.stroke_opacity));
 
@@ -184,14 +182,14 @@ xmlNodePtr Document::DrawRect(const Rect& rect, xmlNodePtr parent_node,
   SetAttribute(node, "height", std::to_string(rect.height));
   SetAttribute(node, "rx", std::to_string(rect.rx));
   SetAttribute(node, "ry", std::to_string(rect.ry));
-  SetAttribute(node, "stroke", rect.stroke_color.ToString());
+  SetAttribute(node, "stroke", ColorToString(rect.stroke_color));
   SetAttribute(node, "stroke-width", std::to_string(rect.stroke_width));
   SetAttribute(node, "stroke-opacity", std::to_string(rect.stroke_opacity));
 
   if (rect.fill_transparent == true) {
     SetAttribute(node, "fill", "transparent");
   } else {
-    SetAttribute(node, "fill", rect.fill_color.ToString());
+    SetAttribute(node, "fill", ColorToString(rect.fill_color));
     SetAttribute(node, "fill-opacity", std::to_string(rect.fill_opacity));
   }
 
@@ -210,7 +208,7 @@ xmlNodePtr Document::DrawCircle(const Circle& circle, xmlNodePtr parent_node,
   SetAttribute(node, "cx", std::to_string(circle.cx));
   SetAttribute(node, "cy", std::to_string(circle.cy));
   SetAttribute(node, "r", std::to_string(circle.r));
-  SetAttribute(node, "fill", circle.fill_color.ToString());
+  SetAttribute(node, "fill", ColorToString(circle.fill_color));
 
   return node;
 }
@@ -232,11 +230,11 @@ xmlNodePtr Document::DrawPath(const Path& path, xmlNodePtr parent_node,
   if (path.fill_transparent == true) {
     SetAttribute(node, "fill", "transparent");
   } else {
-    SetAttribute(node, "fill", path.fill_color.ToString());
+    SetAttribute(node, "fill", ColorToString(path.fill_color));
     SetAttribute(node, "fill-opacity", std::to_string(path.fill_opacity));
   }
 
-  SetAttribute(node, "stroke", path.stroke_color.ToString());
+  SetAttribute(node, "stroke", ColorToString(path.stroke_color));
   SetAttribute(node, "stroke-width", std::to_string(path.stroke_width));
   SetAttribute(node, "d", path_ss.str());
 
