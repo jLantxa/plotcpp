@@ -80,7 +80,7 @@ Subplots added to the group can still be modified independently, but be aware th
 ![Example](examples/group.png)
 
 # Planned features
-* Scatter plot
-* Annotated heatmap
+* Bar plot (standard and stacked) with configurable baselines.
 * Histogram
+* Annotated heatmap
 * Pie chart
