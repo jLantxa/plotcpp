@@ -184,6 +184,7 @@ class Plot2D : public Figure {
 
   /**
    * \brief Set the legend text for all plots.
+   *
    * \param labels Vector of labels, in the same order they were `plotted`, that
    * will appear in the legend box.
    * Excess labels will be ignored. If not enough labels are provided, the
@@ -209,12 +210,14 @@ class Plot2D : public Figure {
 
   /**
    * \brief Returns the x axis label
+   *
    * \return x axis label
    */
   std::string GetXLabel() const;
 
   /**
    * \brief Returns the y axis label
+   *
    * \return y axis label
    */
   std::string GetYLabel() const;
@@ -225,9 +228,7 @@ class Plot2D : public Figure {
   /** Clear plot data */
   void ClearData();
 
-  /**
-   * \brief Build the figure
-   */
+  /** Build the figure */
   void Build() override;
 
  protected:

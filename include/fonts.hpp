@@ -35,6 +35,7 @@ float EmToPx(float em);
 
 /**
  * \brief Calculate an approximation of the bounding box of a text in em.
+ *
  * \param text Text string
  * \param font Font family
  * \param size Font size

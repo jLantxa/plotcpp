@@ -42,6 +42,7 @@ class GroupFigure : public Figure {
 
   /**
    * \brief Add a subplot at the specified location in the group.
+   *
    * \param figure A pointer to a figure.
    * \param row Row
    * \param col Column
@@ -56,7 +57,10 @@ class GroupFigure : public Figure {
 
   /**
    * \brief Returns a pointer to the figure at the specified location in the
-   * group. \param row Row \param col Column
+   * group.
+   *
+   * \param row Row
+   * \param col Column
    */
   Figure* GetFigure(std::size_t row, std::size_t col) {
     return m_figures[_cols * row + col];

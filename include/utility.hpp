@@ -74,6 +74,7 @@ using Interval = std::pair<T, T>;
 /**
  * \brief Returns a vector of Real numbers from a to b in equally spaced
  * intervals except, maybe, the last interval.
+ *
  * \tparam T Custom numeric type
  */
 template <typename T>
@@ -112,6 +113,7 @@ std::vector<T> MakeRange(T start, T end, T step) {
 
 /**
  * \brief Generates a vector of Real y as a function of a vector of Real x.
+ *
  * \param x Input vector
  * \param function A function f such that y=f(x)
  * \return A vector y such that y=function(x)
