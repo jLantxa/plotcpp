@@ -59,7 +59,7 @@ class Plot2D : public Figure {
   /**
    * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
    * sequence will be automatically deduced as an 1-increment sequence from
-   * 0 to N-1.
+   * 0 to N-1 or as the categories set by previous plots.
    *
    * @param x_data x-axis data
    * @param color Stroke color
@@ -215,7 +215,7 @@ class Plot2D : public Figure {
   std::string GetYLabel() const;
 
   /** Clear figure configuration */
-  void Clear();
+  void Clear() override;
 
   /** Clear plot data */
   void ClearData();

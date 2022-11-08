@@ -65,11 +65,20 @@ void Plot2D::Plot(const std::vector<Real>& x_data,
 
 void Plot2D::Plot(const std::vector<Real>& y_data, const Color& color,
                   const float stroke_width, const std::string& dash_array) {
-  std::vector<Real> x_data;
-  x_data.resize(y_data.size());
+  if (m_data_type == DataType::NUMERIC) {
+    std::vector<Real> x_data;
+    x_data.resize(y_data.size());
+    std::iota(x_data.begin(), x_data.end(), 1.0f);
+    Plot(x_data, y_data, color, stroke_width, dash_array);
+  } else if (m_data_type == DataType::CATEGORICAL) {
+    if ((m_categorical_labels.size() > 0) &&
+        (m_categorical_labels.size() != y_data.size())) {
+      return;
+    }
 
-  std::iota(x_data.begin(), x_data.end(), 1.0f);
-  Plot(x_data, y_data, color, stroke_width, dash_array);
+    const Style style = {color, stroke_width, dash_array, false};
+    m_categorical_data.emplace_back(CategoricalDataSeries{y_data, style});
+  }
 }
 
 void Plot2D::Plot(const std::vector<Real>& x_data,
@@ -86,12 +95,17 @@ void Plot2D::Plot(const std::vector<std::string>& x_data,
     return;
   }
 
-  // Reset data if labels are different
-  const bool labels_are_equal = (x_data == m_categorical_labels);
-  if (!labels_are_equal) {
+  // Reset data if the number of labels is different
+  const bool should_reset_data =
+      (x_data.size() != m_categorical_labels.size()) &&
+      (m_categorical_data.size() > 0);
+  if (should_reset_data) {
     m_categorical_data.clear();
-    m_categorical_labels = x_data;
   }
+
+  // Reset labels
+  m_categorical_data.clear();
+  m_categorical_labels = x_data;
 
   const Style style = {color, stroke_width, dash_array, false};
   m_categorical_data.emplace_back(CategoricalDataSeries{y_data, style});

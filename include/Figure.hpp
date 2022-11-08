@@ -36,6 +36,8 @@ class Figure {
    */
   virtual void Build() = 0;
 
+  virtual void Clear() = 0;
+
   /**
    * @brief Render the figure on a window.
    */

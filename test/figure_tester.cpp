@@ -102,7 +102,7 @@ void CategoricalPlot() {
   const std::vector<Real> y1_annotated_data{0, 2, 4};
 
   plot2d.Plot(x_annotated_data, y0_annotated_data, {128, 128, 255}, 2, "");
-  plot2d.Plot(x_annotated_data, y1_annotated_data, {255, 128, 128}, 2, "");
+  plot2d.Plot(y1_annotated_data, {255, 128, 128}, 2, "");
 
   plot2d.SetSize(600, 450);
   plot2d.SetTitle("Categorical Plot2D");

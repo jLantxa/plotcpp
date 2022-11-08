@@ -34,11 +34,7 @@ class GroupFigure : public Figure {
   static_assert(_cols > 0);
 
  public:
-  GroupFigure() {
-    for (auto& figure_ptr : m_figures) {
-      figure_ptr = nullptr;
-    }
-  };
+  GroupFigure() { ClearFigures(); };
 
   /**
    * @brief Add a subplot at the specified location in the group.
@@ -65,6 +61,8 @@ class GroupFigure : public Figure {
   Figure* GetFigure(std::size_t row, std::size_t col) {
     return m_figures[_cols * row + col];
   }
+
+  void Clear() override { ClearFigures(); }
 
   void Build() override {
     m_svg.DrawBackground({255, 255, 255});
@@ -99,6 +97,12 @@ class GroupFigure : public Figure {
 
   static constexpr unsigned int HORIZONTAL_MARGIN = 20;
   static constexpr unsigned int VERTICAL_MARGIN = 20;
+
+  void ClearFigures() {
+    for (auto& figure_ptr : m_figures) {
+      figure_ptr = nullptr;
+    }
+  }
 
 };  // namespace plotcpp
 
