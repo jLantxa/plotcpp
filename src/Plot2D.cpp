@@ -707,9 +707,13 @@ void Plot2D::DrawYAxis() {
                           .stroke_width = 1};
     m_svg.DrawLine(marker_line);
 
+    float font_em =
+        m_axis_font_size /
+        12.0f;  // Some SVG renderers don't support baseline alignment
     const std::string marker_text = fmt::format("{:.2f}", marker);
     auto text_node = m_svg.DrawText(svg::Text{
-        marker_text, x - 2 * MARKER_LENGTH, y, m_axis_font_size, TEXT_FONT});
+        marker_text, x - 2 * MARKER_LENGTH, y + fonts::EmToPx(font_em / 4.0f),
+        m_axis_font_size, TEXT_FONT});
     svg::SetAttribute(text_node, "text-anchor", "end");
 
     if (m_grid_enable) {
