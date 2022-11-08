@@ -23,10 +23,12 @@ LIB_LDFLAGS += \
 
 LIB_SOURCES += \
 	$(SRC)/version.cpp \
+	$(SRC)/fonts.cpp \
+	$(SRC)/svg.cpp \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
-	$(SRC)/fonts.cpp \
-	$(SRC)/svg.cpp
+	$(SRC)/BarPlot.cpp \
+	$(SRC)/HistogramPlot.cpp
 
 
 .PHONY: doc compiledb format syntax library tests

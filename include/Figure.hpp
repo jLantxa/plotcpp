@@ -28,6 +28,8 @@ namespace plotcpp {
 
 class Figure {
  public:
+  virtual ~Figure() = default;
+
   /**
    * @brief Build the figure with its current data and configuration. This sets
    * the figure ready to be displayed or saved.

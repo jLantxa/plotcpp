@@ -38,7 +38,8 @@ namespace plotcpp {
  */
 class Plot2D : public Figure {
  public:
-  Plot2D();
+  explicit Plot2D();
+  virtual ~Plot2D() = default;
 
   /**
    * @brief Add a plot consisting of an x-axis sequence and a y-axis sequence
