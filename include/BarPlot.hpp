@@ -31,10 +31,29 @@ namespace plotcpp {
 class BarPlotBase : public Figure {
  public:
   virtual ~BarPlotBase() = default;
+  void Clear() override;
   void Build() override;
 
  protected:
   explicit BarPlotBase() = default;
+
+  enum class DataType {
+    NUMERIC,
+    CATEGORICAL,
+  };
+  DataType m_data_type = DataType::CATEGORICAL;
+
+  struct DataSeries {
+    std::vector<Real> values;
+    Color color;
+  };
+
+  std::vector<Real> m_baselines;
+  std::vector<Real> m_numeric_x_data;
+  std::vector<std::string> m_categorical_x_data;
+
+  std::string m_x_label;
+  std::string m_y_label;
 };
 
 /**
@@ -62,17 +81,14 @@ class BarPlot : public BarPlotBase {
   explicit BarPlot() = default;
   virtual ~BarPlot() = default;
 
-  void PlotBars(const std::vector<Real>& x_data,
-                const std::vector<Real>& y_data, const Color& color);
-  void PlotBars(const std::vector<std::string>& x_data,
-                const std::vector<Real>& y_data, const Color& color);
-  void PlotBars(const std::vector<Real>& y_data, const Color& color);
+  void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
+            const Color& color);
+  void Plot(const std::vector<std::string>& x_data,
+            const std::vector<Real>& y_data, const Color& color);
+  void Plot(const std::vector<Real>& y_data, const Color& color);
 
-  void StackBars(const std::vector<Real>& x_data,
-                 const std::vector<Real>& y_data, const Color& color);
-  void StackBars(const std::vector<std::string>& x_data,
-                 const std::vector<Real>& y_data, const Color& color);
-  void StackBars(const std::vector<Real>& y_data, const Color& color);
+  void SetXData(const std::vector<Real>& x_data);
+  void SetXData(const std::vector<std::string>& x_data);
 
   void SetBaselines(const std::vector<Real>& baselines);
 

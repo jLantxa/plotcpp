@@ -32,6 +32,8 @@ class HistogramPlot : protected BarPlotBase {
   explicit HistogramPlot() = default;
   virtual ~HistogramPlot() = default;
 
+  void Clear() override;
+
   /**
    * @brief Plot a histogram of a sequence of values
    *
