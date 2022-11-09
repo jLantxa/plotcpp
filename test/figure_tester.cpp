@@ -151,20 +151,18 @@ void StandardBarPlot() {
   static const std::string BAR_PLOT_FILENAME = "bar_plot.svg";
   plotcpp::BarPlot plot;
 
+  plot.Plot({3, 6, 9, 12, 15}, {64, 64, 192});
+  plot.Plot({2, 4, 6, 8, 10}, {192, 64, 64});
+  plot.Plot({1, 2, 3, 4, 5}, {64, 128, 64});
+  plot.Plot({-5, -4, -3, -2, -1}, {32, 32, 32});
+  plot.Plot({-1, -2, -3, -4, -5}, {100, 100, 100});
+
   plot.SetTitle("BarPlot");
+  plot.SetXLabel("x axis");
+  plot.SetYLabel("y axis");
 
   plot.Build();
   plot.Save(BAR_PLOT_FILENAME);
-}
-
-void StackedBarPlot() {
-  static const std::string STACKED_BAR_PLOT_FILENAME = "stack_bar_plot.svg";
-  plotcpp::BarPlot plot;
-
-  plot.SetTitle("Stacked BarPlot");
-
-  plot.Build();
-  plot.Save(STACKED_BAR_PLOT_FILENAME);
 }
 
 int main() {
@@ -172,7 +170,6 @@ int main() {
   CategoricalPlot();
   GroupPlot();
   StandardBarPlot();
-  StackedBarPlot();
 
   return 0;
 }

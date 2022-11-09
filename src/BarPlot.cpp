@@ -18,7 +18,10 @@
 
 #include "BarPlot.hpp"
 
+#include <algorithm>
+
 #include "fonts.hpp"
+#include "svg.hpp"
 
 namespace plotcpp {
 
@@ -27,6 +30,8 @@ const std::string BarPlotBase::FRAME_RECT_CLIP_PATH_ID = {"rect-clip-path"};
 void BarPlotBase::SetXLabel(const std::string& label) { m_x_label = label; }
 
 void BarPlotBase::SetYLabel(const std::string& label) { m_y_label = label; }
+
+void BarPlotBase::SetGridEnable(bool enable) { m_grid_enable = enable; }
 
 void BarPlotBase::Clear() {
   m_baselines.clear();
@@ -46,10 +51,22 @@ void BarPlotBase::Build() {
 
   DrawBackground();
   DrawTitle();
+  DrawBars();
   DrawFrame();
+  DrawXLabel();
+  DrawYLabel();
+}
+
+float BarPlotBase::TranslateToFrame(Real y) const {
+  return m_bar_top_y - (m_zoom_y * static_cast<float>(y - m_y_range.second));
 }
 
 void BarPlotBase::CalculateFrame() {
+  // Set default baselines if not set
+  if (m_baselines.size() == 0) {
+    m_baselines = std::vector<Real>(m_num_bars, 0.0f);
+  }
+
   // Frame rectangle
   m_frame_x = static_cast<float>(m_width) * FRAME_LEFT_MARGIN_REL;
   m_frame_y = static_cast<float>(m_height) * (FRAME_TOP_MARGIN_REL);
@@ -57,9 +74,116 @@ void BarPlotBase::CalculateFrame() {
               (1.0f - FRAME_LEFT_MARGIN_REL - FRAME_RIGHT_MARGIN_REL);
   m_frame_h = static_cast<float>(m_height) *
               (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL);
+  m_bar_top_y = m_frame_y + (BAR_FRAME_Y_MARGIN_REL * m_frame_h);
+
+  // Calculate y range
+  std::vector<Real> pos_acc(m_num_bars, 0.0f);
+  std::vector<Real> neg_acc(m_num_bars, 0.0f);
+  for (const auto& series : m_y_data) {
+    for (std::size_t i = 0; i < m_num_bars; ++i) {
+      const Real value = series.values[i];
+      if (value >= 0.0f) {
+        pos_acc[i] += series.values[i];
+      } else {
+        neg_acc[i] += series.values[i];
+      }
+    }
+  }
+  for (std::size_t i = 0; i < m_num_bars; ++i) {
+    pos_acc[i] += m_baselines[i];
+    neg_acc[i] += m_baselines[i];
+  }
+
+  m_y_range =
+      std::pair<Real, Real>{*std::min_element(neg_acc.begin(), neg_acc.end()),
+                            *std::max_element(pos_acc.begin(), pos_acc.end())};
+
+  m_zoom_y = std::abs((m_frame_h * (1 - 2 * BAR_FRAME_Y_MARGIN_REL)) /
+                      static_cast<float>(m_y_range.second - m_y_range.first));
+}
+
+void BarPlotBase::DrawBars() {
+  // Horizontal space for a bar including a relative margin
+  const float bar_horizontal_space =
+      (m_frame_w * (1 - 2 * BAR_FRAME_Y_MARGIN_REL)) /
+      static_cast<float>(m_num_bars);
+  const float bar_width = bar_horizontal_space * BAR_WIDTH_REL;
+
+  std::vector<Real> pos_acc(m_num_bars, 0.0f);
+  std::vector<Real> neg_acc(m_num_bars, 0.0f);
+  for (const auto& series : m_y_data) {
+    for (std::size_t i = 0; i < m_num_bars; ++i) {
+      const Real value = series.values[i];
+
+      float start_y;
+      float end_y;
+      if (value >= 0) {
+        start_y = TranslateToFrame(m_baselines[i] + pos_acc[i] + value);
+        end_y = TranslateToFrame(m_baselines[i] + pos_acc[i]);
+        pos_acc[i] += value;
+      } else {
+        start_y = TranslateToFrame(m_baselines[i] + neg_acc[i]);
+        end_y = TranslateToFrame(m_baselines[i] + neg_acc[i] + value);
+        neg_acc[i] += value;
+      }
+
+      const float bar_center_x = m_frame_x +
+                                 (m_frame_w * BAR_FRAME_X_MARGIN_REL) +
+                                 (bar_horizontal_space / 2.0f) +
+                                 (static_cast<float>(i) * bar_horizontal_space);
+
+      svg::Rect bar_rect{
+          .x = bar_center_x - (bar_width / 2.0f),
+          .y = start_y,
+          .width = bar_width,
+          .height = end_y - start_y,
+          .stroke_color = series.color,
+          .stroke_opacity = 1.0f,
+          .stroke_width = 1,
+          .fill_color = series.color,
+          .fill_opacity = 1.0f,
+          .fill_transparent = false,
+      };
+      m_svg.DrawRect(bar_rect);
+    }
+  }
 }
 
 void BarPlotBase::DrawBackground() { m_svg.DrawBackground(BACKGROUND_COLOR); }
+
+void BarPlotBase::DrawXLabel() {
+  if (m_x_label.empty()) {
+    return;
+  }
+
+  const float frame_bottom = m_frame_y + m_frame_h;
+  const float x = m_frame_x + (m_frame_w / 2);
+  const float y =
+      frame_bottom + (0.75f) * (static_cast<float>(m_height) - frame_bottom);
+
+  auto node_ptr =
+      m_svg.DrawText(svg::Text{m_x_label, x, y, m_axis_font_size, TEXT_FONT});
+  svg::SetAttribute(node_ptr, "text-anchor", "middle");
+}
+
+void BarPlotBase::DrawYLabel() {
+  if (m_x_label.empty()) {
+    return;
+  }
+
+  const float x = (1 - 0.75f) * m_frame_x;
+  const float y = m_frame_y + (m_frame_h / 2);
+
+  auto node_ptr =
+      m_svg.DrawText(svg::Text{m_y_label, 0, 0, m_axis_font_size, TEXT_FONT});
+  svg::SetAttribute(node_ptr, "text-anchor", "middle");
+
+  std::stringstream trans_ss;
+  trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
+           << ") "
+           << "rotate(-90)";
+  svg::SetAttribute(node_ptr, "transform", trans_ss.str());
+}
 
 void BarPlotBase::DrawFrame() {
   svg::Rect frame_rect{
@@ -166,6 +290,10 @@ void BarPlot::SetXData(const std::vector<Real>& x_data) {
 void BarPlot::SetXData(const std::vector<std::string>& x_data) {
   m_categorical_x_data = x_data;
   m_data_type = DataType::CATEGORICAL;
+}
+
+void BarPlot::SetBaseline(Real baseline) {
+  m_baselines = std::vector<Real>(m_num_bars, baseline);
 }
 
 void BarPlot::SetBaselines(const std::vector<Real>& baselines) {

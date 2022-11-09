@@ -20,6 +20,7 @@
 #define _PLOTCPP_INCLUDE_BAR_PLOT_HPP_
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "Figure.hpp"
@@ -33,6 +34,11 @@ class BarPlotBase : public Figure {
   virtual ~BarPlotBase() = default;
   void Clear() override;
   void Build() override;
+
+  void SetXLabel(const std::string& label);
+  void SetYLabel(const std::string& label);
+
+  void SetGridEnable(bool enable);
 
  protected:
   explicit BarPlotBase() = default;
@@ -58,10 +64,9 @@ class BarPlotBase : public Figure {
   std::string m_x_label;
   std::string m_y_label;
 
-  void SetXLabel(const std::string& label);
-  void SetYLabel(const std::string& label);
-
   float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
+
+  std::pair<Real, Real> m_y_range;
 
   std::set<Real> m_x_markers;
   std::set<Real> m_y_markers;
@@ -75,13 +80,16 @@ class BarPlotBase : public Figure {
   static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.12f;
   static constexpr float FRAME_LEFT_MARGIN_REL = 0.15f;
   static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
+  static constexpr float BAR_FRAME_Y_MARGIN_REL = 0.05f;
+  static constexpr float BAR_FRAME_X_MARGIN_REL = 0.05f;
+  static constexpr float BAR_WIDTH_REL = 0.65f;
   static const std::string FRAME_RECT_CLIP_PATH_ID;
 
   static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
   const std::string TEXT_FONT{"monospace"};
-  float m_axis_font_size;
+  float m_axis_font_size = 11.0f;
 
   static constexpr float MARKER_LENGTH = 5.0f;
   static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
@@ -90,6 +98,11 @@ class BarPlotBase : public Figure {
   static constexpr float BASE_TITLE_FONT_SIZE = 20.0f;
   static constexpr float BASE_AXIS_FONT_SIZE = 11.0f;
 
+  float TranslateToFrame(Real y) const;
+
+  float m_zoom_y = 1.0f;
+  float m_bar_top_y;
+
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();
 
@@ -97,6 +110,11 @@ class BarPlotBase : public Figure {
   void DrawFrame();
 
   void DrawTitle();
+
+  void DrawBars();
+
+  void DrawXLabel();
+  void DrawYLabel();
 };
 
 /**
@@ -133,6 +151,7 @@ class BarPlot : public BarPlotBase {
   void SetXData(const std::vector<Real>& x_data);
   void SetXData(const std::vector<std::string>& x_data);
 
+  void SetBaseline(Real baseline);
   void SetBaselines(const std::vector<Real>& baselines);
 
   void SetLegend(const std::vector<std::string>& labels);

@@ -570,8 +570,8 @@ void Plot2D::DrawXLabel() {
   }
 
   const float frame_bottom = m_frame_y + m_frame_h;
-  float x = m_frame_x + (m_frame_w / 2);
-  float y =
+  const float x = m_frame_x + (m_frame_w / 2);
+  const float y =
       frame_bottom + (0.75f) * (static_cast<float>(m_height) - frame_bottom);
 
   auto node_ptr =
@@ -584,8 +584,8 @@ void Plot2D::DrawYLabel() {
     return;
   }
 
-  float x = (1 - 0.75f) * m_frame_x;
-  float y = m_frame_y + (m_frame_h / 2);
+  const float x = (1 - 0.75f) * m_frame_x;
+  const float y = m_frame_y + (m_frame_h / 2);
 
   auto node_ptr =
       m_svg.DrawText(svg::Text{m_y_label, 0, 0, m_axis_font_size, TEXT_FONT});
