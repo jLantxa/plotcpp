@@ -23,13 +23,12 @@
 #include <string>
 #include <vector>
 
+#include "BarPlot.hpp"
 #include "GroupFigure.hpp"
 #include "Plot2D.hpp"
 #include "utility.hpp"
 #include "version.hpp"
 
-using plotcpp::GroupFigure;
-using plotcpp::Plot2D;
 using plotcpp::Real;
 
 std::random_device rd;
@@ -37,7 +36,7 @@ std::mt19937 gen(rd());
 
 static void NumericPlot() {
   static const std::string NUMERIC_PLOT_FILENAME{"numeric_plot2d.svg"};
-  Plot2D plot2d;
+  plotcpp::Plot2D plot2d;
 
   plot2d.SetSize(600, 450);
   plot2d.SetTitle("Plot2D");
@@ -96,7 +95,7 @@ static void NumericPlot() {
 void CategoricalPlot() {
   static const std::string CATEGORICAL_PLOT_FILENAME{"categorical_plot2d.svg"};
 
-  Plot2D plot2d;
+  plotcpp::Plot2D plot2d;
   const std::vector<std::string> x_annotated_data{"Cat. 1", "Cat. 2", "Cat. 3"};
   const std::vector<Real> y0_annotated_data{-1, 1, 5};
   const std::vector<Real> y1_annotated_data{0, 2, 4};
@@ -118,9 +117,9 @@ void CategoricalPlot() {
 void GroupPlot() {
   static const std::string GROUP_PLOT_FILENAME = "group.svg";
 
-  GroupFigure<2, 1> group;
-  Plot2D p0;
-  Plot2D p1;
+  plotcpp::GroupFigure<2, 1> group;
+  plotcpp::Plot2D p0;
+  plotcpp::Plot2D p1;
 
   const auto x0 = plotcpp::ranges::MakeRange<Real>(0.0, 2 * M_PI, 0.01);
   p0.Plot(
@@ -148,10 +147,32 @@ void GroupPlot() {
   group.Save(GROUP_PLOT_FILENAME);
 }
 
+void StandardBarPlot() {
+  static const std::string BAR_PLOT_FILENAME = "bar_plot.svg";
+  plotcpp::BarPlot plot;
+
+  plot.SetTitle("BarPlot");
+
+  plot.Build();
+  plot.Save(BAR_PLOT_FILENAME);
+}
+
+void StackedBarPlot() {
+  static const std::string STACKED_BAR_PLOT_FILENAME = "stack_bar_plot.svg";
+  plotcpp::BarPlot plot;
+
+  plot.SetTitle("Stacked BarPlot");
+
+  plot.Build();
+  plot.Save(STACKED_BAR_PLOT_FILENAME);
+}
+
 int main() {
   NumericPlot();
   CategoricalPlot();
   GroupPlot();
+  StandardBarPlot();
+  StackedBarPlot();
 
   return 0;
 }

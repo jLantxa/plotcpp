@@ -185,9 +185,6 @@ class Plot2D : public Figure {
    */
   void SetLegend(const std::vector<std::string>& labels);
 
-  /** Clear all legend labels */
-  void ClearLegend();
-
   /**
    * @brief Set a label for the x axis.
    * @param label

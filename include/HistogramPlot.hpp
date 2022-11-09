@@ -43,9 +43,6 @@ class HistogramPlot : protected BarPlotBase {
    */
   void Plot(const std::vector<Real>& values, unsigned int num_bins,
             const Color& color);
-
-  void SetXLabel(const std::string& label);
-  void SetYLabel(const std::string& label);
 };
 
 }  // namespace plotcpp

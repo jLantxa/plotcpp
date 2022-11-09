@@ -189,10 +189,10 @@ void Plot2D::SetHold(bool hold) { m_hold = hold; }
 
 void Plot2D::SetLegend(const std::vector<std::string>& labels) {
   if (labels.empty()) {
+    m_legend_labels.clear();
     return;
   }
 
-  m_legend_enable = true;
   std::size_t num_plots;
   switch (m_data_type) {
     case DataType::NUMERIC:
@@ -211,17 +211,12 @@ void Plot2D::SetLegend(const std::vector<std::string>& labels) {
   }
 }
 
-void Plot2D::ClearLegend() {
-  m_legend_enable = false;
-  m_legend_labels.clear();
-}
-
 void Plot2D::Clear() {
   ClearData();
-  SetTitle("");
+  m_title.clear();
   SetSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-  SetXLabel("");
-  SetYLabel("");
+  m_x_label.clear();
+  m_y_label.clear();
   m_x_set_range.reset();
   m_y_set_range.reset();
   ClearMarkers();
@@ -745,7 +740,7 @@ void Plot2D::DrawYAxis() {
 }
 
 void Plot2D::DrawLegend() {
-  if (!m_legend_enable) {
+  if (m_legend_labels.empty()) {
     return;
   }
 

@@ -48,12 +48,55 @@ class BarPlotBase : public Figure {
     Color color;
   };
 
+  std::size_t m_num_bars;
   std::vector<Real> m_baselines;
   std::vector<Real> m_numeric_x_data;
   std::vector<std::string> m_categorical_x_data;
+  std::vector<DataSeries> m_y_data;
+  std::vector<std::string> m_legend_labels;
 
   std::string m_x_label;
   std::string m_y_label;
+
+  void SetXLabel(const std::string& label);
+  void SetYLabel(const std::string& label);
+
+  float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
+
+  std::set<Real> m_x_markers;
+  std::set<Real> m_y_markers;
+  std::set<Real> m_x_custom_markers;
+  std::set<Real> m_y_custom_markers;
+
+  bool m_grid_enable = false;
+
+  // Constraints
+  static constexpr float FRAME_TOP_MARGIN_REL = 0.10f;
+  static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.12f;
+  static constexpr float FRAME_LEFT_MARGIN_REL = 0.15f;
+  static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
+  static const std::string FRAME_RECT_CLIP_PATH_ID;
+
+  static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
+  static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
+
+  const std::string TEXT_FONT{"monospace"};
+  float m_axis_font_size;
+
+  static constexpr float MARKER_LENGTH = 5.0f;
+  static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
+  static constexpr unsigned int MAX_NUM_X_MARKERS = 10;
+
+  static constexpr float BASE_TITLE_FONT_SIZE = 20.0f;
+  static constexpr float BASE_AXIS_FONT_SIZE = 11.0f;
+
+  /** Calculate all frame parameters needed to draw the plots. */
+  void CalculateFrame();
+
+  void DrawBackground();
+  void DrawFrame();
+
+  void DrawTitle();
 };
 
 /**
@@ -92,8 +135,6 @@ class BarPlot : public BarPlotBase {
 
   void SetBaselines(const std::vector<Real>& baselines);
 
-  void SetXLabel(const std::string& label);
-  void SetYLabel(const std::string& label);
   void SetLegend(const std::vector<std::string>& labels);
 };
 

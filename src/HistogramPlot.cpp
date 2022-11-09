@@ -18,4 +18,14 @@
 
 #include "HistogramPlot.hpp"
 
-namespace plotcpp {}  // namespace plotcpp
+namespace plotcpp {
+
+void HistogramPlot::Plot(const std::vector<Real>& values, unsigned int num_bins,
+                         const Color& color) {
+  // TODO
+  (void)values;
+  (void)num_bins;
+  (void)color;
+}
+
+}  // namespace plotcpp
