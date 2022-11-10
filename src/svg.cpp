@@ -77,13 +77,27 @@ std::string PathCommand::ToString() const {
     case Id::LINE_R:
       ss << "l";
       break;
+    case Id::VERTICAL:
+      ss << "V";
+      break;
+    case Id::VERTICAL_R:
+      ss << "v";
+      break;
+    case Id::HORIZONTAL:
+      ss << "H";
+      break;
+    case Id::HORIZONTAL_R:
+      ss << "h";
+      break;
+    case Id::QUADRATIC_R:
+      ss << "q";
+      break;
     case Id::CLOSE:
       ss << "Z";
   }
 
-  /* The close (Z) command has no arguments */
-  if (id != Id::CLOSE) {
-    ss << " " << std::to_string(x) << " " << std::to_string(y);
+  for (const auto& arg : args) {
+    ss << " " << std::to_string(arg);
   }
 
   return ss.str();

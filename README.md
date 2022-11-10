@@ -58,6 +58,16 @@ The `Plot2D` figure can plot single variable functions. A number of features are
 ![Example](examples/numeric_plot2d.png)
 ![Example](examples/categorical_plot2d.png)
 
+### BarPlot
+The `BarPlot` figure can represent (stacked) segments of data.
+
+A number of features are lacking for this figure type:
+* Axes (and smart subdivision)
+* Grid
+* Annotated values
+
+![Example](examples/bar_plot.png)
+
 ### GroupFigure
 A `GroupFigure` is simply a group of figures (or subplots). The number of rows and columns are specified as template arguments `GroupFigure<rows, cols>`. Subplots are added by calling `Subplot()`:
 

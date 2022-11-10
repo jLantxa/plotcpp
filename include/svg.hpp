@@ -70,11 +70,16 @@ struct PathCommand {
     MOVE_R,
     LINE,
     LINE_R,
+    VERTICAL,
+    VERTICAL_R,
+    HORIZONTAL,
+    HORIZONTAL_R,
+    QUADRATIC_R,
     CLOSE,
   };
 
   Id id;
-  float x, y;
+  std::vector<float> args;
 
   std::string ToString() const;
 };

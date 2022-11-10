@@ -33,6 +33,8 @@ void BarPlotBase::SetYLabel(const std::string& label) { m_y_label = label; }
 
 void BarPlotBase::SetGridEnable(bool enable) { m_grid_enable = enable; }
 
+void BarPlotBase::SetRoundedEdges(bool enable) { m_rounded_borders = enable; }
+
 void BarPlotBase::Clear() {
   m_baselines.clear();
   m_numeric_x_data.clear();
@@ -109,6 +111,21 @@ void BarPlotBase::DrawBars() {
       static_cast<float>(m_num_bars);
   const float bar_width = bar_horizontal_space * BAR_WIDTH_REL;
 
+  std::vector<std::size_t> remaining_positive_segment_counts =
+      std::vector<std::size_t>(m_num_bars, 0);
+  std::vector<std::size_t> remaining_negative_segment_counts =
+      std::vector<std::size_t>(m_num_bars, 0);
+  for (const auto& data_series : m_y_data) {
+    for (std::size_t i = 0; i < m_num_bars; ++i) {
+      const Real value = data_series.values[i];
+      if (value > 0) {
+        remaining_positive_segment_counts[i]++;
+      } else if (value < 0) {
+        remaining_negative_segment_counts[i]++;
+      }
+    }
+  }
+
   std::vector<Real> pos_acc(m_num_bars, 0.0f);
   std::vector<Real> neg_acc(m_num_bars, 0.0f);
   for (const auto& series : m_y_data) {
@@ -117,14 +134,19 @@ void BarPlotBase::DrawBars() {
 
       float start_y;
       float end_y;
+      bool should_round_border;
       if (value >= 0) {
-        start_y = TranslateToFrame(m_baselines[i] + pos_acc[i] + value);
-        end_y = TranslateToFrame(m_baselines[i] + pos_acc[i]);
+        start_y = TranslateToFrame(m_baselines[i] + pos_acc[i]);
+        end_y = TranslateToFrame(m_baselines[i] + pos_acc[i] + value);
         pos_acc[i] += value;
+        should_round_border =
+            m_rounded_borders && (--remaining_positive_segment_counts[i] == 0);
       } else {
         start_y = TranslateToFrame(m_baselines[i] + neg_acc[i]);
         end_y = TranslateToFrame(m_baselines[i] + neg_acc[i] + value);
         neg_acc[i] += value;
+        should_round_border =
+            m_rounded_borders && (--remaining_negative_segment_counts[i] == 0);
       }
 
       const float bar_center_x = m_frame_x +
@@ -132,19 +154,45 @@ void BarPlotBase::DrawBars() {
                                  (bar_horizontal_space / 2.0f) +
                                  (static_cast<float>(i) * bar_horizontal_space);
 
-      svg::Rect bar_rect{
-          .x = bar_center_x - (bar_width / 2.0f),
-          .y = start_y,
-          .width = bar_width,
-          .height = end_y - start_y,
+      static constexpr float max_radius = 5.0f;
+      float radius = std::min(max_radius, bar_width / 2.0f);
+      float delta = (value >= 0) ? -radius : radius;
+
+      std::vector<svg::PathCommand> cmds =
+          (!should_round_border)
+              ? std::vector<
+                    svg::PathCommand>{{svg::PathCommand::Id::MOVE,
+                                       {bar_center_x - (bar_width / 2.0f),
+                                        start_y}},
+                                      {svg::PathCommand::Id::VERTICAL, {end_y}},
+                                      {svg::PathCommand::Id::HORIZONTAL_R,
+                                       {bar_width}},
+                                      {svg::PathCommand::Id::VERTICAL,
+                                       {start_y}},
+                                      {svg::PathCommand::Id::CLOSE, {}}}
+              : std::vector<svg::PathCommand>{
+                    {svg::PathCommand::Id::MOVE,
+                     {bar_center_x - (bar_width / 2.0f), start_y}},
+                    {svg::PathCommand::Id::VERTICAL, {end_y - delta}},
+                    {svg::PathCommand::Id::QUADRATIC_R,
+                     {0, delta, std::abs(delta), delta}},
+                    {svg::PathCommand::Id::HORIZONTAL,
+                     {bar_center_x + bar_width / 2.0f - std::abs(delta)}},
+                    {svg::PathCommand::Id::QUADRATIC_R,
+                     {std::abs(delta), 0, std::abs(delta), -delta}},
+                    {svg::PathCommand::Id::VERTICAL, {start_y}},
+                    {svg::PathCommand::Id::CLOSE, {}}};
+
+      svg::Path path{
+          .commands = cmds,
+          .stroke_width = 1,
           .stroke_color = series.color,
           .stroke_opacity = 1.0f,
-          .stroke_width = 1,
           .fill_color = series.color,
           .fill_opacity = 1.0f,
           .fill_transparent = false,
       };
-      m_svg.DrawRect(bar_rect);
+      m_svg.DrawPath(path);
     }
   }
 }

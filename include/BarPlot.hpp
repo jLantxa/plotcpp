@@ -40,6 +40,8 @@ class BarPlotBase : public Figure {
 
   void SetGridEnable(bool enable);
 
+  void SetRoundedEdges(bool enable);
+
  protected:
   explicit BarPlotBase() = default;
 
@@ -74,6 +76,7 @@ class BarPlotBase : public Figure {
   std::set<Real> m_y_custom_markers;
 
   bool m_grid_enable = false;
+  bool m_rounded_borders = true;
 
   // Constraints
   static constexpr float FRAME_TOP_MARGIN_REL = 0.10f;

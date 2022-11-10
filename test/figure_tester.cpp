@@ -151,11 +151,9 @@ void StandardBarPlot() {
   static const std::string BAR_PLOT_FILENAME = "bar_plot.svg";
   plotcpp::BarPlot plot;
 
-  plot.Plot({3, 6, 9, 12, 15}, {64, 64, 192});
-  plot.Plot({2, 4, 6, 8, 10}, {192, 64, 64});
-  plot.Plot({1, 2, 3, 4, 5}, {64, 128, 64});
-  plot.Plot({-5, -4, -3, -2, -1}, {32, 32, 32});
-  plot.Plot({-1, -2, -3, -4, -5}, {100, 100, 100});
+  plot.Plot({2, 4, 6, 8, 10, 7, -5, -3, -1}, {41, 52, 98});
+  plot.Plot({1, 2, 3, 4, 5, 6, 7, 8, 9}, {214, 28, 78});
+  plot.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4}, {254, 177, 57});
 
   plot.SetTitle("BarPlot");
   plot.SetXLabel("x axis");

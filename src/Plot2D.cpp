@@ -421,7 +421,7 @@ void Plot2D::DrawNumericPath(const DataSeries& plot) {
     const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
                                            : svg::PathCommand::Id::MOVE;
     const auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
-    path.Add({path_cmd, tx, ty});
+    path.Add({path_cmd, {tx, ty}});
   }
 
   auto path_node = m_svg.DrawPath(path);
@@ -488,7 +488,7 @@ void Plot2D::DrawCategoricalPath(const CategoricalDataSeries& plot) {
     const auto [_, ty] = TranslateToFrame(0, data_y[i]);
     const float tx = m_frame_x + static_cast<float>(i) *
                                      (m_frame_w / static_cast<float>(size - 1));
-    path.Add({path_cmd, tx, ty});
+    path.Add({path_cmd, {tx, ty}});
   }
 
   auto path_node = m_svg.DrawPath(path);
