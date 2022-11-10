@@ -22,6 +22,7 @@
 #include <cmath>
 #include <cstdint>
 #include <functional>
+#include <iterator>
 #include <set>
 #include <vector>
 
@@ -178,6 +179,41 @@ std::set<T> PartitionRange(const Interval<T>& range, unsigned int num_markers) {
 }
 
 }  // namespace ranges
+
+template <typename T>
+std::pair<std::size_t, bool> BinarySearchInterval(
+    T value, const std::vector<T>& intervals) {
+  const std::size_t num_intervals = intervals.size();
+
+  if (num_intervals == 0) {
+    return {0, false};
+  } else if ((num_intervals == 1) && (value == intervals.front())) {
+    return {0, true};
+  }
+
+  if ((value < intervals.front()) || (value > intervals.back())) {
+    return {0, false};
+  }
+
+  std::size_t low = 0;
+  std::size_t high = num_intervals - 1;
+  std::size_t index = 0;
+  while (low != high) {
+    index = (low + high) / 2;
+
+    if ((value >= intervals[index]) && (value <= intervals[index + 1])) {
+      break;
+    }
+
+    if (value > intervals[index + 1]) {
+      low = index;
+    } else {
+      high = index;
+    }
+  }
+
+  return {index, true};
+}
 
 }  // namespace plotcpp
 

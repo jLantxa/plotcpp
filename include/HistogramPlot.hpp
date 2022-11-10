@@ -27,9 +27,9 @@
 
 namespace plotcpp {
 
-class HistogramPlot : protected BarPlotBase {
+class HistogramPlot : public BarPlotBase {
  public:
-  explicit HistogramPlot() = default;
+  HistogramPlot();
   virtual ~HistogramPlot() = default;
 
   void Clear() override;
@@ -43,6 +43,13 @@ class HistogramPlot : protected BarPlotBase {
    */
   void Plot(const std::vector<Real>& values, unsigned int num_bins,
             const Color& color);
+
+ protected:
+  std::vector<Real> CalculateIntervals(const std::vector<Real>& values,
+                                       unsigned int num_bins);
+  std::vector<Real> CalculateBins(const std::vector<Real>& intervals);
+  std::vector<Real> CalculateHistogram(const std::vector<Real>& values,
+                                       const std::vector<Real>& intervals);
 };
 
 }  // namespace plotcpp

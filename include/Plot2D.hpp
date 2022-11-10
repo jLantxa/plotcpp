@@ -38,7 +38,7 @@ namespace plotcpp {
  */
 class Plot2D : public Figure {
  public:
-  explicit Plot2D();
+  Plot2D();
   virtual ~Plot2D() = default;
 
   /**

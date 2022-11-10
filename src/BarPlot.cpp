@@ -35,14 +35,22 @@ void BarPlotBase::SetGridEnable(bool enable) { m_grid_enable = enable; }
 
 void BarPlotBase::SetRoundedEdges(bool enable) { m_rounded_borders = enable; }
 
+void BarPlotBase::SetBarRelativeWidth(float rel_width) {
+  m_bar_width_rel = std::max(0.0f, std::min(1.0f, rel_width));
+}
+
 void BarPlotBase::Clear() {
+  ClearData();
+
+  m_x_label.clear();
+  m_y_label.clear();
+}
+
+void BarPlotBase::ClearData() {
   m_baselines.clear();
   m_numeric_x_data.clear();
   m_categorical_x_data.clear();
   m_y_data.clear();
-
-  m_x_label.clear();
-  m_y_label.clear();
 }
 
 void BarPlotBase::Build() {
@@ -109,7 +117,7 @@ void BarPlotBase::DrawBars() {
   const float bar_horizontal_space =
       (m_frame_w * (1 - 2 * BAR_FRAME_Y_MARGIN_REL)) /
       static_cast<float>(m_num_bars);
-  const float bar_width = bar_horizontal_space * BAR_WIDTH_REL;
+  const float bar_width = bar_horizontal_space * m_bar_width_rel;
 
   std::vector<std::size_t> remaining_positive_segment_counts =
       std::vector<std::size_t>(m_num_bars, 0);

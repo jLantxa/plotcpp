@@ -32,6 +32,7 @@ namespace plotcpp {
 class BarPlotBase : public Figure {
  public:
   virtual ~BarPlotBase() = default;
+
   void Clear() override;
   void Build() override;
 
@@ -42,8 +43,12 @@ class BarPlotBase : public Figure {
 
   void SetRoundedEdges(bool enable);
 
+  void SetBarRelativeWidth(float rel_width);
+
  protected:
   explicit BarPlotBase() = default;
+
+  void ClearData();
 
   enum class DataType {
     NUMERIC,
@@ -85,8 +90,10 @@ class BarPlotBase : public Figure {
   static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
   static constexpr float BAR_FRAME_Y_MARGIN_REL = 0.05f;
   static constexpr float BAR_FRAME_X_MARGIN_REL = 0.05f;
-  static constexpr float BAR_WIDTH_REL = 0.65f;
+  static constexpr float DEFAULT_BAR_WIDTH_REL = 0.65f;
   static const std::string FRAME_RECT_CLIP_PATH_ID;
+
+  float m_bar_width_rel = DEFAULT_BAR_WIDTH_REL;
 
   static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
@@ -142,7 +149,7 @@ class BarPlotBase : public Figure {
  */
 class BarPlot : public BarPlotBase {
  public:
-  explicit BarPlot() = default;
+  BarPlot() = default;
   virtual ~BarPlot() = default;
 
   void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,

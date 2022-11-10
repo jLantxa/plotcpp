@@ -25,6 +25,7 @@
 
 #include "BarPlot.hpp"
 #include "GroupFigure.hpp"
+#include "HistogramPlot.hpp"
 #include "Plot2D.hpp"
 #include "utility.hpp"
 #include "version.hpp"
@@ -72,7 +73,6 @@ static void NumericPlot() {
   const Real scatter_x0 = 4.0f;
   const Real scatter_y0 = 2.71f;
   static std::normal_distribution<Real> distr(0.0f, 1.0f);
-  static std::default_random_engine re;
   for (std::size_t i = 0; i < 11; ++i) {
     scatter_x.push_back(scatter_x0 + distr(gen));
     scatter_y.push_back(scatter_y0 + distr(gen));
@@ -147,7 +147,7 @@ void GroupPlot() {
   group.Save(GROUP_PLOT_FILENAME);
 }
 
-void StandardBarPlot() {
+void BarPlot() {
   static const std::string BAR_PLOT_FILENAME = "bar_plot.svg";
   plotcpp::BarPlot plot;
 
@@ -163,11 +163,37 @@ void StandardBarPlot() {
   plot.Save(BAR_PLOT_FILENAME);
 }
 
+void HistograpPlot() {
+  static const std::string HISTOGRAM_PLOT_FILENAME = "histogram_plot.svg";
+  plotcpp::HistogramPlot plot;
+  static constexpr plotcpp::Color color = {41, 52, 98};
+  static constexpr unsigned int num_bins = 64;
+  static constexpr unsigned int num_values = 4096;
+
+  std::vector<Real> values;
+  values.resize(num_values);
+
+  static std::normal_distribution<Real> distr(0.0f, 32.0f);
+  for (std::size_t i = 0; i < num_values; ++i) {
+    values[i] = distr(gen);
+  }
+
+  plot.Plot(values, num_bins, color);
+
+  plot.SetTitle("HistogramPlot");
+  plot.SetXLabel("values");
+  plot.SetYLabel("Counts");
+
+  plot.Build();
+  plot.Save(HISTOGRAM_PLOT_FILENAME);
+}
+
 int main() {
   NumericPlot();
   CategoricalPlot();
   GroupPlot();
-  StandardBarPlot();
+  BarPlot();
+  HistograpPlot();
 
   return 0;
 }

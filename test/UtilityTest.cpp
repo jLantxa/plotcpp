@@ -20,10 +20,13 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <utility>
+
 #include "utility.hpp"
 
 namespace plotcpp {
 
+using ::testing::_;
 using ::testing::ElementsAreArray;
 
 TEST(RangesTest, TrivialPartitionRange) {
@@ -55,6 +58,17 @@ TEST(UtilityTest, FunctionGenerator) {
   const std::vector<int> y_expected = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20};
   const std::vector<int> y_generated = ranges::Generate<int>(x, f);
   EXPECT_THAT(y_generated, ElementsAreArray(y_expected));
+}
+
+TEST(UtilityTest, BinarySearchInterval) {
+  using Pair = std::pair<std::size_t, bool>;
+  std::vector<float> intervals{-2.5, -1.0, 0.0f, 1.5f, 3.5f, 5.2f};
+
+  EXPECT_EQ(BinarySearchInterval(1.0f, intervals), (Pair{2, true}));
+  EXPECT_EQ(BinarySearchInterval(-1.0f, intervals), (Pair{1, true}));
+  EXPECT_EQ(BinarySearchInterval(4.0f, intervals), (Pair{4, true}));
+  EXPECT_EQ(BinarySearchInterval(-3.0f, intervals), (Pair{0, false}));
+  EXPECT_EQ(BinarySearchInterval(6.0f, intervals), (Pair{0, false}));
 }
 
 }  // namespace plotcpp
