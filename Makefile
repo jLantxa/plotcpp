@@ -76,7 +76,11 @@ tests: build_dir compiledb
 		$(LIB_SOURCES) \
 		-o $(BUILD)/tests
 
-	# plot2d tester
+	./$(BUILD)/tests
+
+
+figure-tester: build_dir compiledb
+	# Figure tester
 	$(CXX) $(CXX_FLAGS) -g \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
@@ -84,9 +88,6 @@ tests: build_dir compiledb
 		$(LIB_SOURCES) \
 		$(TEST)/figure_tester.cpp \
 		-o $(BUILD)/figure_tester
-
-	./$(BUILD)/tests
-
 
 SHARED_LIB := lib$(TARGET).so
 library: build_dir

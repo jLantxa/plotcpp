@@ -118,15 +118,14 @@ void GroupPlot() {
   static const std::string GROUP_PLOT_FILENAME = "group.svg";
 
   plotcpp::GroupFigure<2, 1> group;
-  plotcpp::Plot2D p0;
+  plotcpp::BarPlot p0;
   plotcpp::Plot2D p1;
 
-  const auto x0 = plotcpp::ranges::MakeRange<Real>(0.0, 2 * M_PI, 0.01);
-  p0.Plot(
-      x0, [](Real x) { return std::sin(x); }, {0, 0, 0}, 2, "");
-  p0.SetTitle("Sine");
-  p0.SetXLabel("x");
-  p0.SetYLabel("y = sin(x)");
+  p0.Plot({2, 4, 6, 8, 10, 7, -5, -3, -1}, {41, 52, 98});
+  p0.Plot({1, 2, 3, 4, 5, 6, 7, 8, 9}, {214, 28, 78});
+  p0.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4}, {254, 177, 57});
+  p0.SetXLabel("x axis");
+  p0.SetYLabel("y axis");
 
   p1.SetHold(true);
   const auto x1 = plotcpp::ranges::MakeRange<Real>(1, 6, 0.01);
