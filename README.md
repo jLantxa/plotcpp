@@ -12,6 +12,11 @@ built/rendered. A plot can be a pie chart, a histogram, a function plot, etc.
 Internally, `plotcpp` represents all visual elements using an SVG description. This allows plots to
 be scalable as well as to potentially support an infinity of visual styles while looking nice.
 
+# Contents
+1. [Requirements and dependencies](#requirements-and-dependencies)
+2. [Building plotcpp](#building-plotcpp)
+3. [Using plotcpp](#using-plotcpp)
+
 # Requirements and dependencies
 At the moment, `plotcpp` requires at least C++20. It is hard to find a balance between supporting a
 broader set of compiler standards and providing modern language features. As stated before, this
@@ -68,6 +73,11 @@ provides such information. Try running `xml2-config`.This is an example of a com
 ``clang++ -std=c++20 `xml2-config --cflags` -lplotcpp <sources> -o <target>``
 
 ## Supported figure types
+* [Plot2D](#plot2d)
+* [BarPlot](#barplot)
+* [HistogramPlot](#histogramplot)
+* [GroupFigure](#groupfigure)
+
 ### Plot2D
 The `Plot2D` figure can plot single variable functions. A number of features are lacking for this
 figure type:
