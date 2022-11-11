@@ -71,7 +71,7 @@ tests: build_dir compiledb
 	$(CXX) $(CXX_FLAGS) -g \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		$(LIB_LDFLAGS) -lgtest_main -lgtest \
+		$(LIB_LDFLAGS) -lpthread -lgtest_main -lgtest \
 		$(TEST_SOURCES) \
 		$(LIB_SOURCES) \
 		-o $(BUILD)/tests
