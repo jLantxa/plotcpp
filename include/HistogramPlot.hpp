@@ -21,7 +21,7 @@
 
 #include <vector>
 
-#include "BarPlot.hpp"
+#include "BarPlotBase.hpp"
 #include "Figure.hpp"
 #include "utility.hpp"
 

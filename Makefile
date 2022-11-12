@@ -27,6 +27,7 @@ LIB_SOURCES += \
 	$(SRC)/svg.cpp \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
+	$(SRC)/BarPlotBase.cpp \
 	$(SRC)/BarPlot.cpp \
 	$(SRC)/HistogramPlot.cpp
 

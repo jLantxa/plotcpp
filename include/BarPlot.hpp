@@ -23,109 +23,11 @@
 #include <utility>
 #include <vector>
 
-#include "Figure.hpp"
+#include "BarPlotBase.hpp"
 #include "svg.hpp"
 #include "utility.hpp"
 
 namespace plotcpp {
-
-class BarPlotBase : public Figure {
- public:
-  virtual ~BarPlotBase() = default;
-
-  void Clear() override;
-  void Build() override;
-
-  void SetXLabel(const std::string& label);
-  void SetYLabel(const std::string& label);
-
-  void SetGridEnable(bool enable);
-
-  void SetRoundedEdges(bool enable);
-
-  void SetBarRelativeWidth(float rel_width);
-
- protected:
-  explicit BarPlotBase() = default;
-
-  void ClearData();
-
-  enum class DataType {
-    NUMERIC,
-    CATEGORICAL,
-  };
-  DataType m_data_type = DataType::CATEGORICAL;
-
-  struct DataSeries {
-    std::vector<Real> values;
-    Color color;
-  };
-
-  std::size_t m_num_bars;
-  std::vector<Real> m_baselines;
-  std::vector<Real> m_numeric_x_data;
-  std::vector<std::string> m_categorical_x_data;
-  std::vector<DataSeries> m_y_data;
-  std::vector<std::string> m_legend_labels;
-
-  std::string m_x_label;
-  std::string m_y_label;
-
-  float m_frame_x, m_frame_y, m_frame_w, m_frame_h;
-
-  std::pair<Real, Real> m_y_range;
-
-  std::set<Real> m_x_markers;
-  std::set<Real> m_y_markers;
-  std::set<Real> m_x_custom_markers;
-  std::set<Real> m_y_custom_markers;
-
-  bool m_grid_enable = false;
-  bool m_rounded_borders = true;
-
-  // Constraints
-  static constexpr float FRAME_TOP_MARGIN_REL = 0.10f;
-  static constexpr float FRAME_BOTTOM_MARGIN_REL = 0.12f;
-  static constexpr float FRAME_LEFT_MARGIN_REL = 0.15f;
-  static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
-  static constexpr float BAR_FRAME_Y_MARGIN_REL = 0.05f;
-  static constexpr float BAR_FRAME_X_MARGIN_REL = 0.05f;
-  static constexpr float DEFAULT_BAR_WIDTH_REL = 0.65f;
-  static const std::string FRAME_RECT_CLIP_PATH_ID;
-
-  float m_bar_width_rel = DEFAULT_BAR_WIDTH_REL;
-
-  static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
-  static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
-
-  const std::string TEXT_FONT{"monospace"};
-  float m_axis_font_size = 11.0f;
-
-  static constexpr float MARKER_LENGTH = 5.0f;
-  static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
-  static constexpr unsigned int MAX_NUM_X_MARKERS = 10;
-
-  static constexpr float BASE_TITLE_FONT_SIZE = 20.0f;
-  static constexpr float BASE_AXIS_FONT_SIZE = 11.0f;
-
-  float TranslateToFrame(Real y) const;
-
-  float m_zoom_y = 1.0f;
-  float m_bar_top_y;
-
-  /** Calculate all frame parameters needed to draw the plots. */
-  void CalculateFrame();
-
-  void DrawBackground();
-  void DrawFrame();
-
-  void DrawTitle();
-
-  void DrawBars();
-
-  void DrawXLabel();
-  void DrawYLabel();
-};
 
 /**
  * @brief A bar plot.
