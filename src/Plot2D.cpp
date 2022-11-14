@@ -193,7 +193,7 @@ void Plot2D::SetLegend(const std::vector<std::string>& labels) {
     return;
   }
 
-  std::size_t num_plots;
+  std::size_t num_plots = 0;
   switch (m_data_type) {
     case DataType::NUMERIC:
       num_plots = m_numeric_data.size();
@@ -761,7 +761,7 @@ void Plot2D::DrawLegend() {
     max_font_width_em = std::max(max_font_width_em, w);
   }
 
-  std::size_t num_plots;
+  std::size_t num_plots = 0;
   std::vector<Style> styles;
   switch (m_data_type) {
     case DataType::NUMERIC:
