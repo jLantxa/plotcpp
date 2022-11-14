@@ -26,7 +26,6 @@
 
 namespace plotcpp {
 
-using ::testing::_;
 using ::testing::ElementsAreArray;
 
 TEST(RangesTest, TrivialPartitionRange) {

@@ -157,6 +157,7 @@ void BarPlot() {
   plot.SetTitle("BarPlot");
   plot.SetXLabel("x axis");
   plot.SetYLabel("y axis");
+  plot.SetGridEnable(true);
 
   plot.Build();
   plot.Save(BAR_PLOT_FILENAME);
@@ -182,6 +183,7 @@ void HistograpPlot() {
   plot.SetTitle("HistogramPlot");
   plot.SetXLabel("values");
   plot.SetYLabel("Counts");
+  plot.SetGridEnable(true);
 
   plot.Build();
   plot.Save(HISTOGRAM_PLOT_FILENAME);

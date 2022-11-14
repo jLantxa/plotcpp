@@ -268,10 +268,12 @@ void Plot2D::CalculateFrame() {
 
   // Calculate markers
   const unsigned int num_x_markers =
-      std::min(MAX_NUM_X_MARKERS, static_cast<unsigned int>(m_frame_w / 80));
+      std::min(MAX_NUM_X_MARKERS,
+               static_cast<unsigned int>(m_frame_w / PIXELS_PER_X_MARKER));
   m_x_markers = ranges::PartitionRange(m_x_range, num_x_markers);
   const unsigned int num_y_markers =
-      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
+      std::min(MAX_NUM_Y_MARKERS,
+               static_cast<unsigned int>(m_frame_h / PIXELS_PER_Y_MARKER));
   m_y_markers = ranges::PartitionRange(m_y_range, num_y_markers);
 
   // Calculate font sizes
@@ -355,7 +357,8 @@ void Plot2D::CalculateCategoricalFrame() {
       static_cast<float>(abs(m_frame_h / (m_y_range.second - m_y_range.first)));
 
   const unsigned int num_y_markers =
-      std::min(MAX_NUM_Y_MARKERS, static_cast<unsigned int>(m_frame_h / 80));
+      std::min(MAX_NUM_Y_MARKERS,
+               static_cast<unsigned int>(m_frame_h / PIXELS_PER_Y_MARKER));
   m_y_markers = ranges::PartitionRange(m_y_range, num_y_markers);
 }
 

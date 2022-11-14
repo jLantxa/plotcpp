@@ -45,6 +45,8 @@ class BarPlotBase : public Figure {
 
   void SetBarRelativeWidth(float rel_width);
 
+  void AddYMarker(Real marker);
+
  protected:
   explicit BarPlotBase() = default;
 
@@ -54,7 +56,7 @@ class BarPlotBase : public Figure {
     NUMERIC,
     CATEGORICAL,
   };
-  DataType m_data_type = DataType::CATEGORICAL;
+  DataType m_data_type = DataType::NUMERIC;
 
   struct DataSeries {
     std::vector<Real> values;
@@ -75,10 +77,9 @@ class BarPlotBase : public Figure {
 
   std::pair<Real, Real> m_y_range;
 
-  std::set<Real> m_x_markers;
   std::set<Real> m_y_markers;
-  std::set<Real> m_x_custom_markers;
   std::set<Real> m_y_custom_markers;
+  bool m_round_y_markers = false;
 
   bool m_grid_enable = false;
   bool m_rounded_borders = true;
@@ -101,6 +102,8 @@ class BarPlotBase : public Figure {
   const std::string TEXT_FONT{"monospace"};
   float m_axis_font_size = 11.0f;
 
+  static constexpr float PIXELS_PER_X_MARKER = 80.0f;
+  static constexpr float PIXELS_PER_Y_MARKER = 80.0f;
   static constexpr float MARKER_LENGTH = 5.0f;
   static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
   static constexpr unsigned int MAX_NUM_X_MARKERS = 10;
@@ -113,6 +116,8 @@ class BarPlotBase : public Figure {
   float m_zoom_y = 1.0f;
   float m_bar_top_y;
 
+  bool m_discrete_x_axis = true;
+
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();
 
@@ -123,6 +128,8 @@ class BarPlotBase : public Figure {
 
   void DrawBars();
 
+  void DrawXAxis();
+  void DrawYAxis();
   void DrawXLabel();
   void DrawYLabel();
 };

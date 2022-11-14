@@ -64,7 +64,6 @@ syntax: compiledb
 		-fsyntax-only
 
 TEST_SOURCES += \
-	$(TEST)/Plot2DTest.cpp \
 	$(TEST)/UtilityTest.cpp \
 
 tests: build_dir compiledb

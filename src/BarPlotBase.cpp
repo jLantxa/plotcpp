@@ -18,6 +18,9 @@
 
 #include "BarPlotBase.hpp"
 
+#include <fmt/format.h>
+
+#include <iostream>
 #include <set>
 #include <string>
 #include <utility>
@@ -25,6 +28,7 @@
 
 #include "fonts.hpp"
 #include "svg.hpp"
+#include "utility.hpp"
 
 namespace plotcpp {
 
@@ -41,6 +45,8 @@ void BarPlotBase::SetRoundedEdges(bool enable) { m_rounded_borders = enable; }
 void BarPlotBase::SetBarRelativeWidth(float rel_width) {
   m_bar_width_rel = std::max(0.0f, std::min(1.0f, rel_width));
 }
+
+void BarPlotBase::AddYMarker(Real marker) { m_y_custom_markers.insert(marker); }
 
 void BarPlotBase::Clear() {
   ClearData();
@@ -64,10 +70,12 @@ void BarPlotBase::Build() {
 
   DrawBackground();
   DrawTitle();
-  DrawBars();
-  DrawFrame();
   DrawXLabel();
   DrawYLabel();
+  DrawXAxis();
+  DrawYAxis();
+  DrawBars();
+  DrawFrame();
 }
 
 float BarPlotBase::TranslateToFrame(Real y) const {
@@ -113,6 +121,19 @@ void BarPlotBase::CalculateFrame() {
 
   m_zoom_y = std::abs((m_frame_h * (1 - 2 * BAR_FRAME_Y_MARGIN_REL)) /
                       static_cast<float>(m_y_range.second - m_y_range.first));
+
+  const unsigned int num_y_markers =
+      std::min(MAX_NUM_Y_MARKERS,
+               static_cast<unsigned int>(m_frame_h / PIXELS_PER_Y_MARKER));
+  m_y_markers = ranges::PartitionRange(m_y_range, num_y_markers);
+
+  // Calculate font sizes
+  const std::string DUMMY_TEXT = "-000.00";
+  const float y_axis_font_size =
+      fonts::ConstrainedFontSize(BASE_AXIS_FONT_SIZE, DUMMY_TEXT, TEXT_FONT,
+                                 (3.0f * m_frame_x / 4.0f) - MARKER_LENGTH,
+                                 m_frame_h / static_cast<float>(num_y_markers));
+  m_axis_font_size = std::min({y_axis_font_size});
 }
 
 void BarPlotBase::DrawBars() {
@@ -209,6 +230,113 @@ void BarPlotBase::DrawBars() {
 }
 
 void BarPlotBase::DrawBackground() { m_svg.DrawBackground(BACKGROUND_COLOR); }
+
+void BarPlotBase::DrawXAxis() {
+  if (m_num_bars <= 1) {
+    // TODO: Draw marker in the middle
+    return;
+  }
+
+  const std::size_t max_num_x_markers =
+      static_cast<std::size_t>(m_frame_w / PIXELS_PER_X_MARKER);
+  const std::size_t marker_step = m_num_bars / max_num_x_markers;
+
+  const float bar_horizontal_space =
+      (m_frame_w * (1 - 2 * BAR_FRAME_Y_MARGIN_REL)) /
+      static_cast<float>(m_num_bars);
+
+  for (std::size_t i = 0; i < m_num_bars; i += marker_step) {
+    const float x = m_frame_x + (m_frame_w * BAR_FRAME_X_MARGIN_REL) +
+                    (bar_horizontal_space / 2.0f) +
+                    (static_cast<float>(i) * bar_horizontal_space);
+    const auto y = m_frame_y + m_frame_h;
+
+    svg::Line marker_line{.x1 = x,
+                          .y1 = y,
+                          .x2 = x,
+                          .y2 = y + MARKER_LENGTH,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 1};
+    m_svg.DrawLine(marker_line);
+
+    const std::string marker_text =
+        (m_data_type == DataType::NUMERIC)
+            ? fmt::format("{:.2f}", m_numeric_x_data[i])
+            : m_categorical_x_data[i];
+    float font_em = m_axis_font_size / 12.0f;
+    auto text_node = m_svg.DrawText(
+        svg::Text{marker_text, x, y + MARKER_LENGTH + fonts::EmToPx(font_em),
+                  m_axis_font_size, TEXT_FONT});
+    svg::SetAttribute(text_node, "text-anchor", "middle");
+
+    if (m_grid_enable) {
+      svg::Line grid_line{.x1 = x,
+                          .y1 = m_frame_y,
+                          .x2 = x,
+                          .y2 = m_frame_y + m_frame_h,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 0.75f};
+      auto grid_line_node = m_svg.DrawLine(grid_line);
+      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
+    }
+  }
+}
+
+void BarPlotBase::DrawYAxis() {
+  std::set<Real> markers;
+  markers.insert(m_y_markers.begin(), m_y_markers.end());
+  markers.insert(m_y_custom_markers.begin(), m_y_custom_markers.end());
+
+  if (markers.size() <= 1) {
+    // TODO: Draw marker in the middle
+    return;
+  }
+
+  for (const auto& marker : markers) {
+    if ((marker < m_y_range.first) || (marker > m_y_range.second)) {
+      continue;
+    }
+
+    const auto y = TranslateToFrame(marker);
+    const float x = m_frame_x;
+
+    svg::Line marker_line{.x1 = x,
+                          .y1 = y,
+                          .x2 = x - MARKER_LENGTH,
+                          .y2 = y,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 1};
+    m_svg.DrawLine(marker_line);
+
+    float font_em =
+        m_axis_font_size /
+        12.0f;  // Some SVG renderers don't support baseline alignment
+    const std::string marker_text =
+        (!m_round_y_markers)
+            ? fmt::format("{:.2f}", marker)
+            : fmt::format("{:d}", static_cast<int>(std::round(marker)));
+
+    auto text_node = m_svg.DrawText(svg::Text{
+        marker_text, x - 2 * MARKER_LENGTH, y + fonts::EmToPx(font_em / 4.0f),
+        m_axis_font_size, TEXT_FONT});
+    svg::SetAttribute(text_node, "text-anchor", "end");
+
+    if (m_grid_enable) {
+      svg::Line grid_line{.x1 = m_frame_x,
+                          .y1 = y,
+                          .x2 = m_frame_x + m_frame_w,
+                          .y2 = y,
+                          .stroke_color = FRAME_STROKE_COLOR,
+                          .stroke_opacity = 1.0f,
+                          .stroke_width = 0.75f};
+      auto grid_line_node = m_svg.DrawLine(grid_line);
+      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
+    }
+  }
+}
 
 void BarPlotBase::DrawXLabel() {
   if (m_x_label.empty()) {

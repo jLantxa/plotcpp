@@ -25,7 +25,11 @@
 
 namespace plotcpp {
 
-HistogramPlot::HistogramPlot() { SetBarRelativeWidth(1.0f); }
+HistogramPlot::HistogramPlot() {
+  SetBarRelativeWidth(1.0f);
+  m_round_y_markers = true;
+  m_discrete_x_axis = false;
+}
 
 void HistogramPlot::Clear() { ClearData(); }
 
@@ -34,12 +38,11 @@ void HistogramPlot::Plot(const std::vector<Real>& values, unsigned int num_bins,
   ClearData();
 
   std::vector<Real> intervals = CalculateIntervals(values, num_bins);
-  std::vector<Real> bins = CalculateBins(intervals);
+  m_numeric_x_data = CalculateBins(intervals);
   std::vector<Real> counts = CalculateHistogram(values, intervals);
-  m_num_bars = counts.size();
-
-  m_numeric_x_data = bins;
+  m_num_bars = m_numeric_x_data.size();
   m_y_data.push_back(DataSeries{counts, color});
+  m_data_type = DataType::NUMERIC;
 }
 
 std::vector<Real> HistogramPlot::CalculateIntervals(

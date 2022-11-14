@@ -294,6 +294,8 @@ class Plot2D : public Figure {
   const std::string TEXT_FONT{"monospace"};
   float m_axis_font_size;
 
+  static constexpr float PIXELS_PER_X_MARKER = 80.0f;
+  static constexpr float PIXELS_PER_Y_MARKER = 80.0f;
   static constexpr float MARKER_LENGTH = 5.0f;
   static constexpr unsigned int MAX_NUM_Y_MARKERS = 5;
   static constexpr unsigned int MAX_NUM_X_MARKERS = 10;
@@ -328,6 +330,8 @@ class Plot2D : public Figure {
   void DrawYLabel();
 
   void DrawLegend();
+
+  friend class Plot2DTest;
 };
 
 }  // namespace plotcpp

@@ -51,7 +51,7 @@ namespace plotcpp {
  */
 class BarPlot : public BarPlotBase {
  public:
-  BarPlot() = default;
+  BarPlot();
   virtual ~BarPlot() = default;
 
   void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,

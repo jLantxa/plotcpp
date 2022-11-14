@@ -18,7 +18,16 @@
 
 #include "BarPlot.hpp"
 
+#include <fmt/format.h>
+
+#include <numeric>
+
 namespace plotcpp {
+
+BarPlot::BarPlot() {
+  m_round_y_markers = false;
+  m_discrete_x_axis = true;
+}
 
 void BarPlot::Plot(const std::vector<Real>& x_data,
                    const std::vector<Real>& y_data, const Color& color) {
@@ -35,12 +44,12 @@ void BarPlot::Plot(const std::vector<Real>& x_data,
   }
 
   if (m_data_type != DataType::NUMERIC) {
-    m_categorical_x_data.clear();
     m_y_data.clear();
   }
 
   m_data_type = DataType::NUMERIC;
   m_numeric_x_data = x_data;
+  m_categorical_x_data.clear();
   m_y_data.emplace_back(DataSeries{y_data, color});
 }
 
@@ -59,18 +68,26 @@ void BarPlot::Plot(const std::vector<std::string>& x_data,
   }
 
   if (m_data_type != DataType::CATEGORICAL) {
-    m_numeric_x_data.clear();
     m_y_data.clear();
   }
 
   m_data_type = DataType::CATEGORICAL;
   m_categorical_x_data = x_data;
+  m_numeric_x_data.clear();
   m_y_data.emplace_back(DataSeries{y_data, color});
 }
 
 void BarPlot::Plot(const std::vector<Real>& y_data, const Color& color) {
   if (m_y_data.size() == 0) {
     m_num_bars = y_data.size();
+    m_numeric_x_data.clear();
+    m_categorical_x_data.resize(m_num_bars);
+
+    for (std::size_t i = 0; i < m_num_bars; ++i) {
+      m_categorical_x_data[i] = fmt::format("{:d}", i + 1);
+    }
+
+    m_data_type = DataType::CATEGORICAL;
   } else {
     if (y_data.size() != m_num_bars) {
       return;
