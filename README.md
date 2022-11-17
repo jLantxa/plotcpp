@@ -129,7 +129,5 @@ on the group will modify the size of the plot.
 ![Example](examples/group.png)
 
 # Planned features
-* Bar plot (standard and stacked) with configurable baselines.
-* Histogram
 * Annotated heatmap
 * Pie chart
