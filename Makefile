@@ -71,9 +71,9 @@ tests: build_dir compiledb
 	$(CXX) $(CXX_FLAGS) -g \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		$(LIB_LDFLAGS) -lpthread -lgtest_main -lgtest \
 		$(TEST_SOURCES) \
 		$(LIB_SOURCES) \
+		$(LIB_LDFLAGS) -lpthread -lgtest_main -lgtest \
 		-o $(BUILD)/tests
 
 	./$(BUILD)/tests
@@ -84,9 +84,9 @@ figure-tester: build_dir compiledb
 	$(CXX) $(CXX_FLAGS) -g \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		$(LIB_LDFLAGS) \
 		$(LIB_SOURCES) \
 		$(TEST)/figure_tester.cpp \
+		$(LIB_LDFLAGS) \
 		-o $(BUILD)/figure_tester
 
 SHARED_LIB := lib$(TARGET).so
@@ -95,8 +95,8 @@ library: build_dir
 		-fPIC -shared \
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		$(LIB_LDFLAGS) \
 		$(LIB_SOURCES) \
+		$(LIB_LDFLAGS) \
 		-o $(BUILD)/$(SHARED_LIB)
 
 install:
