@@ -275,7 +275,6 @@ class Plot2D : public Figure {
   std::set<Real> m_y_custom_markers;
 
   bool m_grid_enable = false;
-  bool m_legend_enable = false;
 
   /** Translate the (x, y) coordinates from the plot function to (x, y) in the
    * svg image */

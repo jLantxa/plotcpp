@@ -48,6 +48,10 @@ void BarPlotBase::SetBarRelativeWidth(float rel_width) {
 
 void BarPlotBase::AddYMarker(Real marker) { m_y_custom_markers.insert(marker); }
 
+void BarPlotBase::SetLegend(const std::vector<std::string>& labels) {
+  m_legend_labels = labels;
+}
+
 void BarPlotBase::Clear() {
   ClearData();
 
@@ -75,6 +79,7 @@ void BarPlotBase::Build() {
   DrawXAxis();
   DrawYAxis();
   DrawBars();
+  DrawLegend();
   DrawFrame();
 }
 
@@ -417,4 +422,68 @@ void BarPlotBase::DrawTitle() {
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 }
 
+void BarPlotBase::DrawLegend() {
+  if (m_legend_labels.empty()) {
+    return;
+  }
+
+  static constexpr float font_size = 12.0f;
+  static constexpr float box_margin_px = 5.0f;
+  static constexpr float font_em = font_size / 12.0f;
+  static constexpr float font_margin_em = 0.5f * font_em;
+  static constexpr float rect_length_em = 3.0f * font_em / 4.0f;
+  static constexpr float rect_length_px = fonts::EmToPx(rect_length_em);
+  static constexpr float spacing_em = 0.5f * font_em;
+
+  // Calculate sizes
+  float max_font_width_em = 0;
+  for (const auto& label : m_legend_labels) {
+    const auto [w, _] = fonts::CalculateTextSize(label, TEXT_FONT, font_size);
+    max_font_width_em = std::max(max_font_width_em, w);
+  }
+
+  const std::size_t num_labels = std::min(m_legend_labels.size(), m_num_bars);
+  const float box_w = fonts::EmToPx(2 * font_margin_em + rect_length_em +
+                                    spacing_em + max_font_width_em);
+  const float box_x = (m_frame_x + m_frame_w) - box_margin_px - box_w;
+  const float box_y = m_frame_y + box_margin_px;
+  const float box_h = fonts::EmToPx(static_cast<float>(num_labels) * font_em +
+                                    2 * font_margin_em);
+
+  svg::Rect box_rect = {
+      .x = box_x,
+      .y = box_y,
+      .width = box_w,
+      .height = box_h,
+  };
+  auto box_rect_node = m_svg.DrawRect(box_rect);
+  svg::SetAttribute(box_rect_node, "fill", "white");
+  svg::SetAttribute(box_rect_node, "fill-opacity", "0.9");
+  svg::SetAttribute(box_rect_node, "rx", "4", "px");
+  svg::SetAttribute(box_rect_node, "ry", "4", "px");
+
+  for (std::size_t i = 0; i < num_labels; ++i) {
+    const std::string& label = m_legend_labels[i];
+    const Color& color = m_y_data[i].color;
+    const float x = box_x + fonts::EmToPx(font_margin_em);
+    const float y = box_y + fonts::EmToPx(font_em / 2 + font_margin_em +
+                                          static_cast<float>(i) * font_em);
+
+    svg::Rect color_rect{.x = x,
+                         .y = y - (rect_length_px / 2.0f),
+                         .width = rect_length_px,
+                         .height = rect_length_px,
+                         .stroke_color = color,
+                         .stroke_opacity = 1.0f,
+                         .stroke_width = 1.0f,
+                         .fill_color = color,
+                         .fill_opacity = 1.0f,
+                         .fill_transparent = false};
+    m_svg.DrawRect(color_rect);
+
+    const float text_x = x + fonts::EmToPx(rect_length_em + spacing_em);
+    const float text_y = y + fonts::EmToPx(font_em / 4);
+    m_svg.DrawText(svg::Text{label, text_x, text_y, font_size, TEXT_FONT});
+  }
+}
 }  // namespace plotcpp

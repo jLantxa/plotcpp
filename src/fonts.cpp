@@ -31,8 +31,6 @@ static const std::map<std::string, FontData> FONT_DATA = {
     {"monospace", {.width_em = 0.46f}},
 };
 
-float EmToPx(float em) { return em * 16.0f; }
-
 std::pair<float, float> CalculateTextSize(const std::string& text,
                                           const std::string& font, float size) {
   const auto it = FONT_DATA.find(font);
