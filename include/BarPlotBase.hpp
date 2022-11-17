@@ -47,6 +47,8 @@ class BarPlotBase : public Figure {
 
   void AddYMarker(Real marker);
 
+  void SetLegend(const std::vector<std::string>& labels);
+
  protected:
   explicit BarPlotBase() = default;
 
@@ -132,6 +134,8 @@ class BarPlotBase : public Figure {
   void DrawYAxis();
   void DrawXLabel();
   void DrawYLabel();
+
+  void DrawLegend();
 };
 
 }  // namespace plotcpp

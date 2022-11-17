@@ -126,6 +126,8 @@ void GroupPlot() {
   p0.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4}, {254, 177, 57});
   p0.SetXLabel("x axis");
   p0.SetYLabel("y axis");
+  p0.SetGridEnable(true);
+  p0.SetLegend({"S0", "S1", "S2"});
 
   p1.SetHold(true);
   const auto x1 = plotcpp::ranges::MakeRange<Real>(1, 6, 0.01);
@@ -158,6 +160,7 @@ void BarPlot() {
   plot.SetXLabel("x axis");
   plot.SetYLabel("y axis");
   plot.SetGridEnable(true);
+  plot.SetLegend({"S0", "S1", "S2"});
 
   plot.Build();
   plot.Save(BAR_PLOT_FILENAME);

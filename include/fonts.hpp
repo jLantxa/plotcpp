@@ -31,7 +31,7 @@ struct FontData {
 };
 
 /** Convert em to px */
-float EmToPx(float em);
+constexpr float EmToPx(float em) { return em * 16.0f; };
 
 /**
  * @brief Calculate an approximation of the bounding box of a text in em.
