@@ -147,13 +147,17 @@ void BarPlotBase::DrawBars() {
       std::vector<std::size_t>(m_num_bars, 0);
   std::vector<std::size_t> remaining_negative_segment_counts =
       std::vector<std::size_t>(m_num_bars, 0);
+  std::vector<Real> positive_bar_sizes(m_num_bars, 0.0f);
+  std::vector<Real> negative_bar_sizes(m_num_bars, 0.0f);
   for (const auto& data_series : m_y_data) {
     for (std::size_t i = 0; i < m_num_bars; ++i) {
       const Real value = data_series.values[i];
       if (value > 0) {
-        remaining_positive_segment_counts[i]++;
+        ++remaining_positive_segment_counts[i];
+        positive_bar_sizes[i] += value;
       } else if (value < 0) {
-        remaining_negative_segment_counts[i]++;
+        ++remaining_negative_segment_counts[i];
+        negative_bar_sizes[i] += value;
       }
     }
   }
@@ -166,19 +170,22 @@ void BarPlotBase::DrawBars() {
 
       float start_y;
       float end_y;
-      bool should_round_border;
+      bool should_round_border = m_rounded_borders;
+      Real bar_height = 0.0f;
       if (value >= 0) {
         start_y = TranslateToFrame(m_baselines[i] + pos_acc[i]);
         end_y = TranslateToFrame(m_baselines[i] + pos_acc[i] + value);
         pos_acc[i] += value;
-        should_round_border =
-            m_rounded_borders && (--remaining_positive_segment_counts[i] == 0);
+        bar_height = TranslateToFrame(positive_bar_sizes[i]) -
+                     TranslateToFrame(m_baselines[i]);
+        should_round_border &= (--remaining_positive_segment_counts[i] == 0);
       } else {
         start_y = TranslateToFrame(m_baselines[i] + neg_acc[i]);
         end_y = TranslateToFrame(m_baselines[i] + neg_acc[i] + value);
         neg_acc[i] += value;
-        should_round_border =
-            m_rounded_borders && (--remaining_negative_segment_counts[i] == 0);
+        bar_height = TranslateToFrame(negative_bar_sizes[i]) -
+                     TranslateToFrame(m_baselines[i]);
+        should_round_border &= (--remaining_negative_segment_counts[i] == 0);
       }
 
       const float bar_center_x = m_frame_x +
@@ -187,8 +194,9 @@ void BarPlotBase::DrawBars() {
                                  (static_cast<float>(i) * bar_horizontal_space);
 
       static constexpr float max_radius = 5.0f;
-      float radius = std::min(max_radius, bar_width / 2.0f);
-      float delta = (value >= 0) ? -radius : radius;
+      const float radius = std::min({max_radius, bar_width / 2.0f,
+                                     static_cast<float>(std::abs(bar_height))});
+      const float delta = (value >= 0) ? -radius : radius;
 
       std::vector<svg::PathCommand> cmds =
           (!should_round_border)
