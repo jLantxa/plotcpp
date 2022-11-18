@@ -29,6 +29,7 @@
 #include <utility>
 #include <vector>
 
+#include "components.hpp"
 #include "fonts.hpp"
 #include "svg.hpp"
 #include "utility.hpp"
@@ -240,9 +241,9 @@ void Plot2D::Build() {
 
   DrawBackground();
   DrawTitle();
-  DrawAxes();
-  DrawData();
   DrawFrame();
+  DrawLabels();
+  DrawData();
   DrawLegend();
 }
 
@@ -278,12 +279,12 @@ void Plot2D::CalculateFrame() {
 
   // Calculate font sizes
   const std::string DUMMY_TEXT = "-000.00";
-  const float y_axis_font_size =
-      fonts::ConstrainedFontSize(BASE_AXIS_FONT_SIZE, DUMMY_TEXT, TEXT_FONT,
-                                 (3.0f * m_frame_x / 4.0f) - MARKER_LENGTH,
-                                 m_frame_h / static_cast<float>(num_y_markers));
+  const float y_axis_font_size = fonts::ConstrainedFontSize(
+      BASE_AXIS_FONT_SIZE, DUMMY_TEXT, components::TEXT_FONT,
+      (3.0f * m_frame_x / 4.0f) - MARKER_LENGTH,
+      m_frame_h / static_cast<float>(num_y_markers));
   // const float x_axis_font_size = fonts::ConstrainedFontSize(
-  //     BASE_AXIS_FONT_SIZE, DUMMY_TEXT, TEXT_FONT, m_frame_w,
+  //     BASE_AXIS_FONT_SIZE, DUMMY_TEXT, components::TEXT_FONT, m_frame_w,
   //     (static_cast<float>(m_height) * FRAME_BOTTOM_MARGIN_REL -
   //     MARKER_LENGTH) /
   //         2.0f);
@@ -329,9 +330,8 @@ void Plot2D::CalculateNumericFrame() {
 }
 
 std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
-  float tx = static_cast<float>((m_zoom_x * (x - m_x_range.first)) + m_frame_x);
-  float ty = static_cast<float>(-(m_zoom_y * (y - m_y_range.first)) +
-                                (m_frame_y + m_frame_h));
+  float tx = static_cast<float>(m_zoom_x * (x - m_x_range.first));
+  float ty = static_cast<float>(m_frame_h - (m_zoom_y * (y - m_y_range.first)));
   return {tx, ty};
 }
 
@@ -365,22 +365,51 @@ void Plot2D::CalculateCategoricalFrame() {
 void Plot2D::DrawBackground() { m_svg.DrawBackground(BACKGROUND_COLOR); }
 
 void Plot2D::DrawFrame() {
-  svg::Rect frame_rect{
-      .x = m_frame_x,
-      .y = m_frame_y,
-      .width = m_frame_w,
-      .height = m_frame_h,
-      .stroke_color = FRAME_STROKE_COLOR,
-  };
-  auto frame_node = m_svg.DrawRect(frame_rect);
-  svg::SetAttribute(frame_node, "fill", "none");
+  components::Frame frame(m_frame_w, m_frame_h, m_grid_enable);
 
-  auto defs_node = m_svg.Defs();
-  auto clip_path_node = svg::AppendNode(defs_node, "clipPath");
-  svg::SetAttribute(clip_path_node, "id", FRAME_RECT_CLIP_PATH_ID);
-  svg::Rect clip_rect{
-      .x = m_frame_x, .y = m_frame_y, .width = m_frame_w, .height = m_frame_h};
-  m_svg.DrawRect(clip_rect, clip_path_node);
+  // Y axis
+  std::set<Real> left_markers;
+  left_markers.insert(m_y_markers.begin(), m_y_markers.end());
+  left_markers.insert(m_y_custom_markers.begin(), m_y_custom_markers.end());
+
+  for (const auto& marker : left_markers) {
+    if ((marker < m_y_range.first) || (marker > m_y_range.second)) {
+      continue;
+    }
+
+    const auto [_, y] = TranslateToFrame(0, marker);
+    frame.AddLeftMarker(y, fmt::format("{:.2f}", marker));
+  }
+
+  // X axis
+  if (m_data_type == DataType::NUMERIC) {
+    std::set<Real> bottom_markers;
+    bottom_markers.insert(m_x_markers.begin(), m_x_markers.end());
+    bottom_markers.insert(m_x_custom_markers.begin(), m_x_custom_markers.end());
+
+    for (const auto& marker : bottom_markers) {
+      if ((marker < m_x_range.first) || (marker > m_x_range.second)) {
+        continue;
+      }
+
+      const auto [x, _] = TranslateToFrame(marker, 0);
+      frame.AddBottomMarker(x, fmt::format("{:.2g}", marker));
+    }
+  } else if (m_data_type == DataType::CATEGORICAL) {
+    const std::size_t num_labels = m_categorical_labels.size();
+    if (num_labels <= 1) {
+      // TODO: Draw marker in the middle
+      return;
+    }
+
+    for (std::size_t i = 0; i < num_labels; ++i) {
+      const auto x = static_cast<float>(i) *
+                     (m_frame_w / static_cast<float>(num_labels - 1));
+      frame.AddBottomMarker(x, m_categorical_labels[i]);
+    }
+  }
+
+  frame.Draw(&m_svg, m_frame_x, m_frame_y);
 }
 
 void Plot2D::DrawData() {
@@ -424,7 +453,7 @@ void Plot2D::DrawNumericPath(const DataSeries& plot) {
     const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
                                            : svg::PathCommand::Id::MOVE;
     const auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
-    path.Add({path_cmd, {tx, ty}});
+    path.Add({path_cmd, {tx + m_frame_x, ty + m_frame_y}});
   }
 
   auto path_node = m_svg.DrawPath(path);
@@ -453,8 +482,8 @@ void Plot2D::DrawNumericScatter(const DataSeries& plot) {
     }
     const auto [tx, ty] = TranslateToFrame(data_x[i], data_y[i]);
 
-    auto circle_node =
-        m_svg.DrawCircle({tx, ty, plot.style.stroke, plot.style.color});
+    auto circle_node = m_svg.DrawCircle(
+        {tx + m_frame_x, ty + m_frame_y, plot.style.stroke, plot.style.color});
 
     std::stringstream clip_path_url_ss;
     clip_path_url_ss << "url(#" << FRAME_RECT_CLIP_PATH_ID << ")";
@@ -489,9 +518,9 @@ void Plot2D::DrawCategoricalPath(const CategoricalDataSeries& plot) {
     const auto path_cmd = must_join_points ? svg::PathCommand::Id::LINE
                                            : svg::PathCommand::Id::MOVE;
     const auto [_, ty] = TranslateToFrame(0, data_y[i]);
-    const float tx = m_frame_x + static_cast<float>(i) *
-                                     (m_frame_w / static_cast<float>(size - 1));
-    path.Add({path_cmd, {tx, ty}});
+    const float tx =
+        static_cast<float>(i) * (m_frame_w / static_cast<float>(size - 1));
+    path.Add({path_cmd, {tx + m_frame_x, ty + m_frame_y}});
   }
 
   auto path_node = m_svg.DrawPath(path);
@@ -516,12 +545,12 @@ void Plot2D::DrawCategoricalScatter(const CategoricalDataSeries& plot) {
     }
 
     const auto [_, ty] = TranslateToFrame(0, data_y[i]);
-    const float tx = m_frame_x + static_cast<float>(i) *
-                                     (m_frame_w / static_cast<float>(size - 1));
+    const float tx =
+        static_cast<float>(i) * (m_frame_w / static_cast<float>(size - 1));
 
     svg::Circle circle{
-        .cx = tx,
-        .cy = ty,
+        .cx = tx + m_frame_x,
+        .cy = ty + m_frame_y,
         .r = plot.style.stroke,
         .fill_color = plot.style.color,
     };
@@ -542,202 +571,40 @@ void Plot2D::DrawTitle() {
   const float y = static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL / 2;
 
   const float font_size = fonts::ConstrainedFontSize(
-      BASE_TITLE_FONT_SIZE, m_title, TEXT_FONT, static_cast<float>(m_width),
+      BASE_TITLE_FONT_SIZE, m_title, components::TEXT_FONT,
+      static_cast<float>(m_width),
       static_cast<float>(m_height) * FRAME_TOP_MARGIN_REL);
 
-  auto node_ptr =
-      m_svg.DrawText(svg::Text{m_title, x, y, font_size, TEXT_FONT});
+  auto node_ptr = m_svg.DrawText(
+      svg::Text{m_title, x, y, font_size, components::TEXT_FONT});
   svg::SetAttribute(node_ptr, "font-weight", "bold");
   svg::SetAttribute(node_ptr, "text-anchor", "middle");
 }
 
-void Plot2D::DrawAxes() {
-  switch (m_data_type) {
-    case DataType::NUMERIC:
-      DrawNumericXAxis();
-      break;
-    case DataType::CATEGORICAL:
-      DrawCategoricalXAxis();
-      break;
-    default:
-      break;
-  }
-  DrawXLabel();
-  DrawYAxis();
-  DrawYLabel();
-}
+void Plot2D::DrawLabels() {
+  if (!m_x_label.empty()) {
+    const float frame_bottom = m_frame_y + m_frame_h;
+    const float x = m_frame_x + (m_frame_w / 2);
+    const float y =
+        frame_bottom + (0.75f) * (static_cast<float>(m_height) - frame_bottom);
 
-void Plot2D::DrawXLabel() {
-  if (m_x_label.empty()) {
-    return;
-  }
+    auto node_ptr = m_svg.DrawText(
+        svg::Text{m_x_label, x, y, m_axis_font_size, components::TEXT_FONT});
+    svg::SetAttribute(node_ptr, "text-anchor", "middle");
 
-  const float frame_bottom = m_frame_y + m_frame_h;
-  const float x = m_frame_x + (m_frame_w / 2);
-  const float y =
-      frame_bottom + (0.75f) * (static_cast<float>(m_height) - frame_bottom);
+    if (!m_x_label.empty()) {
+      const float x = (1 - 0.75f) * m_frame_x;
+      const float y = m_frame_y + (m_frame_h / 2);
 
-  auto node_ptr =
-      m_svg.DrawText(svg::Text{m_x_label, x, y, m_axis_font_size, TEXT_FONT});
-  svg::SetAttribute(node_ptr, "text-anchor", "middle");
-}
+      auto node_ptr = m_svg.DrawText(
+          svg::Text{m_y_label, 0, 0, m_axis_font_size, components::TEXT_FONT});
+      svg::SetAttribute(node_ptr, "text-anchor", "middle");
 
-void Plot2D::DrawYLabel() {
-  if (m_x_label.empty()) {
-    return;
-  }
-
-  const float x = (1 - 0.75f) * m_frame_x;
-  const float y = m_frame_y + (m_frame_h / 2);
-
-  auto node_ptr =
-      m_svg.DrawText(svg::Text{m_y_label, 0, 0, m_axis_font_size, TEXT_FONT});
-  svg::SetAttribute(node_ptr, "text-anchor", "middle");
-
-  std::stringstream trans_ss;
-  trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
-           << ") "
-           << "rotate(-90)";
-  svg::SetAttribute(node_ptr, "transform", trans_ss.str());
-}
-
-void Plot2D::DrawNumericXAxis() {
-  std::set<Real> markers;
-  markers.insert(m_x_markers.begin(), m_x_markers.end());
-  markers.insert(m_x_custom_markers.begin(), m_x_custom_markers.end());
-
-  if (markers.size() <= 1) {
-    // TODO: Draw marker in the middle
-    return;
-  }
-
-  for (const auto& marker : markers) {
-    if ((marker < m_x_range.first) || (marker > m_x_range.second)) {
-      continue;
-    }
-
-    const auto [x, _] = TranslateToFrame(marker, 0);
-    const auto y = m_frame_y + m_frame_h;
-
-    svg::Line marker_line{.x1 = x,
-                          .y1 = y,
-                          .x2 = x,
-                          .y2 = y + MARKER_LENGTH,
-                          .stroke_color = FRAME_STROKE_COLOR,
-                          .stroke_opacity = 1.0f,
-                          .stroke_width = 1};
-    m_svg.DrawLine(marker_line);
-
-    const std::string marker_text = fmt::format("{:.2g}", marker);
-    float font_em = m_axis_font_size / 12.0f;
-    auto text_node = m_svg.DrawText(
-        svg::Text{marker_text, x, y + MARKER_LENGTH + fonts::EmToPx(font_em),
-                  m_axis_font_size, TEXT_FONT});
-    svg::SetAttribute(text_node, "text-anchor", "middle");
-
-    if (m_grid_enable) {
-      svg::Line grid_line{.x1 = x,
-                          .y1 = m_frame_y,
-                          .x2 = x,
-                          .y2 = m_frame_y + m_frame_h,
-                          .stroke_color = FRAME_STROKE_COLOR,
-                          .stroke_opacity = 1.0f,
-                          .stroke_width = 0.75f};
-      auto grid_line_node = m_svg.DrawLine(grid_line);
-      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
-    }
-  }
-}
-
-void Plot2D::DrawCategoricalXAxis() {
-  const std::size_t num_labels = m_categorical_labels.size();
-  if (num_labels <= 1) {
-    // TODO: Draw marker in the middle
-    return;
-  }
-
-  for (std::size_t i = 0; i < num_labels; ++i) {
-    const auto x =
-        m_frame_x + static_cast<float>(i) *
-                        (m_frame_w / static_cast<float>(num_labels - 1));
-    const auto y = m_frame_y + m_frame_h;
-
-    svg::Line marker_line{.x1 = x,
-                          .y1 = y,
-                          .x2 = x,
-                          .y2 = y + MARKER_LENGTH,
-                          .stroke_color = FRAME_STROKE_COLOR,
-                          .stroke_opacity = 1.0f,
-                          .stroke_width = 1};
-    m_svg.DrawLine(marker_line);
-
-    const std::string marker_text = m_categorical_labels[i];
-    float font_em = m_axis_font_size / 12.0f;
-    auto text_node = m_svg.DrawText(
-        svg::Text{marker_text, x, y + MARKER_LENGTH + fonts::EmToPx(font_em),
-                  m_axis_font_size, TEXT_FONT});
-    svg::SetAttribute(text_node, "text-anchor", "middle");
-
-    if (m_grid_enable) {
-      svg::Line grid_line{.x1 = x,
-                          .y1 = m_frame_y,
-                          .x2 = x,
-                          .y2 = m_frame_y + m_frame_h,
-                          .stroke_color = FRAME_STROKE_COLOR,
-                          .stroke_opacity = 1.0f,
-                          .stroke_width = 0.75f};
-      auto grid_line_node = m_svg.DrawLine(grid_line);
-      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
-    }
-  }
-}
-
-void Plot2D::DrawYAxis() {
-  std::set<Real> markers;
-  markers.insert(m_y_markers.begin(), m_y_markers.end());
-  markers.insert(m_y_custom_markers.begin(), m_y_custom_markers.end());
-
-  if (markers.size() <= 1) {
-    // TODO: Draw marker in the middle
-    return;
-  }
-
-  for (const auto& marker : markers) {
-    if ((marker < m_y_range.first) || (marker > m_y_range.second)) {
-      continue;
-    }
-
-    const auto [_, y] = TranslateToFrame(0, marker);
-    const float x = m_frame_x;
-
-    svg::Line marker_line{.x1 = x,
-                          .y1 = y,
-                          .x2 = x - MARKER_LENGTH,
-                          .y2 = y,
-                          .stroke_color = FRAME_STROKE_COLOR,
-                          .stroke_opacity = 1.0f,
-                          .stroke_width = 1};
-    m_svg.DrawLine(marker_line);
-
-    float font_em =
-        m_axis_font_size /
-        12.0f;  // Some SVG renderers don't support baseline alignment
-    const std::string marker_text = fmt::format("{:.2f}", marker);
-    auto text_node = m_svg.DrawText(svg::Text{
-        marker_text, x - 2 * MARKER_LENGTH, y + fonts::EmToPx(font_em / 4.0f),
-        m_axis_font_size, TEXT_FONT});
-    svg::SetAttribute(text_node, "text-anchor", "end");
-
-    if (m_grid_enable) {
-      svg::Line grid_line{.x1 = m_frame_x,
-                          .y1 = y,
-                          .x2 = m_frame_x + m_frame_w,
-                          .y2 = y,
-                          .stroke_color = FRAME_STROKE_COLOR,
-                          .stroke_opacity = 1.0f,
-                          .stroke_width = 0.75f};
-      auto grid_line_node = m_svg.DrawLine(grid_line);
-      svg::SetAttribute(grid_line_node, "stroke-dasharray", "0.75,0.75");
+      std::stringstream trans_ss;
+      trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
+               << ") "
+               << "rotate(-90)";
+      svg::SetAttribute(node_ptr, "transform", trans_ss.str());
     }
   }
 }
@@ -757,7 +624,8 @@ void Plot2D::DrawLegend() {
   // Calculate sizes
   float max_font_width_em = 0;
   for (const auto& label : m_legend_labels) {
-    const auto [w, _] = fonts::CalculateTextSize(label, TEXT_FONT, font_size);
+    const auto [w, _] =
+        fonts::CalculateTextSize(label, components::TEXT_FONT, font_size);
     max_font_width_em = std::max(max_font_width_em, w);
   }
 
@@ -826,7 +694,8 @@ void Plot2D::DrawLegend() {
 
     const float text_x = x + fonts::EmToPx(dash_length_em + spacing_em);
     const float text_y = y + fonts::EmToPx(font_em / 4);
-    m_svg.DrawText(svg::Text{label, text_x, text_y, font_size, TEXT_FONT});
+    m_svg.DrawText(
+        svg::Text{label, text_x, text_y, font_size, components::TEXT_FONT});
   }
 }
 

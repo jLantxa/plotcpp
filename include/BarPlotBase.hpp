@@ -101,7 +101,6 @@ class BarPlotBase : public Figure {
   static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
-  const std::string TEXT_FONT{"monospace"};
   float m_axis_font_size = 11.0f;
 
   static constexpr float PIXELS_PER_X_MARKER = 80.0f;
@@ -132,8 +131,7 @@ class BarPlotBase : public Figure {
 
   void DrawXAxis();
   void DrawYAxis();
-  void DrawXLabel();
-  void DrawYLabel();
+  void DrawLabels();
 
   void DrawLegend();
 };

@@ -290,7 +290,6 @@ class Plot2D : public Figure {
   static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
-  const std::string TEXT_FONT{"monospace"};
   float m_axis_font_size;
 
   static constexpr float PIXELS_PER_X_MARKER = 80.0f;
@@ -319,14 +318,7 @@ class Plot2D : public Figure {
   void DrawCategoricalScatter(const CategoricalDataSeries& plot);
 
   void DrawTitle();
-
-  void DrawAxes();
-  void DrawNumericXAxis();
-  void DrawCategoricalXAxis();
-  void DrawYAxis();
-
-  void DrawXLabel();
-  void DrawYLabel();
+  void DrawLabels();
 
   void DrawLegend();
 
