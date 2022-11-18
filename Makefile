@@ -1,6 +1,7 @@
 INCLUDE := include
 SRC := src
 TEST := test
+EXAMPLES := examples
 DOC := doc
 BUILD := build
 TARGET := plotcpp
@@ -25,6 +26,7 @@ LIB_SOURCES += \
 	$(SRC)/version.cpp \
 	$(SRC)/fonts.cpp \
 	$(SRC)/svg.cpp \
+	$(SRC)/components.cpp \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
 	$(SRC)/BarPlotBase.cpp \
@@ -85,7 +87,7 @@ figure-tester: build_dir compiledb
 		$(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
 		$(LIB_SOURCES) \
-		$(TEST)/figure_tester.cpp \
+		$(EXAMPLES)/figure_tester.cpp \
 		$(LIB_LDFLAGS) \
 		-o $(BUILD)/figure_tester
 
