@@ -119,10 +119,12 @@ class Document {
   /** Return the xml text */
   std::string GetText() const;
 
+  xmlDocPtr GetDoc();
+
   /** Clear all elements in this document */
   void Reset();
 
-  xmlDocPtr GetDoc();
+  std::pair<float, float> GetSize();
 
   /**
    * @brief Set the Size object

@@ -6,9 +6,6 @@ DOC := doc
 BUILD := build
 TARGET := plotcpp
 
-LIBXML2_LIBS := $(shell xml2-config --libs)
-LIBXML2_CFLAGS := $(shell xml2-config --cflags)
-
 CXX_FLAGS += \
 	-std=c++20 \
 	-O3 \
@@ -22,8 +19,12 @@ all: library cli
 
 LIB_CXXFLAGS += \
 	$(LIBXML2_CFLAGS)
+LIB_CXXFLAGS := \
+	$(shell xml2-config --cflags) \
+	$(shell pkg-config --cflags librsvg-2.0)
 LIB_LDFLAGS += \
-	$(LIBXML2_LIBS) \
+	$(shell xml2-config --libs) \
+	$(shell pkg-config --ldflags librsvg-2.0) \
 	-lfmt
 LIB_SOURCES += \
 	$(SRC)/version.cpp \

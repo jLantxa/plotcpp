@@ -28,6 +28,7 @@ library is targeted for use in modern C++ projects.
 * [libxml2](https://github.com/GNOME/libxml2)
 * [fmt](https://fmt.dev/latest/index.html): Neither `clang` nor `gcc` support `<format>` yet, so fmt
 is a temporary workaround.
+* librsvg2
 
 # Building plotcpp
 To build `plotcpp` you need to make sure you have all dependencies installed on your system (see
