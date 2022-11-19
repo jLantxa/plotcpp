@@ -90,8 +90,7 @@ figure type:
 The `BarPlot` figure can represent (stacked) segments of data.
 
 A number of features are lacking for this figure type:
-* Axes (and smart subdivision)
-* Grid
+* Smart subdivision of axes
 * Annotated values
 
 ![Example](examples/bar_plot.png)
@@ -100,7 +99,7 @@ A number of features are lacking for this figure type:
 The `HistogramPlot` is a `BarPlot` that represents the histogram of a series of values using a
 custom number of bins.
 
-Since this figure is based on the `BarPlot` it will be lacking the same features:
+Since this figure is based on the `BarPlot` it will be lacking the same features.
 
 ![Example](examples/histogram_plot.png)
 
