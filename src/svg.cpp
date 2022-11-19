@@ -39,6 +39,13 @@ void SetAttribute(xmlNode* node, const std::string& name,
   xmlSetProp(node, xchar(name.c_str()), xchar(val_str.c_str()));
 }
 
+std::string ColorToString(const Color& color) {
+  std::stringstream ss;
+  ss << "RGB(" << std::to_string(color.r) << ", " << std::to_string(color.g)
+     << ", " << std::to_string(color.b) << ")";
+  return ss.str();
+}
+
 Document::Document() {
   m_doc = xmlNewDoc(xchar("1.0"));
   Reset();
@@ -52,13 +59,6 @@ std::string Document::GetText() const {
   xmlChar* xml_str;
   xmlDocDumpFormatMemory(m_doc, &xml_str, nullptr, 1);
   return std::string{(char*)xml_str};
-}
-
-static std::string ColorToString(const Color& color) {
-  std::stringstream ss;
-  ss << "RGB(" << std::to_string(color.r) << ", " << std::to_string(color.g)
-     << ", " << std::to_string(color.b) << ")";
-  return ss.str();
 }
 
 std::string PathCommand::ToString() const {

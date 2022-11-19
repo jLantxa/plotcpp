@@ -68,6 +68,9 @@ class Legend {
   static constexpr float RECT_LENGTH_PX = fonts::EmToPx(RECT_LENGTH_EM);
   static constexpr float SPACING_LENGTH_EM = 0.5f * FONT_EM;
   static constexpr Color STROKE_COLOR = style::BORDER_COLOR;
+  static constexpr Color BOX_COLOR{255, 255, 255};
+  static constexpr float BOX_OPACITY = 0.90f;
+  static constexpr float BOX_RADIUS = 3.0f;
 };
 
 }  // namespace components

@@ -105,6 +105,8 @@ struct Text {
   Color color = {0, 0, 0};
 };
 
+std::string ColorToString(const Color& color);
+
 /**
  * /brief An SVG document
  */

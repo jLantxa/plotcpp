@@ -74,10 +74,10 @@ void Legend::Draw(svg::Document* document, float x, float y, float margin,
                         .height = box_h,
                         .stroke_color = STROKE_COLOR};
   auto box_rect_node = document->DrawRect(box_rect);
-  svg::SetAttribute(box_rect_node, "fill", "white");
-  svg::SetAttribute(box_rect_node, "fill-opacity", "0.90");
-  svg::SetAttribute(box_rect_node, "rx", "4", "px");
-  svg::SetAttribute(box_rect_node, "ry", "4", "px");
+  svg::SetAttribute(box_rect_node, "fill", svg::ColorToString(BOX_COLOR));
+  svg::SetAttribute(box_rect_node, "fill-opacity", std::to_string(BOX_OPACITY));
+  svg::SetAttribute(box_rect_node, "rx", std::to_string(BOX_RADIUS), "px");
+  svg::SetAttribute(box_rect_node, "ry", std::to_string(BOX_RADIUS), "px");
 
   for (std::size_t i = 0; i < num_labels; ++i) {
     const LegendEntry label = m_legend_labels[i];
