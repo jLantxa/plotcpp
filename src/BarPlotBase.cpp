@@ -20,7 +20,7 @@
 
 #include <fmt/format.h>
 
-#include <iostream>
+#include <algorithm>
 #include <set>
 #include <string>
 #include <utility>
@@ -156,7 +156,7 @@ void BarPlotBase::DrawBars() {
   for (const auto& data_series : m_y_data) {
     for (std::size_t i = 0; i < m_num_bars; ++i) {
       const Real value = data_series.values[i];
-      if (value > 0) {
+      if (value >= 0) {
         ++remaining_positive_segment_counts[i];
         positive_bar_sizes[i] += value;
       } else if (value < 0) {
@@ -255,21 +255,21 @@ void BarPlotBase::DrawLabels() {
     auto node_ptr = m_svg.DrawText(
         svg::Text{m_x_label, x, y, m_axis_font_size, components::TEXT_FONT});
     svg::SetAttribute(node_ptr, "text-anchor", "middle");
+  }
 
-    if (!m_x_label.empty()) {
-      const float x = (1 - 0.75f) * m_frame_x;
-      const float y = m_frame_y + (m_frame_h / 2);
+  if (!m_x_label.empty()) {
+    const float x = (1 - 0.75f) * m_frame_x;
+    const float y = m_frame_y + (m_frame_h / 2);
 
-      auto node_ptr = m_svg.DrawText(
-          svg::Text{m_y_label, 0, 0, m_axis_font_size, components::TEXT_FONT});
-      svg::SetAttribute(node_ptr, "text-anchor", "middle");
+    auto node_ptr = m_svg.DrawText(
+        svg::Text{m_y_label, 0, 0, m_axis_font_size, components::TEXT_FONT});
+    svg::SetAttribute(node_ptr, "text-anchor", "middle");
 
-      std::stringstream trans_ss;
-      trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
-               << ") "
-               << "rotate(-90)";
-      svg::SetAttribute(node_ptr, "transform", trans_ss.str());
-    }
+    std::stringstream trans_ss;
+    trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
+             << ") "
+             << "rotate(-90)";
+    svg::SetAttribute(node_ptr, "transform", trans_ss.str());
   }
 }
 
@@ -297,7 +297,7 @@ void BarPlotBase::DrawFrame() {
   // Bottom markers
   const std::size_t max_num_x_markers =
       static_cast<std::size_t>(m_frame_w / PIXELS_PER_X_MARKER);
-  const std::size_t marker_step = m_num_bars / max_num_x_markers;
+  const std::size_t marker_step = std::max(1UL, m_num_bars / max_num_x_markers);
 
   const float bar_horizontal_space =
       (m_frame_w * (1 - 2 * BAR_FRAME_Y_MARGIN_REL)) /
@@ -339,7 +339,8 @@ void BarPlotBase::DrawTitle() {
 void BarPlotBase::DrawLegend() {
   components::Legend legend;
 
-  const std::size_t num_labels = std::min(m_legend_labels.size(), m_num_bars);
+  const std::size_t num_labels =
+      std::min(m_legend_labels.size(), m_y_data.size());
   for (std::size_t i = 0; i < num_labels; ++i) {
     legend.AddEntry(m_legend_labels[i],
                     {components::Legend::DataType::BAR, m_y_data[i].color});

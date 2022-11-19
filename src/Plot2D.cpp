@@ -592,21 +592,21 @@ void Plot2D::DrawLabels() {
     auto node_ptr = m_svg.DrawText(
         svg::Text{m_x_label, x, y, m_axis_font_size, components::TEXT_FONT});
     svg::SetAttribute(node_ptr, "text-anchor", "middle");
+  }
 
-    if (!m_x_label.empty()) {
-      const float x = (1 - 0.75f) * m_frame_x;
-      const float y = m_frame_y + (m_frame_h / 2);
+  if (!m_x_label.empty()) {
+    const float x = (1 - 0.75f) * m_frame_x;
+    const float y = m_frame_y + (m_frame_h / 2);
 
-      auto node_ptr = m_svg.DrawText(
-          svg::Text{m_y_label, 0, 0, m_axis_font_size, components::TEXT_FONT});
-      svg::SetAttribute(node_ptr, "text-anchor", "middle");
+    auto node_ptr = m_svg.DrawText(
+        svg::Text{m_y_label, 0, 0, m_axis_font_size, components::TEXT_FONT});
+    svg::SetAttribute(node_ptr, "text-anchor", "middle");
 
-      std::stringstream trans_ss;
-      trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
-               << ") "
-               << "rotate(-90)";
-      svg::SetAttribute(node_ptr, "transform", trans_ss.str());
-    }
+    std::stringstream trans_ss;
+    trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
+             << ") "
+             << "rotate(-90)";
+    svg::SetAttribute(node_ptr, "transform", trans_ss.str());
   }
 }
 
