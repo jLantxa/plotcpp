@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-#include "components.hpp"
+#include "components/Frame.hpp"
 
 #include <fmt/format.h>
 

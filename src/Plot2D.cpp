@@ -29,7 +29,8 @@
 #include <utility>
 #include <vector>
 
-#include "components.hpp"
+#include "components/Frame.hpp"
+#include "components/Legend.hpp"
 #include "fonts.hpp"
 #include "svg.hpp"
 #include "utility.hpp"
@@ -610,93 +611,29 @@ void Plot2D::DrawLabels() {
 }
 
 void Plot2D::DrawLegend() {
-  if (m_legend_labels.empty()) {
-    return;
-  }
+  components::Legend legend;
 
-  static constexpr float font_size = 12.0f;
-  static constexpr float box_margin_px = 5.0f;
-  static constexpr float font_em = font_size / 12.0f;
-  static constexpr float font_margin_em = 0.5f * font_em;
-  static constexpr float dash_length_em = 2.0f * font_em;
-  static constexpr float spacing_em = 0.5f * font_em;
-
-  // Calculate sizes
-  float max_font_width_em = 0;
-  for (const auto& label : m_legend_labels) {
-    const auto [w, _] =
-        fonts::CalculateTextSize(label, components::TEXT_FONT, font_size);
-    max_font_width_em = std::max(max_font_width_em, w);
-  }
-
-  std::size_t num_plots = 0;
-  std::vector<Style> styles;
   switch (m_data_type) {
-    case DataType::NUMERIC:
-      num_plots = m_numeric_data.size();
-      for (const auto& data : m_numeric_data) {
-        styles.push_back(data.style);
+    case DataType::NUMERIC: {
+      const std::size_t num_labels = std::min(m_legend_labels.size(), m_numeric_data.size());
+      for (std::size_t i = 0; i < num_labels; ++i) {
+        components::Legend::DataType type = (m_numeric_data[i].style.scatter == false)? components::Legend::DataType::LINE : components::Legend::DataType::POINT;
+        legend.AddEntry(m_legend_labels[i], {type, m_numeric_data[i].style.color, m_numeric_data[i].style.dash_array});
       }
       break;
-    case DataType::CATEGORICAL:
-      num_plots = m_categorical_data.size();
-      for (const auto& data : m_categorical_data) {
-        styles.push_back(data.style);
-      }
-      break;
-  }
-
-  const std::size_t num_labels = std::min(m_legend_labels.size(), num_plots);
-  const float box_w = fonts::EmToPx(2 * font_margin_em + dash_length_em +
-                                    spacing_em + max_font_width_em);
-  const float box_x = (m_frame_x + m_frame_w) - box_margin_px - box_w;
-  const float box_y = m_frame_y + box_margin_px;
-  const float box_h = fonts::EmToPx(static_cast<float>(num_labels) * font_em +
-                                    2 * font_margin_em);
-
-  svg::Rect box_rect = {
-      .x = box_x,
-      .y = box_y,
-      .width = box_w,
-      .height = box_h,
-  };
-  auto box_rect_node = m_svg.DrawRect(box_rect);
-  svg::SetAttribute(box_rect_node, "fill", "white");
-  svg::SetAttribute(box_rect_node, "fill-opacity", "0.9");
-  svg::SetAttribute(box_rect_node, "rx", "4", "px");
-  svg::SetAttribute(box_rect_node, "ry", "4", "px");
-
-  for (std::size_t i = 0; i < num_labels; ++i) {
-    const std::string& label = m_legend_labels[i];
-    const Style& style = styles[i];
-    const float x = box_x + fonts::EmToPx(font_margin_em);
-    const float y = box_y + fonts::EmToPx(font_em / 2 + font_margin_em +
-                                          static_cast<float>(i) * font_em);
-
-    if (style.scatter == false) {
-      svg::Line dash = {.x1 = x,
-                        .y1 = y,
-                        .x2 = x + fonts::EmToPx(dash_length_em),
-                        .y2 = y,
-                        .stroke_color = style.color,
-                        .stroke_width = 2.0f};
-      auto line_node = m_svg.DrawLine(dash);
-      svg::SetAttribute(line_node, "stroke-dasharray", style.dash_array);
-    } else {
-      svg::Circle circle{
-          .cx = x + (fonts::EmToPx(dash_length_em) / 2.0f),
-          .cy = y,
-          .r = fonts::EmToPx(font_em / 3.0f),
-          .fill_color = style.color,
-      };
-      m_svg.DrawCircle(circle);
     }
 
-    const float text_x = x + fonts::EmToPx(dash_length_em + spacing_em);
-    const float text_y = y + fonts::EmToPx(font_em / 4);
-    m_svg.DrawText(
-        svg::Text{label, text_x, text_y, font_size, components::TEXT_FONT});
+    case DataType::CATEGORICAL: {
+      const std::size_t num_labels = std::min(m_legend_labels.size(), m_categorical_data.size());
+      for (std::size_t i = 0; i < num_labels; ++i) {
+        components::Legend::DataType type = (m_categorical_data[i].style.scatter == false)? components::Legend::DataType::LINE : components::Legend::DataType::POINT;
+        legend.AddEntry(m_legend_labels[i], {type, m_categorical_data[i].style.color, m_categorical_data[i].style.dash_array});
+      }
+      break;
+    }
   }
+
+  legend.Draw(&m_svg, m_frame_x + m_frame_w, m_frame_y, LEGEND_MARGIN, components::Legend::Alignment::TOP_RIGHT);
 }
 
 }  // namespace plotcpp

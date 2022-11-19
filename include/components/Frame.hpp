@@ -16,18 +16,18 @@
  * limitations under the License.
  */
 
-#ifndef _PLOTCPP_INCLUDE_COMPONENTS_COMPONENTS_HPP_
-#define _PLOTCPP_INCLUDE_COMPONENTS_COMPONENTS_HPP_
+#ifndef _PLOTCPP_INCLUDE_COMPONENTS_FRAME_HPP_
+#define _PLOTCPP_INCLUDE_COMPONENTS_FRAME_HPP_
 
 #include <set>
 #include <string>
 
+#include "components/text.hpp"
+#include "style.hpp"
 #include "svg.hpp"
 
 namespace plotcpp {
 namespace components {
-
-const std::string TEXT_FONT{"monospace"};
 
 class Frame {
  public:
@@ -60,7 +60,7 @@ class Frame {
   std::set<Marker> m_bottom_markers;
 
   const std::string RECT_CLIP_PATH_ID{"rect-clip-path"};
-  static constexpr Color STROKE_COLOR{128, 128, 128};
+  static constexpr Color STROKE_COLOR = style::BORDER_COLOR;
   static constexpr float STROKE_WIDTH = 0.75f;
   const std::string DASH_ARRAY{"0.75,0.75"};
   static constexpr float MARKER_LENGTH = 5.0f;
@@ -73,4 +73,4 @@ class Frame {
 }  // namespace components
 }  // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_COMPONENTS_COMPONENTS_HPP_
+#endif  // _PLOTCPP_INCLUDE_COMPONENTS_FRAME_HPP_

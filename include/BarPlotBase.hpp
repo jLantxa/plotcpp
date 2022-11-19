@@ -98,7 +98,6 @@ class BarPlotBase : public Figure {
 
   float m_bar_width_rel = DEFAULT_BAR_WIDTH_REL;
 
-  static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
   float m_axis_font_size = 11.0f;
@@ -111,6 +110,8 @@ class BarPlotBase : public Figure {
 
   static constexpr float BASE_TITLE_FONT_SIZE = 20.0f;
   static constexpr float BASE_AXIS_FONT_SIZE = 11.0f;
+
+  static constexpr float LEGEND_MARGIN = 5.0f;
 
   float TranslateToFrame(Real y) const;
 

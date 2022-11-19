@@ -287,7 +287,6 @@ class Plot2D : public Figure {
   static constexpr float FRAME_RIGHT_MARGIN_REL = 0.05f;
   static const std::string FRAME_RECT_CLIP_PATH_ID;
 
-  static constexpr Color FRAME_STROKE_COLOR = {128, 128, 128};
   static constexpr Color BACKGROUND_COLOR = {255, 255, 255};
 
   float m_axis_font_size;
@@ -300,6 +299,8 @@ class Plot2D : public Figure {
 
   static constexpr float BASE_TITLE_FONT_SIZE = 20.0f;
   static constexpr float BASE_AXIS_FONT_SIZE = 11.0f;
+
+  static constexpr float LEGEND_MARGIN = 5.0f;
 
   /** Calculate all frame parameters needed to draw the plots. */
   void CalculateFrame();

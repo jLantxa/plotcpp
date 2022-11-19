@@ -26,7 +26,8 @@ LIB_SOURCES += \
 	$(SRC)/version.cpp \
 	$(SRC)/fonts.cpp \
 	$(SRC)/svg.cpp \
-	$(SRC)/components.cpp \
+	$(SRC)/components/Frame.cpp \
+	$(SRC)/components/Legend.cpp \
 	$(SRC)/Figure.cpp \
 	$(SRC)/Plot2D.cpp \
 	$(SRC)/BarPlotBase.cpp \
@@ -43,7 +44,7 @@ compiledb: build_dir
 
 format:
 	clang-format -i --style=Google \
-		$(INCLUDE)/* $(SRC)/* $(TEST)/*
+		$(INCLUDE)/*/* $(SRC)/*/* $(TEST)/*
 
 build_dir:
 	mkdir -p $(BUILD)
