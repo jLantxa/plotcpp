@@ -322,8 +322,6 @@ class Plot2D : public Figure {
   void DrawLabels();
 
   void DrawLegend();
-
-  friend class Plot2DTest;
 };
 
 }  // namespace plotcpp
