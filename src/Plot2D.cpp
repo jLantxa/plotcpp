@@ -615,25 +615,38 @@ void Plot2D::DrawLegend() {
 
   switch (m_data_type) {
     case DataType::NUMERIC: {
-      const std::size_t num_labels = std::min(m_legend_labels.size(), m_numeric_data.size());
+      const std::size_t num_labels =
+          std::min(m_legend_labels.size(), m_numeric_data.size());
       for (std::size_t i = 0; i < num_labels; ++i) {
-        components::Legend::DataType type = (m_numeric_data[i].style.scatter == false)? components::Legend::DataType::LINE : components::Legend::DataType::POINT;
-        legend.AddEntry(m_legend_labels[i], {type, m_numeric_data[i].style.color, m_numeric_data[i].style.dash_array});
+        components::Legend::DataType type =
+            (m_numeric_data[i].style.scatter == false)
+                ? components::Legend::DataType::LINE
+                : components::Legend::DataType::POINT;
+        legend.AddEntry(m_legend_labels[i],
+                        {type, m_numeric_data[i].style.color,
+                         m_numeric_data[i].style.dash_array});
       }
       break;
     }
 
     case DataType::CATEGORICAL: {
-      const std::size_t num_labels = std::min(m_legend_labels.size(), m_categorical_data.size());
+      const std::size_t num_labels =
+          std::min(m_legend_labels.size(), m_categorical_data.size());
       for (std::size_t i = 0; i < num_labels; ++i) {
-        components::Legend::DataType type = (m_categorical_data[i].style.scatter == false)? components::Legend::DataType::LINE : components::Legend::DataType::POINT;
-        legend.AddEntry(m_legend_labels[i], {type, m_categorical_data[i].style.color, m_categorical_data[i].style.dash_array});
+        components::Legend::DataType type =
+            (m_categorical_data[i].style.scatter == false)
+                ? components::Legend::DataType::LINE
+                : components::Legend::DataType::POINT;
+        legend.AddEntry(m_legend_labels[i],
+                        {type, m_categorical_data[i].style.color,
+                         m_categorical_data[i].style.dash_array});
       }
       break;
     }
   }
 
-  legend.Draw(&m_svg, m_frame_x + m_frame_w, m_frame_y, LEGEND_MARGIN, components::Legend::Alignment::TOP_RIGHT);
+  legend.Draw(&m_svg, m_frame_x + m_frame_w, m_frame_y, LEGEND_MARGIN,
+              components::Legend::Alignment::TOP_RIGHT);
 }
 
 }  // namespace plotcpp

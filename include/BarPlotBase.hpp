@@ -49,8 +49,9 @@ class BarPlotBase : public Figure {
   void SetRoundedEdges(bool enable);
 
   /**
-   * @brief Set the relative size (percentage) of the bar in relation with its total available space.
-   * Setting this parameter will affect the spacing between bars.
+   * @brief Set the relative size (percentage) of the bar in relation with its
+   * total available space. Setting this parameter will affect the spacing
+   * between bars.
    *
    * @param rel_width Percentage of the bar available space.
    */

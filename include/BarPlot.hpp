@@ -65,8 +65,8 @@ class BarPlot : public BarPlotBase {
 
   /**
    * @brief Set a baseline value for all bars.
-   * The baseline is the value from which all bar segments, positive and negative
-   * will be stacked.
+   * The baseline is the value from which all bar segments, positive and
+   * negative will be stacked.
    *
    * @param baseline Baseline value.
    */
@@ -74,8 +74,8 @@ class BarPlot : public BarPlotBase {
 
   /**
    * @brief Set a baseline value for every individual bar.
-   * The baseline is the value from which all bar segments, positive and negative
-   * will be stacked.
+   * The baseline is the value from which all bar segments, positive and
+   * negative will be stacked.
    *
    * @param baseline Baseline value.
    */

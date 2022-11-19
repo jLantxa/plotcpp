@@ -231,7 +231,7 @@ void BarPlotBase::DrawBars() {
 
       svg::Path path{
           .commands = cmds,
-          .stroke_width = 1,
+          .stroke_width = 1.0f,
           .stroke_color = series.color,
           .stroke_opacity = 1.0f,
           .fill_color = series.color,
@@ -341,10 +341,11 @@ void BarPlotBase::DrawLegend() {
 
   const std::size_t num_labels = std::min(m_legend_labels.size(), m_num_bars);
   for (std::size_t i = 0; i < num_labels; ++i) {
-    legend.AddEntry(m_legend_labels[i], {components::Legend::DataType::BAR, m_y_data[i].color});
+    legend.AddEntry(m_legend_labels[i],
+                    {components::Legend::DataType::BAR, m_y_data[i].color});
   }
 
-  legend.Draw(&m_svg, m_frame_x + m_frame_w, m_frame_y, LEGEND_MARGIN, components::Legend::Alignment::TOP_RIGHT);
-
+  legend.Draw(&m_svg, m_frame_x + m_frame_w, m_frame_y, LEGEND_MARGIN,
+              components::Legend::Alignment::TOP_RIGHT);
 }
 }  // namespace plotcpp
