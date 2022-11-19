@@ -63,9 +63,25 @@ class BarPlot : public BarPlotBase {
   void SetXData(const std::vector<Real>& x_data);
   void SetXData(const std::vector<std::string>& x_data);
 
+  /**
+   * @brief Set a baseline value for all bars.
+   * The baseline is the value from which all bar segments, positive and negative
+   * will be stacked.
+   *
+   * @param baseline Baseline value.
+   */
   void SetBaseline(Real baseline);
+
+  /**
+   * @brief Set a baseline value for every individual bar.
+   * The baseline is the value from which all bar segments, positive and negative
+   * will be stacked.
+   *
+   * @param baseline Baseline value.
+   */
   void SetBaselines(const std::vector<Real>& baselines);
 
+  /** Set the figure legend */
   void SetLegend(const std::vector<std::string>& labels);
 };
 

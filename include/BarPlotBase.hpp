@@ -36,17 +36,30 @@ class BarPlotBase : public Figure {
   void Clear() override;
   void Build() override;
 
+  /** Set the x axis label */
   void SetXLabel(const std::string& label);
+
+  /** Set the y axis label */
   void SetYLabel(const std::string& label);
 
+  /** Set the grid enabled / disabled*/
   void SetGridEnable(bool enable);
 
+  /** Enable / disable rounded edges in the bars*/
   void SetRoundedEdges(bool enable);
 
+  /**
+   * @brief Set the relative size (percentage) of the bar in relation with its total available space.
+   * Setting this parameter will affect the spacing between bars.
+   *
+   * @param rel_width Percentage of the bar available space.
+   */
   void SetBarRelativeWidth(float rel_width);
 
+  /** Add a y axis marker */
   void AddYMarker(Real marker);
 
+  /** Set the figure legend */
   void SetLegend(const std::vector<std::string>& labels);
 
  protected:

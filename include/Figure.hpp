@@ -36,6 +36,7 @@ class Figure {
    */
   virtual void Build() = 0;
 
+  /** @brief Clear the figure */
   virtual void Clear() = 0;
 
   /**
@@ -56,6 +57,7 @@ class Figure {
    */
   std::string GetSVGText() const;
 
+  /** @brief Return the svg document */
   svg::Document& GetSVGDocument();
 
   /**
