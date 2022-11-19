@@ -44,7 +44,8 @@ compiledb: build_dir
 
 format:
 	clang-format -i --style=Google \
-		$(INCLUDE)/**.hpp $(SRC)/**.cpp $(TEST)/**.cpp
+		$(shell find $(SOURCEDIR) -name '*.hpp') \
+		$(shell find $(SOURCEDIR) -name '*.cpp')
 
 build_dir:
 	mkdir -p $(BUILD)
