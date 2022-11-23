@@ -56,9 +56,18 @@ APP_SOURCES += \
 	$(APP)/SplitStringView.cpp
 app: build_dir
 	$(CXX) $(CXX_FLAGS) $(LIB_CXXFLAGS) \
-		-I$(INCLUDE) $(APP_MAIN) $(APP_SOURCES) \
+		-I$(INCLUDE) \
+		$(APP_MAIN) $(APP_SOURCES) \
 		-L$(BUILD) -l$(TARGET) \
 		-o $(BUILD)/$(APP_TARGET)
+
+app-static: build_dir
+	$(CXX) $(CXX_FLAGS) $(LIB_CXXFLAGS) \
+		-I$(INCLUDE) \
+		$(APP_MAIN) $(APP_SOURCES) \
+		$(LIB_SOURCES) \
+		$(LIB_LDFLAGS) \
+		-o $(BUILD)/$(APP_TARGET)_static
 
 install:
 	cp -r $(INCLUDE) /usr/include/$(TARGET)
