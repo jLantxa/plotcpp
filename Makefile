@@ -41,6 +41,8 @@ all: library
 
 compiledb: build_dir
 	compiledb make -n
+	compiledb make -n tests
+	compiledb make -n figure-tester
 
 format:
 	clang-format -i --style=Google \
@@ -68,8 +70,7 @@ syntax: compiledb
 		-fsyntax-only
 
 TEST_SOURCES += \
-	$(TEST)/UtilityTest.cpp \
-
+	$(TEST)/UtilityTest.cpp
 tests: build_dir compiledb
 	# Unit tests
 	$(CXX) $(CXX_FLAGS) -g \
@@ -81,7 +82,6 @@ tests: build_dir compiledb
 		-o $(BUILD)/tests
 
 	./$(BUILD)/tests
-
 
 figure-tester: build_dir compiledb
 	# Figure tester
