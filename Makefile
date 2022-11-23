@@ -15,13 +15,16 @@ CXX_FLAGS += \
 	-Wall -Werror \
 	-Wextra -Wpedantic -Wconversion
 
+
+.PHONY: doc compiledb format syntax library app tests
+
+all: library app
+
 LIB_CXXFLAGS += \
 	$(LIBXML2_CFLAGS)
-
 LIB_LDFLAGS += \
 	$(LIBXML2_LIBS) \
 	-lfmt
-
 LIB_SOURCES += \
 	$(SRC)/version.cpp \
 	$(SRC)/fonts.cpp \
@@ -33,12 +36,6 @@ LIB_SOURCES += \
 	$(SRC)/BarPlotBase.cpp \
 	$(SRC)/BarPlot.cpp \
 	$(SRC)/HistogramPlot.cpp
-
-
-.PHONY: doc compiledb format syntax library app tests
-
-all: library app
-
 SHARED_LIB := lib$(TARGET).so
 library: build_dir
 	$(CXX) $(CXX_FLAGS) \
@@ -53,7 +50,8 @@ APP := app
 APP_TARGET := plotcpp
 APP_MAIN := $(APP)/plotcpp.cpp
 APP_SOURCES += \
-	$(APP)/SplitStringView.cpp
+	$(APP)/SplitStringView.cpp \
+	$(APP)/Plot2DHandler.cpp
 app: build_dir
 	$(CXX) $(CXX_FLAGS) $(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
@@ -86,6 +84,8 @@ compiledb:
 	compiledb make -n
 	compiledb make -n tests
 	compiledb make -n figure-tester
+
+everything: library app app-static figure-tester doc tests
 
 format:
 	clang-format -i --style=Google \
