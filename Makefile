@@ -96,7 +96,7 @@ clean:
 	rm -r $(DOC)
 
 cloc:
-	@cloc $(INCLUDE) $(SRC) $(TEST) $(APP) $(EXAMPLES)
+	@cloc Makefile $(INCLUDE) $(SRC) $(TEST) $(APP) $(EXAMPLES)
 
 syntax: compiledb
 	$(CXX) $(CXX_FLAGS) \
