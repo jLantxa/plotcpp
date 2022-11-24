@@ -43,7 +43,7 @@ class BarPlotBase : public Figure {
   void SetYLabel(const std::string& label);
 
   /** Set the grid enabled / disabled*/
-  void SetGridEnable(bool enable);
+  void SetGrid(bool enable);
 
   /** Enable / disable rounded edges in the bars*/
   void SetRoundedEdges(bool enable);

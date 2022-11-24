@@ -23,46 +23,31 @@
 
 #include "Plot2DHandler.hpp"
 
-static bool HandlePlot2D(std::deque<std::string> args) {
+static bool HandlePlot2D(int argc, char** argv) {
   Plot2DHandler handler;
-  return handler.Run(args);
+  return handler.Run(argc, argv);
 }
 
-static const std::map<std::string, std::function<bool(std::deque<std::string>)>>
-    PROGRAMS{
-        {"plot2d", HandlePlot2D},
-    };
+static const std::map<std::string, std::function<bool(int, char**)>> PROGRAMS{
+    {"plot2d", HandlePlot2D},
+};
 
-static std::deque<std::string> PackArgs(int argc, char* argv[]) {
-  std::deque<std::string> args;
-
-  for (int i = 0; i < argc; ++i) {
-    args.push_back(argv[i]);
-  }
-
-  return args;
-}
-
-static bool HandleArguments(std::deque<std::string> args) {
-  if (args.size() < 1) {
+static bool HandleArguments(int argc, char** argv) {
+  if (argc < 1) {
     return false;
   }
 
-  const auto it = PROGRAMS.find(args[0]);
+  const auto it = PROGRAMS.find(argv[0]);
   if (it != PROGRAMS.end()) {
-    args.pop_front();
     const auto program_handler = it->second;
-    return program_handler(args);
+    return program_handler(argc, argv);
   }
 
   return false;
 }
 
-int main(int argc, char* argv[]) {
-  auto args = PackArgs(argc, argv);
-  args.pop_front();
-
-  if (!HandleArguments(args)) {
+int main(int argc, char** argv) {
+  if (!HandleArguments(argc - 1, argv + 1)) {
     return -1;
   }
 

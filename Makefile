@@ -107,13 +107,6 @@ clean:
 cloc:
 	@cloc Makefile $(INCLUDE) $(SRC) $(TEST) $(APP) $(EXAMPLES)
 
-syntax: compiledb
-	$(CXX) $(CXX_FLAGS) \
-		$(LIB_CXXFLAGS) \
-		-I$(INCLUDE) \
-		$(LIB_SOURCES) \
-		-fsyntax-only
-
 LIB_TEST_SOURCES += \
 	$(TEST)/UtilityTest.cpp
 APP_TEST_SOURCE += \

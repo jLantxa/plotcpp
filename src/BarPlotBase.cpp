@@ -40,7 +40,7 @@ void BarPlotBase::SetXLabel(const std::string& label) { m_x_label = label; }
 
 void BarPlotBase::SetYLabel(const std::string& label) { m_y_label = label; }
 
-void BarPlotBase::SetGridEnable(bool enable) { m_grid_enable = enable; }
+void BarPlotBase::SetGrid(bool enable) { m_grid_enable = enable; }
 
 void BarPlotBase::SetRoundedEdges(bool enable) { m_rounded_borders = enable; }
 

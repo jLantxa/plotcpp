@@ -22,11 +22,10 @@
 #include <deque>
 #include <string>
 
-class Plot2DHandler {
+class Plot2DHandler final {
  public:
   Plot2DHandler() = default;
-
-  bool Run(std::deque<std::string> args);
+  bool Run(int argc, char** argv);
 };
 
 #endif  // _PLOTCPP_APP_INCLUDE_PLOT2D_HANDLER_HPP_
