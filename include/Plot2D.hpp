@@ -53,8 +53,21 @@ class Plot2D : public Figure {
    * units)
    */
   void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
-            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
+            const Color& color, const float stroke_width = 2,
             const std::string& dash_array = {});
+
+  /**
+   * @brief Add a plot consisting of an x-axis sequence and a y-axis sequence
+   * of the same length
+   *
+   * @param x_data x-axis data
+   * @param y_data y-axis data
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
+            const float stroke_width = 2, const std::string& dash_array = {});
 
   /**
    * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
@@ -67,8 +80,20 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<Real>& y_data,
-            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
+  void Plot(const std::vector<Real>& y_data, const Color& color,
+            const float stroke_width = 2, const std::string& dash_array = {});
+
+  /**
+   * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
+   * sequence will be automatically deduced as an 1-increment sequence from
+   * 0 to N-1 or as the categories set by previous plots.
+   *
+   * @param x_data x-axis data
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Plot(const std::vector<Real>& y_data, const float stroke_width = 2,
             const std::string& dash_array = {});
 
   /**
@@ -83,9 +108,22 @@ class Plot2D : public Figure {
    * units)
    */
   void Plot(const std::vector<Real>& x_data,
+            const std::function<Real(Real)>& function, const Color& color,
+            const float stroke_width = 2, const std::string& dash_array = {});
+
+  /**
+   * @brief Add a plot using a vector as x axis values and a lambda function
+   * such that y=function(x)
+   *
+   * @param x x values
+   * @param function A function such that y=function(x)
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Plot(const std::vector<Real>& x_data,
             const std::function<Real(Real)>& function,
-            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
-            const std::string& dash_array = {});
+            const float stroke_width = 2, const std::string& dash_array = {});
 
   /**
    * @brief Add a categorical plot with discrete text labels on the x axis and
@@ -99,8 +137,21 @@ class Plot2D : public Figure {
    * units)
    */
   void Plot(const std::vector<std::string>& x_data,
-            const std::vector<Real>& y_data,
-            const Color& color = Color{0, 0, 0}, const float stroke_width = 2,
+            const std::vector<Real>& y_data, const Color& color,
+            const float stroke_width = 2, const std::string& dash_array = {});
+
+  /**
+   * @brief Add a categorical plot with discrete text labels on the x axis and
+   * Real numbers on the y axis.
+   *
+   * @param x_data categorical x
+   * @param y_data y-axis data axis
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Plot(const std::vector<std::string>& x_data,
+            const std::vector<Real>& y_data, const float stroke_width = 2,
             const std::string& dash_array = {});
 
   /**
@@ -116,7 +167,21 @@ class Plot2D : public Figure {
    * units)
    */
   void Scatter(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
-               const Color& color = Color{0, 0, 0}, const float radius = 2);
+               const Color& color, const float radius = 2);
+
+  /**
+   * @brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
+   * x-axis sequence will be automatically deduced as an 1-increment sequence
+   * from 0 to N-1.
+   *
+   * @param x_data categorical x
+   * @param y_data y-axis data axis
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Scatter(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
+               const float radius = 2);
 
   /**
    * @brief Add a categorical SCATTER plot with discrete text labels on the x
@@ -132,6 +197,19 @@ class Plot2D : public Figure {
   void Scatter(const std::vector<std::string>& x_data,
                const std::vector<Real>& y_data,
                const Color& color = Color{0, 0, 0}, const float radius = 2);
+
+  /**
+   * @brief Add a categorical SCATTER plot with discrete text labels on the x
+   * axis and Real numbers on the y axis.
+   *
+   * @param x_data categorical x
+   * @param y_data y-axis data axis
+   * @param stroke_width Line width
+   * @param dash_array Dash array (length of draw / no-draw segments in pt
+   * units)
+   */
+  void Scatter(const std::vector<std::string>& x_data,
+               const std::vector<Real>& y_data, const float radius = 2);
 
   /**
    * @brief Set hold on/off
@@ -257,6 +335,8 @@ class Plot2D : public Figure {
   ranges::Interval<Real> m_x_range, m_y_range;
   float m_zoom_x = 1.0f;
   float m_zoom_y = 1.0f;
+
+  ColorSelector m_color_selector;
 
   // Categorical data series
   std::vector<std::string> m_categorical_labels;

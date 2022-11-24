@@ -56,9 +56,13 @@ class BarPlot : public BarPlotBase {
 
   void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
             const Color& color);
+  void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data);
   void Plot(const std::vector<std::string>& x_data,
             const std::vector<Real>& y_data, const Color& color);
+  void Plot(const std::vector<std::string>& x_data,
+            const std::vector<Real>& y_data);
   void Plot(const std::vector<Real>& y_data, const Color& color);
+  void Plot(const std::vector<Real>& y_data);
 
   void SetXData(const std::vector<Real>& x_data);
   void SetXData(const std::vector<std::string>& x_data);
@@ -83,6 +87,9 @@ class BarPlot : public BarPlotBase {
 
   /** Set the figure legend */
   void SetLegend(const std::vector<std::string>& labels);
+
+ protected:
+  ColorSelector m_color_selector;
 };
 
 }  // namespace plotcpp

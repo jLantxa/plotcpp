@@ -66,6 +66,11 @@ std::vector<Real> HistogramPlot::CalculateIntervals(
   return intervals;
 }
 
+void HistogramPlot::Plot(const std::vector<Real>& values,
+                         unsigned int num_bins) {
+  Plot(values, num_bins, DEFAULT_COLOR);
+}
+
 std::vector<Real> HistogramPlot::CalculateBins(
     const std::vector<Real>& intervals) {
   const std::size_t num_intervals = intervals.size();

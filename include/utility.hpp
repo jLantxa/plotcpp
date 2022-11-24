@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <functional>
 #include <iterator>
+#include <list>
 #include <set>
 #include <vector>
 
@@ -35,6 +36,16 @@ struct Color {
   uint8_t r;
   uint8_t g;
   uint8_t b;
+
+  constexpr Color() = default;
+
+  constexpr Color(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b) {}
+
+  constexpr Color(uint32_t value) {
+    b = value & 0xff;
+    g = (value >> 8) & 0xFF;
+    r = (value >> 16) & 0xFF;
+  }
 };
 
 namespace adaptor {
@@ -214,6 +225,42 @@ std::pair<std::size_t, bool> BinarySearchInterval(
 
   return {index, true};
 }
+
+namespace color_tables {
+
+const std::vector<Color> BRIGHT{
+    Color(0x4477AA), Color(0xEE6677), Color(0x228833), Color(0xCCBB44),
+    Color(0x66CCEE), Color(0xAA3377), Color(0xBBBBBB)};
+
+const std::vector<Color> VIBRANT{
+    Color(0xEE7733), Color(0x0077BB), Color(0x33BBEE), Color(0xEE3377),
+    Color(0xCC3311), Color(0x009988), Color(0xBBBBBB)};
+
+const std::vector<Color> MUTED{
+    Color(0xCC6677), Color(0x332288), Color(0xDDCC77), Color(0x117733),
+    Color(0x88CCEE), Color(0x882255), Color(0x44AA99), Color(0x999933)};
+
+const std::vector<Color> LIGHT{
+    Color(0x77AADD), Color(0xEE8866), Color(0xEEDD88),
+    Color(0xFFAABB), Color(0x99DDFF), Color(0x44BB99),
+    Color(0xBBCC33), Color(0xAAAA00), Color(0xDDDDDD)};
+
+}  // namespace color_tables
+
+class ColorSelector final {
+ public:
+  ColorSelector(const std::vector<Color>& table) : m_table(table) {}
+  const Color& NextColor() {
+    const Color& color = m_table[index];
+    index = (index + 1) % m_table.size();
+    return color;
+  }
+
+ private:
+  const std::vector<Color> m_table;
+
+  std::size_t index = 0;
+};
 
 }  // namespace plotcpp
 

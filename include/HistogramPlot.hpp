@@ -44,12 +44,22 @@ class HistogramPlot : public BarPlotBase {
   void Plot(const std::vector<Real>& values, unsigned int num_bins,
             const Color& color);
 
+  /**
+   * @brief Plot a histogram of a sequence of values
+   *
+   * @param values Vector of values
+   * @param num_bins Number of bins
+   */
+  void Plot(const std::vector<Real>& values, unsigned int num_bins);
+
  protected:
   std::vector<Real> CalculateIntervals(const std::vector<Real>& values,
                                        unsigned int num_bins);
   std::vector<Real> CalculateBins(const std::vector<Real>& intervals);
   std::vector<Real> CalculateHistogram(const std::vector<Real>& values,
                                        const std::vector<Real>& intervals);
+
+  static constexpr Color DEFAULT_COLOR{0x332288};
 };
 
 }  // namespace plotcpp

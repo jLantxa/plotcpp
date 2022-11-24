@@ -47,8 +47,7 @@ static void NumericPlot() {
   std::vector<Real> data_x0 =
       plotcpp::ranges::MakeRange<Real>(0.0f, 10.0f, 0.001f);
   plot2d.Plot(
-      data_x0, [](auto x) { return std::sin(2 * M_PI * x) * exp(-x); },
-      {0, 0, 0}, 3, "");
+      data_x0, [](auto x) { return std::sin(2 * M_PI * x) * exp(-x); }, 2, "");
 
   std::vector<Real> data_x1 =
       plotcpp::ranges::MakeRange<Real>(0.0f, 10.0f, 0.01f);
@@ -57,7 +56,7 @@ static void NumericPlot() {
     Real y = 1 / x;
     data_y1.push_back(y);
   }
-  plot2d.Plot(data_x1, data_y1, {255, 32, 32}, 2, "10,5,2,5");
+  plot2d.Plot(data_x1, data_y1, 2, "10,5,2,5");
 
   std::vector<Real> data_x2 =
       plotcpp::ranges::MakeRange<Real>(10.0f, 0.0f, -0.01f);
@@ -66,7 +65,7 @@ static void NumericPlot() {
     Real y = std::pow(x - 5, 3);
     data_y2.push_back(y);
   }
-  plot2d.Plot(data_x2, data_y2, {32, 255, 32}, 2, "5,5");
+  plot2d.Plot(data_x2, data_y2, 2, "5,5");
 
   std::vector<Real> scatter_x;
   std::vector<Real> scatter_y;
@@ -77,7 +76,7 @@ static void NumericPlot() {
     scatter_x.push_back(scatter_x0 + distr(gen));
     scatter_y.push_back(scatter_y0 + distr(gen));
   }
-  plot2d.Scatter(scatter_x, scatter_y, {64, 64, 192}, 5);
+  plot2d.Scatter(scatter_x, scatter_y, 5);
 
   plot2d.SetGrid(true);
   plot2d.SetYRange(-5.0f, 5.0f);
@@ -100,8 +99,8 @@ void CategoricalPlot() {
   const std::vector<Real> y0_annotated_data{-1, 1, 5};
   const std::vector<Real> y1_annotated_data{0, 2, 4};
 
-  plot2d.Plot(x_annotated_data, y0_annotated_data, {128, 128, 255}, 2, "");
-  plot2d.Plot(y1_annotated_data, {255, 128, 128}, 2, "");
+  plot2d.Plot(x_annotated_data, y0_annotated_data, 2, "");
+  plot2d.Plot(y1_annotated_data, 2, "");
 
   plot2d.SetSize(600, 450);
   plot2d.SetTitle("Categorical Plot2D");
@@ -121,9 +120,9 @@ void GroupPlot() {
   plotcpp::BarPlot p0;
   plotcpp::Plot2D p1;
 
-  p0.Plot({2, 4, 6, 8, 10, 7, -5, -3, -1}, {41, 52, 98});
-  p0.Plot({1, 2, 3, 4, 5, 6, 7, 8, 9}, {214, 28, 78});
-  p0.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4}, {254, 177, 57});
+  p0.Plot({2, 4, 6, 8, 10, 7, -5, -3, -1});
+  p0.Plot({1, 2, 3, 4, 5, 6, 7, 8, 9});
+  p0.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4});
   p0.SetXLabel("x axis");
   p0.SetYLabel("y axis");
   p0.SetGrid(true);
@@ -132,11 +131,11 @@ void GroupPlot() {
   p1.SetHold(true);
   const auto x1 = plotcpp::ranges::MakeRange<Real>(1, 6, 0.01);
   p1.Plot(
-      x1, [](Real x) { return x * x; }, {255, 0, 0}, 2, "");
+      x1, [](Real x) { return x * x; }, 2, "");
   p1.Plot(
-      x1, [](Real x) { return x; }, {0, 255, 0}, 2, "");
+      x1, [](Real x) { return x; }, 2, "");
   p1.Plot(
-      x1, [](Real x) { return std::log2(x); }, {0, 0, 255}, 2, "");
+      x1, [](Real x) { return std::log2(x); }, 2, "");
   p1.SetXLabel("x");
   p1.SetYLabel("y");
   p1.SetGrid(true);
@@ -152,9 +151,9 @@ void BarPlot() {
   static const std::string BAR_PLOT_FILENAME = "bar_plot.svg";
   plotcpp::BarPlot plot;
 
-  plot.Plot({2, 4, 6, 8, 10, 7, -5, -3, -1}, {41, 52, 98});
-  plot.Plot({1, 2, 3, 4, 5, 6, 7, 8, 9}, {214, 28, 78});
-  plot.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4}, {254, 177, 57});
+  plot.Plot({2, 4, 6, 8, 10, 7, -5, -3, -1});
+  plot.Plot({1, 2, 3, 4, 5, 6, 7, 8, 9});
+  plot.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4});
 
   plot.SetTitle("BarPlot");
   plot.SetXLabel("x axis");
@@ -169,7 +168,6 @@ void BarPlot() {
 void HistograpPlot() {
   static const std::string HISTOGRAM_PLOT_FILENAME = "histogram_plot.svg";
   plotcpp::HistogramPlot plot;
-  static constexpr plotcpp::Color color = {41, 52, 98};
   static constexpr unsigned int num_bins = 64;
   static constexpr unsigned int num_values = 4096;
 
@@ -181,7 +179,7 @@ void HistograpPlot() {
     values[i] = distr(gen);
   }
 
-  plot.Plot(values, num_bins, color);
+  plot.Plot(values, num_bins);
 
   plot.SetTitle("HistogramPlot");
   plot.SetXLabel("values");

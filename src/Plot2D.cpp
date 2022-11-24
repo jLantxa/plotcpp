@@ -45,7 +45,7 @@ static bool IsInfinity(T x) {
 
 const std::string Plot2D::FRAME_RECT_CLIP_PATH_ID = {"rect-clip-path"};
 
-Plot2D::Plot2D() : Figure() {}
+Plot2D::Plot2D() : Figure(), m_color_selector(color_tables::BRIGHT) {}
 
 void Plot2D::Plot(const std::vector<Real>& x_data,
                   const std::vector<Real>& y_data, const Color& color,
@@ -63,6 +63,12 @@ void Plot2D::Plot(const std::vector<Real>& x_data,
 
   m_data_type = DataType::NUMERIC;
   m_categorical_data.clear();
+}
+
+void Plot2D::Plot(const std::vector<Real>& x_data,
+                  const std::vector<Real>& y_data, const float stroke_width,
+                  const std::string& dash_array) {
+  Plot(x_data, y_data, m_color_selector.NextColor(), stroke_width, dash_array);
 }
 
 void Plot2D::Plot(const std::vector<Real>& y_data, const Color& color,
@@ -83,11 +89,23 @@ void Plot2D::Plot(const std::vector<Real>& y_data, const Color& color,
   }
 }
 
+void Plot2D::Plot(const std::vector<Real>& y_data, const float stroke_width,
+                  const std::string& dash_array) {
+  Plot(y_data, m_color_selector.NextColor(), stroke_width, dash_array);
+}
+
 void Plot2D::Plot(const std::vector<Real>& x_data,
                   const std::function<Real(Real)>& function, const Color& color,
                   const float stroke_width, const std::string& dash_array) {
   const auto y_data = ranges::Generate(x_data, function);
   Plot(x_data, y_data, color, stroke_width, dash_array);
+}
+
+void Plot2D::Plot(const std::vector<Real>& x_data,
+                  const std::function<Real(Real)>& function,
+                  const float stroke_width, const std::string& dash_array) {
+  Plot(x_data, function, m_color_selector.NextColor(), stroke_width,
+       dash_array);
 }
 
 void Plot2D::Plot(const std::vector<std::string>& x_data,
@@ -115,6 +133,12 @@ void Plot2D::Plot(const std::vector<std::string>& x_data,
   m_data_type = DataType::CATEGORICAL;
 }
 
+void Plot2D::Plot(const std::vector<std::string>& x_data,
+                  const std::vector<Real>& y_data, const float stroke_width,
+                  const std::string& dash_array) {
+  Plot(x_data, y_data, m_color_selector.NextColor(), stroke_width, dash_array);
+}
+
 void Plot2D::Scatter(const std::vector<Real>& x_data,
                      const std::vector<Real>& y_data, const Color& color,
                      const float radius) {
@@ -131,6 +155,11 @@ void Plot2D::Scatter(const std::vector<Real>& x_data,
 
   m_data_type = DataType::NUMERIC;
   m_categorical_data.clear();
+}
+
+void Plot2D::Scatter(const std::vector<Real>& x_data,
+                     const std::vector<Real>& y_data, const float radius) {
+  Scatter(x_data, y_data, m_color_selector.NextColor(), radius);
 }
 
 void Plot2D::Scatter(const std::vector<std::string>& x_data,
@@ -151,6 +180,11 @@ void Plot2D::Scatter(const std::vector<std::string>& x_data,
   m_categorical_data.emplace_back(CategoricalDataSeries{y_data, style});
   m_numeric_data.clear();
   m_data_type = DataType::CATEGORICAL;
+}
+
+void Plot2D::Scatter(const std::vector<std::string>& x_data,
+                     const std::vector<Real>& y_data, const float radius) {
+  Scatter(x_data, y_data, m_color_selector.NextColor(), radius);
 }
 
 void Plot2D::SetXRange(Real x0, Real x1) {
