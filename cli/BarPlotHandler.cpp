@@ -16,21 +16,22 @@
  * limitations under the License.
  */
 
-#include "HistogramHandler.hpp"
+#include "BarPlotHandler.hpp"
 
 #include <getopt.h>
 
 #include <iostream>
 
-#include "HistogramPlot.hpp"
+#include "BarPlot.hpp"
 #include "cli.hpp"
 #include "csv.hpp"
-#include "utility.hpp"
 
-bool HistogramHandler::Run(int argc, char** argv) {
+bool BarPlotHandler::Run(int argc, char** argv) {
+  static constexpr int FIRST_LINE_LABEL_OPTION = 1000;
+
   static const struct option long_options[] = {
       {"filename", required_argument, nullptr, 'f'},
-      {"num-bins", required_argument, nullptr, 'b'},
+      {"first-line-labels", no_argument, nullptr, FIRST_LINE_LABEL_OPTION},
       {"title", required_argument, nullptr, 't'},
       {"x-label", required_argument, nullptr, 'x'},
       {"y-label", required_argument, nullptr, 'y'},
@@ -39,12 +40,13 @@ bool HistogramHandler::Run(int argc, char** argv) {
       {"output", required_argument, nullptr, 'o'},
       {nullptr, 0, nullptr, 0}};
 
-  const char* short_opts = "f:t:x:y:go:";
+  const char* short_opts = "f:t:x:y:lgo:";
 
-  plotcpp::HistogramPlot plot;
+  plotcpp::BarPlot plot;
   std::string csv_filename;
   std::string output_filename;
-  unsigned int num_bins = 8;
+  bool first_line_has_labels = false;
+  bool use_legend = false;
 
   int opt;
   int option_index = 0;
@@ -60,10 +62,6 @@ bool HistogramHandler::Run(int argc, char** argv) {
         plot.SetTitle(std::string{optarg});
         break;
 
-      case 'b':
-        num_bins = static_cast<unsigned int>(atol(optarg));
-        break;
-
       case 'x':
         plot.SetXLabel(std::string{optarg});
         break;
@@ -74,6 +72,14 @@ bool HistogramHandler::Run(int argc, char** argv) {
 
       case 'g':
         plot.SetGrid(true);
+        break;
+
+      case FIRST_LINE_LABEL_OPTION:
+        first_line_has_labels = true;
+        break;
+
+      case 'l':
+        use_legend = true;
         break;
 
       case 'f':
@@ -94,13 +100,14 @@ bool HistogramHandler::Run(int argc, char** argv) {
   }
 
   const DataCollection collection =
-      ParseCsv(csv_filename, DEFAULT_CSV_DELIMITER, false);
+      ParseCsv(csv_filename, DEFAULT_CSV_DELIMITER, first_line_has_labels);
 
-  plotcpp::ColorSelector color_selector(plotcpp::color_tables::MUTED);
-  // Histogram only plots one series
-  const std::size_t num_series = collection.series.size();
-  if (num_series > 0) {
-    plot.Plot(collection.series[0], num_bins, color_selector.NextColor());
+  for (const auto& series : collection.series) {
+    plot.Plot(series);
+  }
+
+  if (use_legend && !collection.labels.empty()) {
+    plot.SetLegend(collection.labels);
   }
 
   plot.Build();

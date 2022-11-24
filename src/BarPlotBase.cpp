@@ -156,7 +156,7 @@ void BarPlotBase::DrawBars() {
   for (const auto& data_series : m_y_data) {
     for (std::size_t i = 0; i < m_num_bars; ++i) {
       const Real value = data_series.values[i];
-      if (value >= 0) {
+      if (value > 0) {
         ++remaining_positive_segment_counts[i];
         positive_bar_sizes[i] += value;
       } else if (value < 0) {
@@ -176,7 +176,7 @@ void BarPlotBase::DrawBars() {
       float end_y;
       bool should_round_border = m_rounded_borders;
       Real bar_height = 0.0f;
-      if (value >= 0) {
+      if (value > 0) {
         start_y = m_frame_y + TranslateToFrame(m_baselines[i] + pos_acc[i]);
         end_y =
             m_frame_y + TranslateToFrame(m_baselines[i] + pos_acc[i] + value);
@@ -184,7 +184,7 @@ void BarPlotBase::DrawBars() {
         bar_height = TranslateToFrame(positive_bar_sizes[i]) -
                      TranslateToFrame(m_baselines[i]);
         should_round_border &= (--remaining_positive_segment_counts[i] == 0);
-      } else {
+      } else if (value < 0) {
         start_y = m_frame_y + TranslateToFrame(m_baselines[i] + neg_acc[i]);
         end_y =
             m_frame_y + TranslateToFrame(m_baselines[i] + neg_acc[i] + value);
@@ -192,6 +192,8 @@ void BarPlotBase::DrawBars() {
         bar_height = TranslateToFrame(negative_bar_sizes[i]) -
                      TranslateToFrame(m_baselines[i]);
         should_round_border &= (--remaining_negative_segment_counts[i] == 0);
+      } else {
+        continue;
       }
 
       const float bar_center_x = m_frame_x +

@@ -21,6 +21,8 @@
 #include <map>
 #include <string>
 
+#include "BarPlotHandler.hpp"
+#include "HistogramHandler.hpp"
 #include "Plot2DHandler.hpp"
 
 static bool HandlePlot2D(int argc, char** argv) {
@@ -28,8 +30,20 @@ static bool HandlePlot2D(int argc, char** argv) {
   return handler.Run(argc, argv);
 }
 
+static bool HandleBarPlot(int argc, char** argv) {
+  BarPlotHandler handler;
+  return handler.Run(argc, argv);
+}
+
+static bool HandleHistogramPlot(int argc, char** argv) {
+  HistogramHandler handler;
+  return handler.Run(argc, argv);
+}
+
 static const std::map<std::string, std::function<bool(int, char**)>> PROGRAMS{
     {"plot2d", HandlePlot2D},
+    {"bar", HandleBarPlot},
+    {"hist", HandleHistogramPlot},
 };
 
 static bool HandleArguments(int argc, char** argv) {

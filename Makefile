@@ -52,7 +52,9 @@ CLI_MAIN := $(CLI)/plotcpp.cpp
 CLI_SOURCES += \
 	$(CLI)/SplitStringView.cpp \
 	$(CLI)/csv.cpp \
-	$(CLI)/Plot2DHandler.cpp
+	$(CLI)/Plot2DHandler.cpp \
+	$(CLI)/HistogramHandler.cpp \
+	$(CLI)/BarPlotHandler.cpp
 cli: build_dir
 	$(CXX) $(CXX_FLAGS) $(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
