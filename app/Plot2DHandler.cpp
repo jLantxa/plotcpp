@@ -23,13 +23,15 @@
 #include <iostream>
 
 #include "Plot2D.hpp"
+#include "app.hpp"
+#include "csv.hpp"
 
 bool Plot2DHandler::Run(int argc, char** argv) {
   static constexpr int FIRST_LINE_LABEL_OPTION = 1000;
 
   static const struct option long_options[] = {
       {"filename", required_argument, nullptr, 'f'},
-      {"first-line-label", no_argument, nullptr, FIRST_LINE_LABEL_OPTION},
+      {"first-line-labels", no_argument, nullptr, FIRST_LINE_LABEL_OPTION},
       {"title", required_argument, nullptr, 't'},
       {"x-label", required_argument, nullptr, 'x'},
       {"y-label", required_argument, nullptr, 'y'},
@@ -43,6 +45,8 @@ bool Plot2DHandler::Run(int argc, char** argv) {
   plotcpp::Plot2D plot;
   std::string csv_filename;
   std::string output_filename;
+  bool first_line_has_labels = false;
+  bool use_legend = false;
 
   int opt;
   int option_index = 0;
@@ -70,6 +74,14 @@ bool Plot2DHandler::Run(int argc, char** argv) {
         plot.SetGrid(true);
         break;
 
+      case FIRST_LINE_LABEL_OPTION:
+        first_line_has_labels = true;
+        break;
+
+      case 'l':
+        use_legend = true;
+        break;
+
       case 'f':
         csv_filename = std::string{optarg};
         break;
@@ -87,7 +99,21 @@ bool Plot2DHandler::Run(int argc, char** argv) {
     std::cout << "Error: specify input csv file" << std::endl;
   }
 
-  // TODO parse csv
+  const DataCollection collection =
+      ParseCsv(csv_filename, DEFAULT_CSV_DELIMITER, first_line_has_labels);
+
+  const std::size_t num_series = collection.series.size();
+  if (num_series == 1) {
+    plot.Plot(collection.series[0], {0, 0, 0}, 2, "");
+  } else if (num_series > 1) {
+    for (std::size_t i = 1; i < num_series; ++i) {
+      plot.Plot(collection.series[0], collection.series[i], {0, 0, 0}, 2, "");
+    }
+  }
+
+  if (use_legend && !collection.labels.empty()) {
+    plot.SetLegend(collection.labels);
+  }
 
   plot.Build();
 
@@ -95,5 +121,5 @@ bool Plot2DHandler::Run(int argc, char** argv) {
     plot.Save(output_filename);
   }
 
-  return false;
+  return true;
 }

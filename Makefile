@@ -51,6 +51,7 @@ APP_TARGET := plotcpp
 APP_MAIN := $(APP)/plotcpp.cpp
 APP_SOURCES += \
 	$(APP)/SplitStringView.cpp \
+	$(APP)/csv.cpp \
 	$(APP)/Plot2DHandler.cpp
 app: build_dir
 	$(CXX) $(CXX_FLAGS) $(LIB_CXXFLAGS) \
