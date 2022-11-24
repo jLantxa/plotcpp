@@ -23,7 +23,7 @@
 #include <iostream>
 
 #include "Plot2D.hpp"
-#include "app.hpp"
+#include "cli.hpp"
 #include "csv.hpp"
 
 bool Plot2DHandler::Run(int argc, char** argv) {

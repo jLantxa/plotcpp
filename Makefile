@@ -16,9 +16,9 @@ CXX_FLAGS += \
 	-Wextra -Wpedantic -Wconversion
 
 
-.PHONY: doc compiledb format syntax library app tests
+.PHONY: doc compiledb format syntax library cli tests
 
-all: library app
+all: library cli
 
 LIB_CXXFLAGS += \
 	$(LIBXML2_CFLAGS)
@@ -46,37 +46,37 @@ library: build_dir
 		$(LIB_LDFLAGS) \
 		-o $(BUILD)/$(SHARED_LIB)
 
-APP := app
-APP_TARGET := plotcpp
-APP_MAIN := $(APP)/plotcpp.cpp
-APP_SOURCES += \
-	$(APP)/SplitStringView.cpp \
-	$(APP)/csv.cpp \
-	$(APP)/Plot2DHandler.cpp
-app: build_dir
+CLI := cli
+CLI_TARGET := plotcpp
+CLI_MAIN := $(CLI)/plotcpp.cpp
+CLI_SOURCES += \
+	$(CLI)/SplitStringView.cpp \
+	$(CLI)/csv.cpp \
+	$(CLI)/Plot2DHandler.cpp
+cli: build_dir
 	$(CXX) $(CXX_FLAGS) $(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		$(APP_MAIN) $(APP_SOURCES) \
+		$(CLI_MAIN) $(CLI_SOURCES) \
 		-L$(BUILD) -l$(TARGET) \
-		-o $(BUILD)/$(APP_TARGET)
+		-o $(BUILD)/$(CLI_TARGET)
 
-app-static: build_dir
+cli-static: build_dir
 	$(CXX) $(CXX_FLAGS) $(LIB_CXXFLAGS) \
 		-I$(INCLUDE) \
-		$(APP_MAIN) $(APP_SOURCES) \
+		$(CLI_MAIN) $(CLI_SOURCES) \
 		$(LIB_SOURCES) \
 		$(LIB_LDFLAGS) \
-		-o $(BUILD)/$(APP_TARGET)_static
+		-o $(BUILD)/$(CLI_TARGET)_static
 
 install:
 	cp -r $(INCLUDE) /usr/include/$(TARGET)
 	cp $(BUILD)/$(SHARED_LIB) /usr/lib64/$(SHARED_LIB)
-	cp $(BUILD)/$(APP_TARGET) /usr/bin/$(APP_TARGET)
+	cp $(BUILD)/$(CLI_TARGET) /usr/bin/$(CLI_TARGET)
 
 uninstall:
 	rm -r /usr/include/$(TARGET)
 	rm /usr/lib64/$(SHARED_LIB)
-	rm /usr/bin/$(APP_TARGET)
+	rm /usr/bin/$(CLI_TARGET)
 
 build_dir:
 	mkdir -p $(BUILD)
@@ -86,7 +86,7 @@ compiledb:
 	compiledb make -n tests
 	compiledb make -n figure-tester
 
-everything: library app app-static figure-tester doc tests
+everything: library cli cli-static figure-tester doc tests
 
 format:
 	clang-format -i --style=Google \
@@ -106,18 +106,18 @@ clean:
 	rm -r $(DOC)
 
 cloc:
-	@cloc Makefile $(INCLUDE) $(SRC) $(TEST) $(APP) $(EXAMPLES)
+	@cloc Makefile $(INCLUDE) $(SRC) $(TEST) $(CLI) $(EXAMPLES)
 
 LIB_TEST_SOURCES += \
 	$(TEST)/UtilityTest.cpp
-APP_TEST_SOURCE += \
-	$(APP)/$(TEST)/SplitStringViewTest.cpp
+CLI_TEST_SOURCE += \
+	$(CLI)/$(TEST)/SplitStringViewTest.cpp
 tests: build_dir
 	$(CXX) $(CXX_FLAGS) -g \
 		$(LIB_CXXFLAGS) \
-		-I$(INCLUDE) -I$(APP) \
-		$(LIB_SOURCES) $(APP_SOURCES) \
-		$(LIB_TEST_SOURCES) $(APP_TEST_SOURCE) \
+		-I$(INCLUDE) -I$(CLI) \
+		$(LIB_SOURCES) $(CLI_SOURCES) \
+		$(LIB_TEST_SOURCES) $(CLI_TEST_SOURCE) \
 		$(LIB_LDFLAGS) -lpthread -lgtest_main -lgtest \
 		-o $(BUILD)/tests
 

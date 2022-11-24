@@ -21,7 +21,7 @@
 
 #include <string_view>
 
-#include "app.hpp"
+#include "cli.hpp"
 
 DataCollection ParseCsv(const std::string& csv_filename,
                         std::string_view delimiter, bool first_line_has_labels);
