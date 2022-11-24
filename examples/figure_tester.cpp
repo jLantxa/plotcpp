@@ -126,7 +126,7 @@ void GroupPlot() {
   p0.Plot({-5, -4, -3, -2, -1, 1, 2, 3, 4}, {254, 177, 57});
   p0.SetXLabel("x axis");
   p0.SetYLabel("y axis");
-  p0.SetGridEnable(true);
+  p0.SetGrid(true);
   p0.SetLegend({"S0", "S1", "S2"});
 
   p1.SetHold(true);
@@ -159,7 +159,7 @@ void BarPlot() {
   plot.SetTitle("BarPlot");
   plot.SetXLabel("x axis");
   plot.SetYLabel("y axis");
-  plot.SetGridEnable(true);
+  plot.SetGrid(true);
   plot.SetLegend({"S0", "S1", "S2"});
 
   plot.Build();
@@ -186,7 +186,7 @@ void HistograpPlot() {
   plot.SetTitle("HistogramPlot");
   plot.SetXLabel("values");
   plot.SetYLabel("Counts");
-  plot.SetGridEnable(true);
+  plot.SetGrid(true);
 
   plot.Build();
   plot.Save(HISTOGRAM_PLOT_FILENAME);
