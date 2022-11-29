@@ -25,11 +25,14 @@ LIB_CXXFLAGS := \
 LIB_LDFLAGS += \
 	$(shell xml2-config --libs) \
 	$(shell pkg-config --ldflags librsvg-2.0) \
-	-lfmt
+	-lglfw \
+	-lfmt \
+	-lpthread
 LIB_SOURCES += \
 	$(SRC)/version.cpp \
 	$(SRC)/fonts.cpp \
 	$(SRC)/svg.cpp \
+	$(SRC)/DisplayService.cpp \
 	$(SRC)/components/Frame.cpp \
 	$(SRC)/components/Legend.cpp \
 	$(SRC)/Figure.cpp \

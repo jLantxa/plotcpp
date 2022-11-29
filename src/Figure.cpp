@@ -20,6 +20,9 @@
 
 #include <fstream>
 #include <string>
+#include <thread>
+
+#include "DisplayService.hpp"
 
 namespace plotcpp {
 
@@ -39,6 +42,15 @@ unsigned int Figure::Height() const { return m_height; }
 std::string Figure::GetSVGText() const { return m_svg.GetText(); }
 
 svg::Document& Figure::GetSVGDocument() { return m_svg; }
+
+void Figure::Show() const {
+  DisplayService& display_service = DisplayService::GetInstance();
+  display_service.ShowFigure(this);
+}
+
+[[nodiscard]] std::thread Figure::ShowThread() const {
+  return std::thread(&Figure::Show, this);
+}
 
 void Figure::Save(const std::string& filepath) const {
   // TODO: Extract extension and call save function

@@ -20,6 +20,7 @@
 #define _PLOTCPP_INCLUDE_FIGURE_HPP_
 
 #include <string>
+#include <thread>
 
 #include "svg.hpp"
 #include "utility.hpp"
@@ -40,9 +41,14 @@ class Figure {
   virtual void Clear() = 0;
 
   /**
-   * @brief Render the figure on a window.
+   * @brief Render the figure on a window (blocking).
    */
   void Show() const;
+
+  /**
+   * @brief Render the figure on a window.
+   */
+  [[nodiscard]] std::thread ShowThread() const;
 
   /**
    * @brief Render and save the figure to a file.

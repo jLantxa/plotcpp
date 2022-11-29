@@ -61,9 +61,7 @@ std::string Document::GetText() const {
   return std::string{(char*)xml_str};
 }
 
-std::pair<float, float> Document::GetSize() {
-  return {m_width, m_height};
-}
+std::pair<float, float> Document::GetSize() { return {m_width, m_height}; }
 
 std::string PathCommand::ToString() const {
   std::stringstream ss;
