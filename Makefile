@@ -88,7 +88,7 @@ compiledb:
 	compiledb make -n tests
 	compiledb make -n figure-tester
 
-everything: library cli cli-static figure-tester doc tests
+everything: library cli cli-static figure-tester doc tests compiledb
 
 format:
 	clang-format -i --style=Google \
