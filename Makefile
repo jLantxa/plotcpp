@@ -24,7 +24,7 @@ LIB_CXXFLAGS := \
 	$(shell pkg-config --cflags librsvg-2.0)
 LIB_LDFLAGS += \
 	$(shell xml2-config --libs) \
-	$(shell pkg-config --ldflags librsvg-2.0) \
+	$(shell pkg-config --libs librsvg-2.0) \
 	-lglfw \
 	-lfmt \
 	-lpthread
