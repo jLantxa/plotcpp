@@ -28,13 +28,6 @@ namespace plotcpp {
 
 using ::testing::ElementsAreArray;
 
-TEST(RangesTest, TrivialPartitionRange) {
-  EXPECT_THAT(ranges::TrivialPartitionRange<Real>({0, 10}, 5),
-              ElementsAreArray({0.0f, 2.5f, 5.0f, 7.5f, 10.0f}));
-  EXPECT_THAT(ranges::TrivialPartitionRange<Real>({-10, 10}, 5),
-              ElementsAreArray({-10.0f, -5.0f, 0.0f, 5.0f, 10.0f}));
-}
-
 TEST(UtilityTest, RangeGenerator) {
   EXPECT_THAT(ranges::MakeRange<int>(0, 10, 1),
               ElementsAreArray({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));

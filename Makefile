@@ -111,7 +111,8 @@ cloc:
 	@cloc Makefile $(INCLUDE) $(SRC) $(TEST) $(CLI) $(EXAMPLES)
 
 LIB_TEST_SOURCES += \
-	$(TEST)/UtilityTest.cpp
+	$(TEST)/UtilityTest.cpp \
+	$(TEST)/AxisPartitionTest.cpp
 CLI_TEST_SOURCE += \
 	$(CLI)/$(TEST)/SplitStringViewTest.cpp
 tests: build_dir
