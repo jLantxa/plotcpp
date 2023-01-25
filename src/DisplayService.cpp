@@ -19,6 +19,7 @@
 #include "DisplayService.hpp"
 
 #include <GLFW/glfw3.h>
+#include <librsvg/rsvg.h>
 
 #include "Figure.hpp"
 
@@ -33,14 +34,41 @@ DisplayService::DisplayService() noexcept {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
-DisplayService& DisplayService::GetInstance() {
+const DisplayService& DisplayService::GetInstance() {
   static DisplayService instance;
   return instance;
 }
 
-void DisplayService::ShowFigure(const Figure* figure) {
+void DisplayService::ShowFigure(const Figure* figure) const {
   FigureWindow window(figure);
   window.Show();
+}
+
+cairo_surface_t* DisplayService::RenderToSurface(const Figure* figure) const {
+  const int width = static_cast<int>(figure->Width());
+  const int height = static_cast<int>(figure->Height());
+
+  const std::string svg_str = figure->GetSVGText();
+  const uint8_t* svg_data = (const uint8_t*)(svg_str.c_str());
+  RsvgHandle* handle =
+      rsvg_handle_new_from_data(svg_data, svg_str.size(), &error);
+
+  cairo_surface_t* surface =
+      cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+  cairo_t* cr = cairo_create(surface);
+
+  RsvgRectangle viewport = {
+      .x = 0.0,
+      .y = 0.0,
+      .width = static_cast<float>(width),
+      .height = static_cast<float>(height),
+  };
+
+  rsvg_handle_render_document(handle, cr, &viewport, &error);
+
+  cairo_destroy(cr);
+
+  return surface;
 }
 
 FigureWindow::FigureWindow(const Figure* figure) : m_figure(figure) {
@@ -62,12 +90,20 @@ void FigureWindow::Show() {
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, false);
   glfwMakeContextCurrent(window);
 
+  // Render SVG to cairo surface
+  const DisplayService& display_service = DisplayService::GetInstance();
+  cairo_surface_t* surface = display_service.RenderToSurface(m_figure);
+  // TODO: Draw surface
+
+  // Poll events
   m_is_running = true;
   while (m_is_running && !glfwWindowShouldClose(window)) {
     glfwPollEvents();
     usleep(33'000);
   }
 
+  // Clean up
+  cairo_surface_destroy(surface);
   glfwDestroyWindow(window);
 }
 

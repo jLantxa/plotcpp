@@ -18,6 +18,8 @@
 
 #include "Figure.hpp"
 
+#include <librsvg/rsvg.h>
+
 #include <fstream>
 #include <string>
 #include <thread>
@@ -44,7 +46,7 @@ std::string Figure::GetSVGText() const { return m_svg.GetText(); }
 svg::Document& Figure::GetSVGDocument() { return m_svg; }
 
 void Figure::Show() const {
-  DisplayService& display_service = DisplayService::GetInstance();
+  const DisplayService& display_service = DisplayService::GetInstance();
   display_service.ShowFigure(this);
 }
 
@@ -54,11 +56,17 @@ void Figure::Show() const {
 
 void Figure::Save(const std::string& filepath) const {
   // TODO: Extract extension and call save function
-  // auto ext = filepath.find_last_of(".") + 1;
-  // if (filepath.substr(ext) == "ext")
-
-  // Default to svg
-  SaveSVG(filepath);
+  auto ext = filepath.find_last_of(".") + 1;
+  if (filepath.substr(ext) == "svg") {
+    SaveSVG(filepath);
+  } else if (filepath.substr(ext) == "png") {
+    const DisplayService& display_service = DisplayService::GetInstance();
+    cairo_surface_t* surface = display_service.RenderToSurface(this);
+    cairo_surface_write_to_png(surface, filepath.c_str());
+    cairo_surface_destroy(surface);
+  } else {
+    SaveSVG({filepath + ".svg"});
+  }
 }
 
 void Figure::SaveSVG(const std::string& filepath) const {

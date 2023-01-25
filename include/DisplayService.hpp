@@ -19,6 +19,8 @@
 #ifndef _PLOTCPP_INCLUDE_DISPLAY_SERVICE_HPP_
 #define _PLOTCPP_INCLUDE_DISPLAY_SERVICE_HPP_
 
+#include <librsvg/rsvg.h>
+
 #include "Figure.hpp"
 
 namespace plotcpp {
@@ -28,9 +30,11 @@ class DisplayService final {
   DisplayService(const DisplayService& other) = delete;
   DisplayService operator=(const DisplayService& other) = delete;
 
-  static DisplayService& GetInstance();
+  static const DisplayService& GetInstance();
 
-  void ShowFigure(const Figure* figure);
+  void ShowFigure(const Figure* figure) const;
+
+  cairo_surface_t* RenderToSurface(const Figure* figure) const;
 
  private:
   DisplayService() noexcept;
