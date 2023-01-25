@@ -29,12 +29,13 @@ library is targeted for use in modern C++ projects.
 * [fmt](https://fmt.dev/latest/index.html): Neither `clang` nor `gcc` support `<format>` yet, so fmt
 is a temporary workaround.
 * librsvg2
+* GLFW
 
 # Building plotcpp
 To build `plotcpp` you need to make sure you have all dependencies installed on your system (see
 dependencies). In Fedora, you can achieve this by running
 
-``sudo dnf install libxml2 libxml2-devel fmt-devel``
+``sudo dnf install libxml2 libxml2-devel fmt-devel librsvg2 librsvg2-devel glfw3 glfw3-devel``
 
 Other distributions may provide these dependencies through different packages.
 
