@@ -9,8 +9,8 @@ TARGET := plotcpp
 CXX_FLAGS += \
 	-std=c++20 \
 	-O3 \
-	-Wall -Werror \
-	-Wextra -Wpedantic -Wconversion
+	-Werror \
+	-Wall -Wextra -Wpedantic -Wconversion
 
 
 .PHONY: doc compiledb format syntax library cli tests
