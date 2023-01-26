@@ -51,7 +51,7 @@ cairo_surface_t* DisplayService::RenderToSurface(const Figure* figure) const {
   const std::string svg_str = figure->GetSVGText();
   const uint8_t* svg_data = (const uint8_t*)(svg_str.c_str());
   RsvgHandle* handle =
-      rsvg_handle_new_from_data(svg_data, svg_str.size(), &error);
+      rsvg_handle_new_from_data(svg_data, svg_str.size(), nullptr);
 
   cairo_surface_t* surface =
       cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
@@ -64,7 +64,7 @@ cairo_surface_t* DisplayService::RenderToSurface(const Figure* figure) const {
       .height = static_cast<float>(height),
   };
 
-  rsvg_handle_render_document(handle, cr, &viewport, &error);
+  rsvg_handle_render_document(handle, cr, &viewport, nullptr);
 
   cairo_destroy(cr);
 
