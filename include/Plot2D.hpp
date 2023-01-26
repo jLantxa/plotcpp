@@ -71,7 +71,7 @@ class Plot2D : public Figure {
 
   /**
    * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
-   * sequence will be automatically deduced as an 1-increment sequence from
+   * sequence will be automatically deduced as a 1-increment sequence from
    * 0 to N-1 or as the categories set by previous plots.
    *
    * @param x_data x-axis data
@@ -85,7 +85,7 @@ class Plot2D : public Figure {
 
   /**
    * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
-   * sequence will be automatically deduced as an 1-increment sequence from
+   * sequence will be automatically deduced as a 1-increment sequence from
    * 0 to N-1 or as the categories set by previous plots.
    *
    * @param x_data x-axis data
@@ -156,7 +156,7 @@ class Plot2D : public Figure {
 
   /**
    * @brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
-   * x-axis sequence will be automatically deduced as an 1-increment sequence
+   * x-axis sequence will be automatically deduced as a 1-increment sequence
    * from 0 to N-1.
    *
    * @param x_data categorical x
@@ -171,7 +171,7 @@ class Plot2D : public Figure {
 
   /**
    * @brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
-   * x-axis sequence will be automatically deduced as an 1-increment sequence
+   * x-axis sequence will be automatically deduced as a 1-increment sequence
    * from 0 to N-1.
    *
    * @param x_data categorical x
