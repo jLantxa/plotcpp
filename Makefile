@@ -25,7 +25,7 @@ LIB_CXXFLAGS := \
 LIB_LDFLAGS += \
 	$(shell xml2-config --libs) \
 	$(shell pkg-config --libs librsvg-2.0) \
-	-lglfw \
+	-lglfw -lGL \
 	-lfmt \
 	-lpthread
 LIB_SOURCES += \

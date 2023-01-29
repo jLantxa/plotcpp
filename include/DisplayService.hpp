@@ -27,6 +27,7 @@ namespace plotcpp {
 
 class DisplayService final {
  public:
+  ~DisplayService();
   DisplayService(const DisplayService& other) = delete;
   DisplayService operator=(const DisplayService& other) = delete;
 

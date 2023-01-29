@@ -34,6 +34,8 @@ DisplayService::DisplayService() noexcept {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
+DisplayService::~DisplayService() { glfwTerminate(); }
+
 const DisplayService& DisplayService::GetInstance() {
   static DisplayService instance;
   return instance;
@@ -93,14 +95,14 @@ void FigureWindow::Show() {
   // Render SVG to cairo surface
   const DisplayService& display_service = DisplayService::GetInstance();
   cairo_surface_t* surface = display_service.RenderToSurface(m_figure);
-  // TODO: Draw surface
+  glViewport(0, 0, width, height);
 
   // Poll events
   m_is_running = true;
-  while (m_is_running && !glfwWindowShouldClose(window)) {
-    glfwPollEvents();
+  do {
     usleep(33'000);
-  }
+    glfwPollEvents();
+  } while (m_is_running && !glfwWindowShouldClose(window));
 
   // Clean up
   cairo_surface_destroy(surface);
