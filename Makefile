@@ -21,7 +21,7 @@ LIB_CXXFLAGS += \
 	$(LIBXML2_CFLAGS)
 LIB_CXXFLAGS := \
 	$(shell xml2-config --cflags) \
-	$(shell pkg-config --cflags librsvg-2.0)
+	$(shell pkg-config --cflags-only-I librsvg-2.0)
 LIB_LDFLAGS += \
 	$(shell xml2-config --libs) \
 	$(shell pkg-config --libs librsvg-2.0) \
