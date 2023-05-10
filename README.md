@@ -26,8 +26,7 @@ library is targeted for use in modern C++ projects.
 `plotcpp` is based on the following dependencies:
 * A C++20 compliant compiler.
 * [libxml2](https://github.com/GNOME/libxml2)
-* [fmt](https://fmt.dev/latest/index.html): Neither `clang` nor `gcc` support `<format>` yet, so fmt
-is a temporary workaround.
+* std::format: `clang` does not support `<format>` yet.
 * librsvg2
 * GLFW
 
