@@ -16,7 +16,6 @@ set(TEST test)
 find_package(PkgConfig REQUIRED)
 find_package(LibXml2 REQUIRED)
 pkg_check_modules(RSVG2 REQUIRED librsvg-2.0)
-find_package(fmt REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(Threads REQUIRED)
@@ -51,7 +50,6 @@ set(
     ${RSVG2_LIBRARIES}
     ${OPENGL_LIBRARIES}
     glfw
-    fmt::fmt
 )
 
 add_library(plotcpp SHARED ${LIB_SOURCES})

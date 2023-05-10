@@ -18,8 +18,7 @@
 
 #include "components/Frame.hpp"
 
-#include <fmt/format.h>
-
+#include <format>
 #include <set>
 #include <string>
 
