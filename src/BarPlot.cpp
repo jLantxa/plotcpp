@@ -18,7 +18,8 @@
 
 #include "BarPlot.hpp"
 
-#include <format>
+#include <fmt/format.h>
+
 #include <numeric>
 
 namespace plotcpp {
@@ -93,7 +94,7 @@ void BarPlot::Plot(const std::vector<Real>& y_data, const Color& color) {
     m_categorical_x_data.resize(m_num_bars);
 
     for (std::size_t i = 0; i < m_num_bars; ++i) {
-      m_categorical_x_data[i] = std::format("{:d}", i + 1);
+      m_categorical_x_data[i] = fmt::format("{:d}", i + 1);
     }
 
     m_data_type = DataType::CATEGORICAL;

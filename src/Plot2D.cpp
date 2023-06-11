@@ -18,8 +18,9 @@
 
 #include "Plot2D.hpp"
 
+#include <fmt/format.h>
+
 #include <algorithm>
-#include <format>
 #include <functional>
 #include <limits>
 #include <numeric>
@@ -412,7 +413,7 @@ void Plot2D::DrawFrame() {
     }
 
     const auto [_, y] = TranslateToFrame(0, marker);
-    frame.AddLeftMarker(y, std::format("{:.2f}", marker));
+    frame.AddLeftMarker(y, fmt::format("{:.2f}", marker));
   }
 
   // X axis
@@ -427,7 +428,7 @@ void Plot2D::DrawFrame() {
       }
 
       const auto [x, _] = TranslateToFrame(marker, 0);
-      frame.AddBottomMarker(x, std::format("{:.2g}", marker));
+      frame.AddBottomMarker(x, fmt::format("{:.2g}", marker));
     }
   } else if (m_data_type == DataType::CATEGORICAL) {
     const std::size_t num_labels = m_categorical_labels.size();

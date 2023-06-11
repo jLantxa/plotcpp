@@ -18,8 +18,9 @@
 
 #include "BarPlotBase.hpp"
 
+#include <fmt/format.h>
+
 #include <algorithm>
-#include <format>
 #include <set>
 #include <string>
 #include <utility>
@@ -292,8 +293,8 @@ void BarPlotBase::DrawFrame() {
     const auto y = TranslateToFrame(marker);
     const std::string marker_text =
         (!m_round_y_markers)
-            ? std::format("{:.2f}", marker)
-            : std::format("{:d}", static_cast<int>(std::round(marker)));
+            ? fmt::format("{:.2f}", marker)
+            : fmt::format("{:d}", static_cast<int>(std::round(marker)));
     frame.AddLeftMarker(y, marker_text);
   }
 
@@ -312,7 +313,7 @@ void BarPlotBase::DrawFrame() {
                     (static_cast<float>(i) * bar_horizontal_space);
     const std::string marker_text =
         (m_data_type == DataType::NUMERIC)
-            ? std::format("{:.2f}", m_numeric_x_data[i])
+            ? fmt::format("{:.2f}", m_numeric_x_data[i])
             : m_categorical_x_data[i];
     frame.AddBottomMarker(x, marker_text);
   }
