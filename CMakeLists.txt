@@ -69,7 +69,7 @@ set(
 )
 
 add_executable(cli ${CLI_MAIN} ${CLI_SOURCES})
-target_link_libraries(cli -lplotcpp)
+target_link_libraries(cli -L./${CMAKE_CURRENT_BINARY_DIR} plotcpp)
 set_target_properties(cli PROPERTIES OUTPUT_NAME plotcpp)
 
 add_executable(cli_static ${CLI_MAIN} ${CLI_SOURCES} ${LIB_SOURCES})
