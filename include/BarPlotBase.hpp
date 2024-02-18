@@ -30,17 +30,17 @@
 namespace plotcpp {
 
 class BarPlotBase : public Figure {
- public:
+public:
   virtual ~BarPlotBase() = default;
 
   void Clear() override;
   void Build() override;
 
   /** Set the x axis label */
-  void SetXLabel(const std::string& label);
+  void SetXLabel(const std::string &label);
 
   /** Set the y axis label */
-  void SetYLabel(const std::string& label);
+  void SetYLabel(const std::string &label);
 
   /** Set the grid enabled / disabled*/
   void SetGrid(bool enable);
@@ -61,9 +61,9 @@ class BarPlotBase : public Figure {
   void AddYMarker(Real marker);
 
   /** Set the figure legend */
-  void SetLegend(const std::vector<std::string>& labels);
+  void SetLegend(const std::vector<std::string> &labels);
 
- protected:
+protected:
   explicit BarPlotBase() = default;
 
   void ClearData();
@@ -151,6 +151,6 @@ class BarPlotBase : public Figure {
   void DrawLegend();
 };
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_BAR_PLOT_BASE_HPP_
+#endif // _PLOTCPP_INCLUDE_BAR_PLOT_BASE_HPP_

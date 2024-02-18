@@ -27,7 +27,7 @@
 #include "csv.hpp"
 #include "utility.hpp"
 
-bool HistogramHandler::Run(int argc, char** argv) {
+bool HistogramHandler::Run(int argc, char **argv) {
   static const struct option long_options[] = {
       {"filename", required_argument, nullptr, 'f'},
       {"num-bins", required_argument, nullptr, 'b'},
@@ -39,7 +39,7 @@ bool HistogramHandler::Run(int argc, char** argv) {
       {"output", required_argument, nullptr, 'o'},
       {nullptr, 0, nullptr, 0}};
 
-  const char* short_opts = "f:t:x:y:go:";
+  const char *short_opts = "f:t:x:y:go:";
 
   plotcpp::HistogramPlot plot;
   std::string csv_filename;
@@ -56,36 +56,36 @@ bool HistogramHandler::Run(int argc, char** argv) {
     }
 
     switch (opt) {
-      case 't':
-        plot.SetTitle(std::string{optarg});
-        break;
+    case 't':
+      plot.SetTitle(std::string{optarg});
+      break;
 
-      case 'b':
-        num_bins = static_cast<unsigned int>(atol(optarg));
-        break;
+    case 'b':
+      num_bins = static_cast<unsigned int>(atol(optarg));
+      break;
 
-      case 'x':
-        plot.SetXLabel(std::string{optarg});
-        break;
+    case 'x':
+      plot.SetXLabel(std::string{optarg});
+      break;
 
-      case 'y':
-        plot.SetYLabel(std::string{optarg});
-        break;
+    case 'y':
+      plot.SetYLabel(std::string{optarg});
+      break;
 
-      case 'g':
-        plot.SetGrid(true);
-        break;
+    case 'g':
+      plot.SetGrid(true);
+      break;
 
-      case 'f':
-        csv_filename = std::string{optarg};
-        break;
+    case 'f':
+      csv_filename = std::string{optarg};
+      break;
 
-      case 'o':
-        output_filename = std::string{optarg};
-        break;
+    case 'o':
+      output_filename = std::string{optarg};
+      break;
 
-      default:
-        break;
+    default:
+      break;
     }
   };
 

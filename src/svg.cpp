@@ -23,23 +23,23 @@
 namespace plotcpp {
 namespace svg {
 
-static inline const xmlChar* xchar(const char* str) {
-  return (const xmlChar*)str;
+static inline const xmlChar *xchar(const char *str) {
+  return (const xmlChar *)str;
 }
 
-xmlNode* AppendNode(xmlNode* parent, const std::string& name) {
-  xmlNode* new_node = xmlNewNode(nullptr, xchar(name.c_str()));
+xmlNode *AppendNode(xmlNode *parent, const std::string &name) {
+  xmlNode *new_node = xmlNewNode(nullptr, xchar(name.c_str()));
   xmlAddChild(parent, new_node);
   return new_node;
 }
 
-void SetAttribute(xmlNode* node, const std::string& name,
-                  const std::string& value, const std::string& unit) {
+void SetAttribute(xmlNode *node, const std::string &name,
+                  const std::string &value, const std::string &unit) {
   const std::string val_str = value + unit;
   xmlSetProp(node, xchar(name.c_str()), xchar(val_str.c_str()));
 }
 
-std::string ColorToString(const Color& color) {
+std::string ColorToString(const Color &color) {
   std::stringstream ss;
   ss << "RGB(" << std::to_string(color.r) << ", " << std::to_string(color.g)
      << ", " << std::to_string(color.b) << ")";
@@ -56,9 +56,9 @@ Document::~Document() { xmlFreeDoc(m_doc); }
 xmlDocPtr Document::GetDoc() { return m_doc; }
 
 std::string Document::GetText() const {
-  xmlChar* xml_str;
+  xmlChar *xml_str;
   xmlDocDumpFormatMemory(m_doc, &xml_str, nullptr, 1);
-  return std::string{(char*)xml_str};
+  return std::string{(char *)xml_str};
 }
 
 std::pair<float, float> Document::GetSize() { return {m_width, m_height}; }
@@ -67,45 +67,45 @@ std::string PathCommand::ToString() const {
   std::stringstream ss;
 
   switch (id) {
-    case Id::MOVE:
-      ss << "M";
-      break;
-    case Id::MOVE_R:
-      ss << "m";
-      break;
-    case Id::LINE:
-      ss << "L";
-      break;
-    case Id::LINE_R:
-      ss << "l";
-      break;
-    case Id::VERTICAL:
-      ss << "V";
-      break;
-    case Id::VERTICAL_R:
-      ss << "v";
-      break;
-    case Id::HORIZONTAL:
-      ss << "H";
-      break;
-    case Id::HORIZONTAL_R:
-      ss << "h";
-      break;
-    case Id::QUADRATIC_R:
-      ss << "q";
-      break;
-    case Id::CLOSE:
-      ss << "Z";
+  case Id::MOVE:
+    ss << "M";
+    break;
+  case Id::MOVE_R:
+    ss << "m";
+    break;
+  case Id::LINE:
+    ss << "L";
+    break;
+  case Id::LINE_R:
+    ss << "l";
+    break;
+  case Id::VERTICAL:
+    ss << "V";
+    break;
+  case Id::VERTICAL_R:
+    ss << "v";
+    break;
+  case Id::HORIZONTAL:
+    ss << "H";
+    break;
+  case Id::HORIZONTAL_R:
+    ss << "h";
+    break;
+  case Id::QUADRATIC_R:
+    ss << "q";
+    break;
+  case Id::CLOSE:
+    ss << "Z";
   }
 
-  for (const auto& arg : args) {
+  for (const auto &arg : args) {
     ss << " " << std::to_string(arg);
   }
 
   return ss.str();
 }
 
-void Path::Add(const PathCommand& command) { commands.push_back(command); }
+void Path::Add(const PathCommand &command) { commands.push_back(command); }
 
 void Path::Clear() { commands.clear(); }
 
@@ -130,9 +130,9 @@ void Document::SetSize(unsigned int width, unsigned int height) {
 
 void Document::Append(xmlNodePtr node) { xmlAddChild(m_root, node); }
 
-xmlNodePtr Document::AddGroup(xmlNodePtr parent_node, const std::string& id) {
+xmlNodePtr Document::AddGroup(xmlNodePtr parent_node, const std::string &id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
-  auto* node = AppendNode(parent, "g");
+  auto *node = AppendNode(parent, "g");
 
   if (!id.empty()) {
     SetAttribute(node, "id", id);
@@ -144,7 +144,7 @@ xmlNodePtr Document::AddGroup(xmlNodePtr parent_node, const std::string& id) {
 xmlNodePtr Document::Defs() { return m_defs; }
 
 xmlNodePtr Document::DrawBackground(Color color) {
-  auto* node = AppendNode(m_root, "rect");
+  auto *node = AppendNode(m_root, "rect");
 
   SetAttribute(node, "id", "_background");
 
@@ -163,10 +163,10 @@ xmlNodePtr Document::DrawBackground(Color color) {
   return node;
 }
 
-xmlNodePtr Document::DrawLine(const Line& line, xmlNodePtr parent_node,
-                              const std::string& id) {
+xmlNodePtr Document::DrawLine(const Line &line, xmlNodePtr parent_node,
+                              const std::string &id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
-  auto* node = AppendNode(parent, "line");
+  auto *node = AppendNode(parent, "line");
 
   if (!id.empty()) {
     SetAttribute(node, "id", id);
@@ -183,10 +183,10 @@ xmlNodePtr Document::DrawLine(const Line& line, xmlNodePtr parent_node,
   return node;
 }
 
-xmlNodePtr Document::DrawRect(const Rect& rect, xmlNodePtr parent_node,
-                              const std::string& id) {
+xmlNodePtr Document::DrawRect(const Rect &rect, xmlNodePtr parent_node,
+                              const std::string &id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
-  auto* node = AppendNode(parent, "rect");
+  auto *node = AppendNode(parent, "rect");
 
   if (!id.empty()) {
     SetAttribute(node, "id", id);
@@ -212,10 +212,10 @@ xmlNodePtr Document::DrawRect(const Rect& rect, xmlNodePtr parent_node,
   return node;
 }
 
-xmlNodePtr Document::DrawCircle(const Circle& circle, xmlNodePtr parent_node,
-                                const std::string& id) {
+xmlNodePtr Document::DrawCircle(const Circle &circle, xmlNodePtr parent_node,
+                                const std::string &id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
-  auto* node = AppendNode(parent, "circle");
+  auto *node = AppendNode(parent, "circle");
 
   if (!id.empty()) {
     SetAttribute(node, "id", id);
@@ -229,17 +229,17 @@ xmlNodePtr Document::DrawCircle(const Circle& circle, xmlNodePtr parent_node,
   return node;
 }
 
-xmlNodePtr Document::DrawPath(const Path& path, xmlNodePtr parent_node,
-                              const std::string& id) {
+xmlNodePtr Document::DrawPath(const Path &path, xmlNodePtr parent_node,
+                              const std::string &id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
-  auto* node = AppendNode(parent, "path");
+  auto *node = AppendNode(parent, "path");
 
   if (!id.empty()) {
     SetAttribute(node, "id", id);
   }
 
   std::stringstream path_ss;
-  for (const PathCommand& cmd : path.commands) {
+  for (const PathCommand &cmd : path.commands) {
     path_ss << cmd.ToString() << " ";
   }
 
@@ -257,10 +257,10 @@ xmlNodePtr Document::DrawPath(const Path& path, xmlNodePtr parent_node,
   return node;
 }
 
-xmlNodePtr Document::DrawText(const Text& text, xmlNodePtr parent_node,
-                              const std::string& id) {
+xmlNodePtr Document::DrawText(const Text &text, xmlNodePtr parent_node,
+                              const std::string &id) {
   xmlNodePtr parent = parent_node == nullptr ? m_root : parent_node;
-  auto* node = AppendNode(parent, "text");
+  auto *node = AppendNode(parent, "text");
 
   if (!id.empty()) {
     SetAttribute(node, "id", id);
@@ -278,5 +278,5 @@ xmlNodePtr Document::DrawText(const Text& text, xmlNodePtr parent_node,
   return node;
 }
 
-}  // namespace svg
-}  // namespace plotcpp
+} // namespace svg
+} // namespace plotcpp

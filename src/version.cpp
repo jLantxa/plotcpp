@@ -20,8 +20,8 @@
 
 namespace plotcpp {
 
-static const char* LIB_VERSION = HEADER_VERSION;
+static const char *LIB_VERSION = HEADER_VERSION;
 
-const char* GetBuildVersion() { return LIB_VERSION; }
+const char *GetBuildVersion() { return LIB_VERSION; }
 
-}  // namespace plotcpp
+} // namespace plotcpp

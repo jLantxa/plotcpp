@@ -28,7 +28,7 @@
 
 namespace plotcpp {
 
-void Figure::SetTitle(const std::string& title) { m_title = title; }
+void Figure::SetTitle(const std::string &title) { m_title = title; }
 
 std::string Figure::Title() const { return m_title; }
 
@@ -43,10 +43,10 @@ unsigned int Figure::Height() const { return m_height; }
 
 std::string Figure::GetSVGText() const { return m_svg.GetText(); }
 
-svg::Document& Figure::GetSVGDocument() { return m_svg; }
+svg::Document &Figure::GetSVGDocument() { return m_svg; }
 
 void Figure::Show() const {
-  const DisplayService& display_service = DisplayService::GetInstance();
+  const DisplayService &display_service = DisplayService::GetInstance();
   display_service.ShowFigure(this);
 }
 
@@ -54,14 +54,14 @@ void Figure::Show() const {
   return std::thread(&Figure::Show, this);
 }
 
-void Figure::Save(const std::string& filepath) const {
+void Figure::Save(const std::string &filepath) const {
   // TODO: Extract extension and call save function
   auto ext = filepath.find_last_of(".") + 1;
   if (filepath.substr(ext) == "svg") {
     SaveSVG(filepath);
   } else if (filepath.substr(ext) == "png") {
-    const DisplayService& display_service = DisplayService::GetInstance();
-    cairo_surface_t* surface = display_service.RenderToSurface(this);
+    const DisplayService &display_service = DisplayService::GetInstance();
+    cairo_surface_t *surface = display_service.RenderToSurface(this);
     cairo_surface_write_to_png(surface, filepath.c_str());
     cairo_surface_destroy(surface);
   } else {
@@ -69,10 +69,10 @@ void Figure::Save(const std::string& filepath) const {
   }
 }
 
-void Figure::SaveSVG(const std::string& filepath) const {
+void Figure::SaveSVG(const std::string &filepath) const {
   std::ofstream out_file(filepath);
   out_file << m_svg.GetText();
   out_file.close();
 }
 
-}  // namespace plotcpp
+} // namespace plotcpp

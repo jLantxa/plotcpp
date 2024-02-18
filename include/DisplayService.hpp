@@ -26,34 +26,34 @@
 namespace plotcpp {
 
 class DisplayService final {
- public:
+public:
   ~DisplayService();
-  DisplayService(const DisplayService& other) = delete;
-  DisplayService operator=(const DisplayService& other) = delete;
+  DisplayService(const DisplayService &other) = delete;
+  DisplayService operator=(const DisplayService &other) = delete;
 
-  static const DisplayService& GetInstance();
+  static const DisplayService &GetInstance();
 
-  void ShowFigure(const Figure* figure) const;
+  void ShowFigure(const Figure *figure) const;
 
-  cairo_surface_t* RenderToSurface(const Figure* figure) const;
+  cairo_surface_t *RenderToSurface(const Figure *figure) const;
 
- private:
+private:
   DisplayService() noexcept;
 };
 
 class FigureWindow {
- public:
-  FigureWindow(const Figure* figure);
+public:
+  FigureWindow(const Figure *figure);
 
   void Show();
 
   void Close();
 
- private:
+private:
   bool m_is_running = false;
-  const Figure* m_figure;
+  const Figure *m_figure;
 };
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_DISPLAY_SERVICE_HPP_
+#endif // _PLOTCPP_INCLUDE_DISPLAY_SERVICE_HPP_

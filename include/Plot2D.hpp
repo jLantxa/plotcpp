@@ -37,7 +37,7 @@ namespace plotcpp {
  * @brief A 2D plot consisting of one or more 2D sets of points
  */
 class Plot2D : public Figure {
- public:
+public:
   Plot2D();
   virtual ~Plot2D() = default;
 
@@ -52,9 +52,9 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
-            const Color& color, const float stroke_width = 2,
-            const std::string& dash_array = {});
+  void Plot(const std::vector<Real> &x_data, const std::vector<Real> &y_data,
+            const Color &color, const float stroke_width = 2,
+            const std::string &dash_array = {});
 
   /**
    * @brief Add a plot consisting of an x-axis sequence and a y-axis sequence
@@ -66,8 +66,8 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
-            const float stroke_width = 2, const std::string& dash_array = {});
+  void Plot(const std::vector<Real> &x_data, const std::vector<Real> &y_data,
+            const float stroke_width = 2, const std::string &dash_array = {});
 
   /**
    * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
@@ -80,8 +80,8 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<Real>& y_data, const Color& color,
-            const float stroke_width = 2, const std::string& dash_array = {});
+  void Plot(const std::vector<Real> &y_data, const Color &color,
+            const float stroke_width = 2, const std::string &dash_array = {});
 
   /**
    * @brief Add a plot consisting of one y-axis sequence of size N. The x-axis
@@ -93,8 +93,8 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<Real>& y_data, const float stroke_width = 2,
-            const std::string& dash_array = {});
+  void Plot(const std::vector<Real> &y_data, const float stroke_width = 2,
+            const std::string &dash_array = {});
 
   /**
    * @brief Add a plot using a vector as x axis values and a lambda function
@@ -107,9 +107,9 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<Real>& x_data,
-            const std::function<Real(Real)>& function, const Color& color,
-            const float stroke_width = 2, const std::string& dash_array = {});
+  void Plot(const std::vector<Real> &x_data,
+            const std::function<Real(Real)> &function, const Color &color,
+            const float stroke_width = 2, const std::string &dash_array = {});
 
   /**
    * @brief Add a plot using a vector as x axis values and a lambda function
@@ -121,9 +121,9 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<Real>& x_data,
-            const std::function<Real(Real)>& function,
-            const float stroke_width = 2, const std::string& dash_array = {});
+  void Plot(const std::vector<Real> &x_data,
+            const std::function<Real(Real)> &function,
+            const float stroke_width = 2, const std::string &dash_array = {});
 
   /**
    * @brief Add a categorical plot with discrete text labels on the x axis and
@@ -136,9 +136,9 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<std::string>& x_data,
-            const std::vector<Real>& y_data, const Color& color,
-            const float stroke_width = 2, const std::string& dash_array = {});
+  void Plot(const std::vector<std::string> &x_data,
+            const std::vector<Real> &y_data, const Color &color,
+            const float stroke_width = 2, const std::string &dash_array = {});
 
   /**
    * @brief Add a categorical plot with discrete text labels on the x axis and
@@ -150,9 +150,9 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Plot(const std::vector<std::string>& x_data,
-            const std::vector<Real>& y_data, const float stroke_width = 2,
-            const std::string& dash_array = {});
+  void Plot(const std::vector<std::string> &x_data,
+            const std::vector<Real> &y_data, const float stroke_width = 2,
+            const std::string &dash_array = {});
 
   /**
    * @brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
@@ -166,8 +166,8 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Scatter(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
-               const Color& color, const float radius = 2);
+  void Scatter(const std::vector<Real> &x_data, const std::vector<Real> &y_data,
+               const Color &color, const float radius = 2);
 
   /**
    * @brief Add a SCATTER plot consisting of one y-axis sequence of size N. The
@@ -180,7 +180,7 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Scatter(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
+  void Scatter(const std::vector<Real> &x_data, const std::vector<Real> &y_data,
                const float radius = 2);
 
   /**
@@ -194,9 +194,9 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Scatter(const std::vector<std::string>& x_data,
-               const std::vector<Real>& y_data,
-               const Color& color = Color{0, 0, 0}, const float radius = 2);
+  void Scatter(const std::vector<std::string> &x_data,
+               const std::vector<Real> &y_data,
+               const Color &color = Color{0, 0, 0}, const float radius = 2);
 
   /**
    * @brief Add a categorical SCATTER plot with discrete text labels on the x
@@ -208,8 +208,8 @@ class Plot2D : public Figure {
    * @param dash_array Dash array (length of draw / no-draw segments in pt
    * units)
    */
-  void Scatter(const std::vector<std::string>& x_data,
-               const std::vector<Real>& y_data, const float radius = 2);
+  void Scatter(const std::vector<std::string> &x_data,
+               const std::vector<Real> &y_data, const float radius = 2);
 
   /**
    * @brief Set hold on/off
@@ -261,19 +261,19 @@ class Plot2D : public Figure {
    * corresponding plots will not shot a label. Calling this function deletes
    * all previously set labels.
    */
-  void SetLegend(const std::vector<std::string>& labels);
+  void SetLegend(const std::vector<std::string> &labels);
 
   /**
    * @brief Set a label for the x axis.
    * @param label
    */
-  void SetXLabel(const std::string& label);
+  void SetXLabel(const std::string &label);
 
   /**
    * @brief Set a label for the y axis.
    * @param label
    */
-  void SetYLabel(const std::string& label);
+  void SetYLabel(const std::string &label);
 
   /**
    * @brief Returns the x axis label
@@ -298,7 +298,7 @@ class Plot2D : public Figure {
   /** Build the figure */
   void Build() override;
 
- protected:
+protected:
   struct Style {
     Color color;
     float stroke;
@@ -392,11 +392,11 @@ class Plot2D : public Figure {
 
   void DrawData();
   void DrawNumericData();
-  void DrawNumericPath(const DataSeries& plot);
-  void DrawNumericScatter(const DataSeries& plot);
+  void DrawNumericPath(const DataSeries &plot);
+  void DrawNumericScatter(const DataSeries &plot);
   void DrawCategoricalData();
-  void DrawCategoricalPath(const CategoricalDataSeries& plot);
-  void DrawCategoricalScatter(const CategoricalDataSeries& plot);
+  void DrawCategoricalPath(const CategoricalDataSeries &plot);
+  void DrawCategoricalScatter(const CategoricalDataSeries &plot);
 
   void DrawTitle();
   void DrawLabels();
@@ -404,6 +404,6 @@ class Plot2D : public Figure {
   void DrawLegend();
 };
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_PLOT2D_HPP_
+#endif // _PLOTCPP_INCLUDE_PLOT2D_HPP_

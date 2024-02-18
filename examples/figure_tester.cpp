@@ -52,7 +52,7 @@ static void NumericPlot() {
   std::vector<Real> data_x1 =
       plotcpp::ranges::MakeRange<Real>(0.0f, 10.0f, 0.01f);
   std::vector<Real> data_y1;
-  for (auto& x : data_x1) {
+  for (auto &x : data_x1) {
     Real y = 1 / x;
     data_y1.push_back(y);
   }
@@ -61,7 +61,7 @@ static void NumericPlot() {
   std::vector<Real> data_x2 =
       plotcpp::ranges::MakeRange<Real>(10.0f, 0.0f, -0.01f);
   std::vector<Real> data_y2;
-  for (auto& x : data_x2) {
+  for (auto &x : data_x2) {
     Real y = std::pow(x - 5, 3);
     data_y2.push_back(y);
   }

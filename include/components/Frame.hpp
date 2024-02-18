@@ -30,7 +30,7 @@ namespace plotcpp {
 namespace components {
 
 class Frame {
- public:
+public:
   enum class FrameType {
     FULL_FRAME,
     AXES_ONLY,
@@ -38,16 +38,16 @@ class Frame {
 
   Frame(float width, float height, bool enable_grid);
 
-  void Draw(svg::Document* document, float x, float y) const;
+  void Draw(svg::Document *document, float x, float y) const;
 
-  void AddLeftMarker(float pos, const std::string& text);
-  void AddTopMarker(float pos, const std::string& text);
-  void AddRightMarker(float pos, const std::string& text);
-  void AddBottomMarker(float pos, const std::string& text);
+  void AddLeftMarker(float pos, const std::string &text);
+  void AddTopMarker(float pos, const std::string &text);
+  void AddRightMarker(float pos, const std::string &text);
+  void AddBottomMarker(float pos, const std::string &text);
 
   void SetFrameType(FrameType frame_type);
 
- protected:
+protected:
   float m_width, m_height;
   float m_axis_font_size = 11.0f;
   bool m_grid_enable;
@@ -65,12 +65,12 @@ class Frame {
   const std::string DASH_ARRAY{"0.75,0.75"};
   static constexpr float MARKER_LENGTH = 5.0f;
 
-  void DrawFullFrame(svg::Document* document, float x, float y) const;
-  void DrawAxesOnly(svg::Document* document, float x, float y) const;
-  void DrawAxes(svg::Document* document, float x, float y) const;
+  void DrawFullFrame(svg::Document *document, float x, float y) const;
+  void DrawAxesOnly(svg::Document *document, float x, float y) const;
+  void DrawAxes(svg::Document *document, float x, float y) const;
 };
 
-}  // namespace components
-}  // namespace plotcpp
+} // namespace components
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_COMPONENTS_FRAME_HPP_
+#endif // _PLOTCPP_INCLUDE_COMPONENTS_FRAME_HPP_

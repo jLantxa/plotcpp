@@ -26,7 +26,7 @@ namespace style {
 
 static constexpr Color BORDER_COLOR{128, 128, 128};
 
-}  // namespace style
-}  // namespace plotcpp
+} // namespace style
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_COMPONENTS_STYLE_HPP_
+#endif // _PLOTCPP_INCLUDE_COMPONENTS_STYLE_HPP_

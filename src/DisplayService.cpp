@@ -36,28 +36,28 @@ DisplayService::DisplayService() noexcept {
 
 DisplayService::~DisplayService() { glfwTerminate(); }
 
-const DisplayService& DisplayService::GetInstance() {
+const DisplayService &DisplayService::GetInstance() {
   static DisplayService instance;
   return instance;
 }
 
-void DisplayService::ShowFigure(const Figure* figure) const {
+void DisplayService::ShowFigure(const Figure *figure) const {
   FigureWindow window(figure);
   window.Show();
 }
 
-cairo_surface_t* DisplayService::RenderToSurface(const Figure* figure) const {
+cairo_surface_t *DisplayService::RenderToSurface(const Figure *figure) const {
   const int width = static_cast<int>(figure->Width());
   const int height = static_cast<int>(figure->Height());
 
   const std::string svg_str = figure->GetSVGText();
-  const uint8_t* svg_data = (const uint8_t*)(svg_str.c_str());
-  RsvgHandle* handle =
+  const uint8_t *svg_data = (const uint8_t *)(svg_str.c_str());
+  RsvgHandle *handle =
       rsvg_handle_new_from_data(svg_data, svg_str.size(), nullptr);
 
-  cairo_surface_t* surface =
+  cairo_surface_t *surface =
       cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-  cairo_t* cr = cairo_create(surface);
+  cairo_t *cr = cairo_create(surface);
 
   RsvgRectangle viewport = {
       .x = 0.0,
@@ -73,7 +73,7 @@ cairo_surface_t* DisplayService::RenderToSurface(const Figure* figure) const {
   return surface;
 }
 
-FigureWindow::FigureWindow(const Figure* figure) : m_figure(figure) {
+FigureWindow::FigureWindow(const Figure *figure) : m_figure(figure) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -87,14 +87,14 @@ void FigureWindow::Show() {
 
   const int width = static_cast<int>(m_figure->Width());
   const int height = static_cast<int>(m_figure->Height());
-  GLFWwindow* window =
+  GLFWwindow *window =
       glfwCreateWindow(width, height, m_figure->Title().c_str(), NULL, NULL);
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, false);
   glfwMakeContextCurrent(window);
 
   // Render SVG to cairo surface
-  const DisplayService& display_service = DisplayService::GetInstance();
-  cairo_surface_t* surface = display_service.RenderToSurface(m_figure);
+  const DisplayService &display_service = DisplayService::GetInstance();
+  cairo_surface_t *surface = display_service.RenderToSurface(m_figure);
   glViewport(0, 0, width, height);
 
   // Poll events
@@ -111,4 +111,4 @@ void FigureWindow::Show() {
 
 void FigureWindow::Close() { m_is_running = false; }
 
-}  // namespace plotcpp
+} // namespace plotcpp

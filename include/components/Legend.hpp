@@ -29,7 +29,7 @@ namespace plotcpp {
 namespace components {
 
 class Legend {
- public:
+public:
   enum class Alignment {
     TOP_LEFT,
     TOP_RIGHT,
@@ -51,12 +51,12 @@ class Legend {
 
   Legend() = default;
 
-  void AddEntry(const std::string& label, const Style& style);
+  void AddEntry(const std::string &label, const Style &style);
 
-  void Draw(svg::Document* document, float x, float y, float margin,
+  void Draw(svg::Document *document, float x, float y, float margin,
             Alignment alignment) const;
 
- protected:
+protected:
   using LegendEntry = std::pair<std::string, Style>;
   std::vector<LegendEntry> m_legend_labels;
 
@@ -73,7 +73,7 @@ class Legend {
   static constexpr float BOX_RADIUS = 3.0f;
 };
 
-}  // namespace components
-}  // namespace plotcpp
+} // namespace components
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_COMPONENTS_LEGEND_HPP_
+#endif // _PLOTCPP_INCLUDE_COMPONENTS_LEGEND_HPP_

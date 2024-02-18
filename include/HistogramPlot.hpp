@@ -28,7 +28,7 @@
 namespace plotcpp {
 
 class HistogramPlot : public BarPlotBase {
- public:
+public:
   HistogramPlot();
   virtual ~HistogramPlot() = default;
 
@@ -41,8 +41,8 @@ class HistogramPlot : public BarPlotBase {
    * @param num_bins Number of bins
    * @param color Bar colour
    */
-  void Plot(const std::vector<Real>& values, unsigned int num_bins,
-            const Color& color);
+  void Plot(const std::vector<Real> &values, unsigned int num_bins,
+            const Color &color);
 
   /**
    * @brief Plot a histogram of a sequence of values
@@ -50,18 +50,18 @@ class HistogramPlot : public BarPlotBase {
    * @param values Vector of values
    * @param num_bins Number of bins
    */
-  void Plot(const std::vector<Real>& values, unsigned int num_bins);
+  void Plot(const std::vector<Real> &values, unsigned int num_bins);
 
- protected:
-  std::vector<Real> CalculateIntervals(const std::vector<Real>& values,
+protected:
+  std::vector<Real> CalculateIntervals(const std::vector<Real> &values,
                                        unsigned int num_bins);
-  std::vector<Real> CalculateBins(const std::vector<Real>& intervals);
-  std::vector<Real> CalculateHistogram(const std::vector<Real>& values,
-                                       const std::vector<Real>& intervals);
+  std::vector<Real> CalculateBins(const std::vector<Real> &intervals);
+  std::vector<Real> CalculateHistogram(const std::vector<Real> &values,
+                                       const std::vector<Real> &intervals);
 
   static constexpr Color DEFAULT_COLOR{0x332288};
 };
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_HISTOGRAM_PLOT_HPP_
+#endif // _PLOTCPP_INCLUDE_HISTOGRAM_PLOT_HPP_

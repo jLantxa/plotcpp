@@ -36,9 +36,9 @@ namespace plotcpp {
 
 const std::string BarPlotBase::FRAME_RECT_CLIP_PATH_ID = {"rect-clip-path"};
 
-void BarPlotBase::SetXLabel(const std::string& label) { m_x_label = label; }
+void BarPlotBase::SetXLabel(const std::string &label) { m_x_label = label; }
 
-void BarPlotBase::SetYLabel(const std::string& label) { m_y_label = label; }
+void BarPlotBase::SetYLabel(const std::string &label) { m_y_label = label; }
 
 void BarPlotBase::SetGrid(bool enable) { m_grid_enable = enable; }
 
@@ -50,7 +50,7 @@ void BarPlotBase::SetBarRelativeWidth(float rel_width) {
 
 void BarPlotBase::AddYMarker(Real marker) { m_y_custom_markers.insert(marker); }
 
-void BarPlotBase::SetLegend(const std::vector<std::string>& labels) {
+void BarPlotBase::SetLegend(const std::vector<std::string> &labels) {
   m_legend_labels = labels;
 }
 
@@ -104,7 +104,7 @@ void BarPlotBase::CalculateFrame() {
   // Calculate y range
   std::vector<Real> pos_acc(m_num_bars, 0.0f);
   std::vector<Real> neg_acc(m_num_bars, 0.0f);
-  for (const auto& series : m_y_data) {
+  for (const auto &series : m_y_data) {
     for (std::size_t i = 0; i < m_num_bars; ++i) {
       const Real value = series.values[i];
       if (value >= 0.0f) {
@@ -153,7 +153,7 @@ void BarPlotBase::DrawBars() {
       std::vector<std::size_t>(m_num_bars, 0);
   std::vector<Real> positive_bar_sizes(m_num_bars, 0.0f);
   std::vector<Real> negative_bar_sizes(m_num_bars, 0.0f);
-  for (const auto& data_series : m_y_data) {
+  for (const auto &data_series : m_y_data) {
     for (std::size_t i = 0; i < m_num_bars; ++i) {
       const Real value = data_series.values[i];
       if (value > 0) {
@@ -168,7 +168,7 @@ void BarPlotBase::DrawBars() {
 
   std::vector<Real> pos_acc(m_num_bars, 0.0f);
   std::vector<Real> neg_acc(m_num_bars, 0.0f);
-  for (const auto& series : m_y_data) {
+  for (const auto &series : m_y_data) {
     for (std::size_t i = 0; i < m_num_bars; ++i) {
       const Real value = series.values[i];
 
@@ -285,7 +285,7 @@ void BarPlotBase::DrawFrame() {
   left_markers.insert(m_y_markers.begin(), m_y_markers.end());
   left_markers.insert(m_y_custom_markers.begin(), m_y_custom_markers.end());
 
-  for (const auto& marker : left_markers) {
+  for (const auto &marker : left_markers) {
     if ((marker < m_y_range.first) || (marker > m_y_range.second)) {
       continue;
     }
@@ -353,4 +353,4 @@ void BarPlotBase::DrawLegend() {
   legend.Draw(&m_svg, m_frame_x + m_frame_w, m_frame_y, LEGEND_MARGIN,
               components::Legend::Alignment::TOP_RIGHT);
 }
-}  // namespace plotcpp
+} // namespace plotcpp

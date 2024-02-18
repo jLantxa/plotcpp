@@ -28,7 +28,7 @@
 namespace plotcpp {
 
 class Figure {
- public:
+public:
   virtual ~Figure() = default;
 
   /**
@@ -55,7 +55,7 @@ class Figure {
    *
    * @param filepath Path to a file to save the figure.
    */
-  void Save(const std::string& filepath) const;
+  void Save(const std::string &filepath) const;
 
   /**
    * @brief Return the SVG representation of this Figure.
@@ -64,14 +64,14 @@ class Figure {
   std::string GetSVGText() const;
 
   /** @brief Return the svg document */
-  svg::Document& GetSVGDocument();
+  svg::Document &GetSVGDocument();
 
   /**
    * @brief Set figure title.
    *
    * @param title
    */
-  void SetTitle(const std::string& title);
+  void SetTitle(const std::string &title);
 
   /**
    * @brief Returns the figure's title.
@@ -102,7 +102,7 @@ class Figure {
    */
   unsigned int Height() const;
 
- protected:
+protected:
   std::string m_title;
 
   static constexpr unsigned int DEFAULT_WIDTH = 600;
@@ -116,13 +116,13 @@ class Figure {
 
   explicit Figure() = default;
 
- private:
+private:
   /**
    * @brief Save plot to svg format
    */
-  void SaveSVG(const std::string& filepath) const;
+  void SaveSVG(const std::string &filepath) const;
 };
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_FIGURE_HPP_
+#endif // _PLOTCPP_INCLUDE_FIGURE_HPP_

@@ -22,9 +22,9 @@
 #include <string>
 
 class HistogramHandler final {
- public:
+public:
   HistogramHandler() = default;
-  bool Run(int argc, char** argv);
+  bool Run(int argc, char **argv);
 };
 
-#endif  // _PLOTCPP_APP_INCLUDE_HISTOGRAM_HANDLER_HPP_
+#endif // _PLOTCPP_APP_INCLUDE_HISTOGRAM_HANDLER_HPP_

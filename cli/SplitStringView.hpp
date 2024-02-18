@@ -23,32 +23,32 @@
 #include <string_view>
 
 class SplitStringView final {
- public:
+public:
   SplitStringView(const std::string_view str, std::string_view delimiter);
 
   class Iterator final {
-   public:
+  public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = std::string_view;
     using pointer = std::string_view;
     using reference = std::string_view;
 
-    Iterator(const SplitStringView& split_str_view, std::size_t start);
+    Iterator(const SplitStringView &split_str_view, std::size_t start);
 
     void FindNextToken();
 
-    bool operator==(const Iterator& other) const;
+    bool operator==(const Iterator &other) const;
 
-    bool operator!=(const Iterator& other) const;
+    bool operator!=(const Iterator &other) const;
 
-    Iterator& operator++();
+    Iterator &operator++();
 
     reference operator*();
 
     pointer operator->();
 
-   private:
-    const SplitStringView& split_string_view;
+  private:
+    const SplitStringView &split_string_view;
     std::size_t substr_start;
     std::size_t substr_end;
     std::size_t next_token = 0;
@@ -57,11 +57,11 @@ class SplitStringView final {
   Iterator begin();
   Iterator end();
 
- private:
+private:
   const std::string_view string;
   const std::string_view delimiter;
 
   friend class ::SplitStringView::Iterator;
 };
 
-#endif  // _PLOTCPP_APP_INCLUDE_SPLIT_STRING_HPP_
+#endif // _PLOTCPP_APP_INCLUDE_SPLIT_STRING_HPP_

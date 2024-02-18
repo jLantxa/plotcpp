@@ -26,7 +26,7 @@ namespace components {
 
 const std::string TEXT_FONT{"monospace"};
 
-}  // namespace components
-}  // namespace plotcpp
+} // namespace components
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_COMPONENTS_TEXT_HPP_
+#endif // _PLOTCPP_INCLUDE_COMPONENTS_TEXT_HPP_

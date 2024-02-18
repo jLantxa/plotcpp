@@ -24,15 +24,15 @@
 
 namespace plotcpp {
 
-static const char* HEADER_VERSION = "v0.2.1";
+static const char *HEADER_VERSION = "v0.2.1";
 
-const char* GetBuildVersion();
+const char *GetBuildVersion();
 
 [[maybe_unused]] static bool TestVersion() {
-  const char* build_version = GetBuildVersion();
+  const char *build_version = GetBuildVersion();
   return (strcmp(build_version, HEADER_VERSION) == 0);
 }
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_VERSION_HPP_
+#endif // _PLOTCPP_INCLUDE_VERSION_HPP_

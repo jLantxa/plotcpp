@@ -32,39 +32,39 @@ namespace components {
 Frame::Frame(float width, float height, bool enable_grid)
     : m_width(width), m_height(height), m_grid_enable(enable_grid) {}
 
-void Frame::AddLeftMarker(float pos, const std::string& text) {
+void Frame::AddLeftMarker(float pos, const std::string &text) {
   m_left_markers.insert({pos, text});
 }
 
-void Frame::AddTopMarker(float pos, const std::string& text) {
+void Frame::AddTopMarker(float pos, const std::string &text) {
   m_top_markers.insert({pos, text});
 }
 
-void Frame::AddRightMarker(float pos, const std::string& text) {
+void Frame::AddRightMarker(float pos, const std::string &text) {
   m_right_markers.insert({pos, text});
 }
 
-void Frame::AddBottomMarker(float pos, const std::string& text) {
+void Frame::AddBottomMarker(float pos, const std::string &text) {
   m_bottom_markers.insert({pos, text});
 }
 
 void Frame::SetFrameType(FrameType frame_type) { m_frame_type = frame_type; }
 
-void Frame::Draw(svg::Document* document, float x, float y) const {
+void Frame::Draw(svg::Document *document, float x, float y) const {
   DrawAxes(document, x, y);
 
   // Draw frame
   switch (m_frame_type) {
-    case FrameType::FULL_FRAME:
-      DrawFullFrame(document, x, y);
-      break;
-    case FrameType::AXES_ONLY:
-      DrawAxesOnly(document, x, y);
-      break;
+  case FrameType::FULL_FRAME:
+    DrawFullFrame(document, x, y);
+    break;
+  case FrameType::AXES_ONLY:
+    DrawAxesOnly(document, x, y);
+    break;
   }
 }
 
-void Frame::DrawFullFrame(svg::Document* document, float x, float y) const {
+void Frame::DrawFullFrame(svg::Document *document, float x, float y) const {
   svg::Rect frame_rect{
       .x = x,
       .y = y,
@@ -82,7 +82,7 @@ void Frame::DrawFullFrame(svg::Document* document, float x, float y) const {
   document->DrawRect(clip_rect, clip_path_node);
 }
 
-void Frame::DrawAxesOnly(svg::Document* document, float x, float y) const {
+void Frame::DrawAxesOnly(svg::Document *document, float x, float y) const {
   svg::Rect frame_rect{
       .x = x,
       .y = y,
@@ -109,11 +109,11 @@ void Frame::DrawAxesOnly(svg::Document* document, float x, float y) const {
   document->DrawRect(clip_rect, clip_path_node);
 }
 
-void Frame::DrawAxes(svg::Document* document, float x, float y) const {
+void Frame::DrawAxes(svg::Document *document, float x, float y) const {
   float font_em = m_axis_font_size / 12.0f;
 
   // Left markers
-  for (const Marker& marker : m_left_markers) {
+  for (const Marker &marker : m_left_markers) {
     svg::Line marker_line{.x1 = x,
                           .y1 = y + marker.first,
                           .x2 = x - MARKER_LENGTH,
@@ -148,7 +148,7 @@ void Frame::DrawAxes(svg::Document* document, float x, float y) const {
   // TODO: Right markers
 
   // Bottom markers
-  for (const Marker& marker : m_bottom_markers) {
+  for (const Marker &marker : m_bottom_markers) {
     svg::Line marker_line{.x1 = x + marker.first,
                           .y1 = y + m_height,
                           .x2 = x + marker.first,
@@ -178,5 +178,5 @@ void Frame::DrawAxes(svg::Document* document, float x, float y) const {
   }
 }
 
-}  // namespace components
-}  // namespace plotcpp
+} // namespace components
+} // namespace plotcpp

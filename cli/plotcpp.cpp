@@ -25,28 +25,28 @@
 #include "HistogramHandler.hpp"
 #include "Plot2DHandler.hpp"
 
-static bool HandlePlot2D(int argc, char** argv) {
+static bool HandlePlot2D(int argc, char **argv) {
   Plot2DHandler handler;
   return handler.Run(argc, argv);
 }
 
-static bool HandleBarPlot(int argc, char** argv) {
+static bool HandleBarPlot(int argc, char **argv) {
   BarPlotHandler handler;
   return handler.Run(argc, argv);
 }
 
-static bool HandleHistogramPlot(int argc, char** argv) {
+static bool HandleHistogramPlot(int argc, char **argv) {
   HistogramHandler handler;
   return handler.Run(argc, argv);
 }
 
-static const std::map<std::string, std::function<bool(int, char**)>> PROGRAMS{
+static const std::map<std::string, std::function<bool(int, char **)>> PROGRAMS{
     {"plot2d", HandlePlot2D},
     {"bar", HandleBarPlot},
     {"hist", HandleHistogramPlot},
 };
 
-static bool HandleArguments(int argc, char** argv) {
+static bool HandleArguments(int argc, char **argv) {
   if (argc < 1) {
     return false;
   }
@@ -60,7 +60,7 @@ static bool HandleArguments(int argc, char** argv) {
   return false;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (!HandleArguments(argc - 1, argv + 1)) {
     return -1;
   }

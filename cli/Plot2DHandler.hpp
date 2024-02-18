@@ -23,9 +23,9 @@
 #include <string>
 
 class Plot2DHandler final {
- public:
+public:
   Plot2DHandler() = default;
-  bool Run(int argc, char** argv);
+  bool Run(int argc, char **argv);
 };
 
-#endif  // _PLOTCPP_APP_INCLUDE_PLOT2D_HANDLER_HPP_
+#endif // _PLOTCPP_APP_INCLUDE_PLOT2D_HANDLER_HPP_

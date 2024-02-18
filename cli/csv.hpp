@@ -23,7 +23,7 @@
 
 #include "cli.hpp"
 
-DataCollection ParseCsv(const std::string& csv_filename,
+DataCollection ParseCsv(const std::string &csv_filename,
                         std::string_view delimiter, bool first_line_has_labels);
 
-#endif  // _PLOTCPP_APP_INCLUDE_CSV_HPP_
+#endif // _PLOTCPP_APP_INCLUDE_CSV_HPP_

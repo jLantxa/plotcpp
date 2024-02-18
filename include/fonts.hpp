@@ -41,13 +41,13 @@ constexpr float EmToPx(float em) { return em * 16.0f; };
  * @param size Font size
  * @return A std::pair with the width and height of the bounding box.
  */
-std::pair<float, float> CalculateTextSize(const std::string& text,
-                                          const std::string& font, float size);
+std::pair<float, float> CalculateTextSize(const std::string &text,
+                                          const std::string &font, float size);
 
-float ConstrainedFontSize(float base_size, const std::string& text,
-                          const std::string& font, float width, float height);
+float ConstrainedFontSize(float base_size, const std::string &text,
+                          const std::string &font, float width, float height);
 
-}  // namespace fonts
-}  // namespace plotcpp
+} // namespace fonts
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_FONTS_HPP_
+#endif // _PLOTCPP_INCLUDE_FONTS_HPP_

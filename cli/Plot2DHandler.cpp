@@ -26,7 +26,7 @@
 #include "cli.hpp"
 #include "csv.hpp"
 
-bool Plot2DHandler::Run(int argc, char** argv) {
+bool Plot2DHandler::Run(int argc, char **argv) {
   static constexpr int FIRST_LINE_LABEL_OPTION = 1000;
 
   static const struct option long_options[] = {
@@ -40,7 +40,7 @@ bool Plot2DHandler::Run(int argc, char** argv) {
       {"output", required_argument, nullptr, 'o'},
       {nullptr, 0, nullptr, 0}};
 
-  const char* short_opts = "f:t:x:y:lgo:";
+  const char *short_opts = "f:t:x:y:lgo:";
 
   plotcpp::Plot2D plot;
   std::string csv_filename;
@@ -58,40 +58,40 @@ bool Plot2DHandler::Run(int argc, char** argv) {
     }
 
     switch (opt) {
-      case 't':
-        plot.SetTitle(std::string{optarg});
-        break;
+    case 't':
+      plot.SetTitle(std::string{optarg});
+      break;
 
-      case 'x':
-        plot.SetXLabel(std::string{optarg});
-        break;
+    case 'x':
+      plot.SetXLabel(std::string{optarg});
+      break;
 
-      case 'y':
-        plot.SetYLabel(std::string{optarg});
-        break;
+    case 'y':
+      plot.SetYLabel(std::string{optarg});
+      break;
 
-      case 'g':
-        plot.SetGrid(true);
-        break;
+    case 'g':
+      plot.SetGrid(true);
+      break;
 
-      case FIRST_LINE_LABEL_OPTION:
-        first_line_has_labels = true;
-        break;
+    case FIRST_LINE_LABEL_OPTION:
+      first_line_has_labels = true;
+      break;
 
-      case 'l':
-        use_legend = true;
-        break;
+    case 'l':
+      use_legend = true;
+      break;
 
-      case 'f':
-        csv_filename = std::string{optarg};
-        break;
+    case 'f':
+      csv_filename = std::string{optarg};
+      break;
 
-      case 'o':
-        output_filename = std::string{optarg};
-        break;
+    case 'o':
+      output_filename = std::string{optarg};
+      break;
 
-      default:
-        break;
+    default:
+      break;
     }
   };
 

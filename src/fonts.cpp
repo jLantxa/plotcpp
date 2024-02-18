@@ -31,8 +31,8 @@ static const std::map<std::string, FontData> FONT_DATA = {
     {"monospace", {.width_em = 0.46f}},
 };
 
-std::pair<float, float> CalculateTextSize(const std::string& text,
-                                          const std::string& font, float size) {
+std::pair<float, float> CalculateTextSize(const std::string &text,
+                                          const std::string &font, float size) {
   const auto it = FONT_DATA.find(font);
   const float width_em =
       (it != FONT_DATA.end()) ? it->second.width_em : DEFAULT_WIDTH_EM;
@@ -41,8 +41,8 @@ std::pair<float, float> CalculateTextSize(const std::string& text,
           (size / 12.0f)};
 }
 
-float ConstrainedFontSize(float base_size, const std::string& text,
-                          const std::string& font, float width, float height) {
+float ConstrainedFontSize(float base_size, const std::string &text,
+                          const std::string &font, float width, float height) {
   const auto [text_width_em, text_height_em] =
       CalculateTextSize(text, font, base_size);
 
@@ -53,5 +53,5 @@ float ConstrainedFontSize(float base_size, const std::string& text,
   return std::min(w_scaled_size, h_scaled_size);
 }
 
-}  // namespace fonts
-}  // namespace plotcpp
+} // namespace fonts
+} // namespace plotcpp

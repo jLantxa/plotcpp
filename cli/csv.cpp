@@ -24,7 +24,7 @@
 
 #include "SplitStringView.hpp"
 
-DataCollection ParseCsv(const std::string& csv_filename,
+DataCollection ParseCsv(const std::string &csv_filename,
                         std::string_view delimiter,
                         bool first_line_has_labels) {
   DataCollection collection;
@@ -35,7 +35,7 @@ DataCollection ParseCsv(const std::string& csv_filename,
   if (first_line_has_labels) {
     if (std::getline(file_stream, line) && (line != "")) {
       SplitStringView split_view(line, delimiter);
-      for (const auto& label : split_view) {
+      for (const auto &label : split_view) {
         collection.labels.emplace_back(label);
       }
     }
@@ -48,7 +48,7 @@ DataCollection ParseCsv(const std::string& csv_filename,
 
     DataSeries new_series;
     SplitStringView split_view(line, delimiter);
-    for (const auto& token : split_view) {
+    for (const auto &token : split_view) {
       new_series.emplace_back(static_cast<plotcpp::Real>(atof(token.data())));
     }
     collection.series.emplace_back(new_series);

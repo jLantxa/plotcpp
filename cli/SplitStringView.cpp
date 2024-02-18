@@ -32,7 +32,7 @@ SplitStringView::Iterator SplitStringView::end() {
   return Iterator(*this, std::string_view::npos);
 }
 
-SplitStringView::Iterator::Iterator(const SplitStringView& split_str_view,
+SplitStringView::Iterator::Iterator(const SplitStringView &split_str_view,
                                     std::size_t start)
     : split_string_view(split_str_view), next_token(start) {
   FindNextToken();
@@ -61,18 +61,18 @@ void SplitStringView::Iterator::FindNextToken() {
   }
 }
 
-bool SplitStringView::Iterator::operator==(const Iterator& other) const {
+bool SplitStringView::Iterator::operator==(const Iterator &other) const {
   return (split_string_view.string == other.split_string_view.string) &&
          (split_string_view.delimiter == other.split_string_view.delimiter) &&
          (substr_start == other.substr_start) &&
          (substr_end == other.substr_end) && (next_token == other.next_token);
 }
 
-bool SplitStringView::Iterator::operator!=(const Iterator& other) const {
+bool SplitStringView::Iterator::operator!=(const Iterator &other) const {
   return !(*this == other);
 }
 
-SplitStringView::Iterator& SplitStringView::Iterator::operator++() {
+SplitStringView::Iterator &SplitStringView::Iterator::operator++() {
   FindNextToken();
   return *this;
 }

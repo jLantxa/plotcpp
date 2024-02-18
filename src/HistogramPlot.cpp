@@ -33,8 +33,8 @@ HistogramPlot::HistogramPlot() {
 
 void HistogramPlot::Clear() { ClearData(); }
 
-void HistogramPlot::Plot(const std::vector<Real>& values, unsigned int num_bins,
-                         const Color& color) {
+void HistogramPlot::Plot(const std::vector<Real> &values, unsigned int num_bins,
+                         const Color &color) {
   ClearData();
 
   std::vector<Real> intervals = CalculateIntervals(values, num_bins);
@@ -45,8 +45,9 @@ void HistogramPlot::Plot(const std::vector<Real>& values, unsigned int num_bins,
   m_data_type = DataType::NUMERIC;
 }
 
-std::vector<Real> HistogramPlot::CalculateIntervals(
-    const std::vector<Real>& values, unsigned int num_bins) {
+std::vector<Real>
+HistogramPlot::CalculateIntervals(const std::vector<Real> &values,
+                                  unsigned int num_bins) {
   std::vector<Real> intervals;
   intervals.resize(num_bins + 1);
 
@@ -66,13 +67,13 @@ std::vector<Real> HistogramPlot::CalculateIntervals(
   return intervals;
 }
 
-void HistogramPlot::Plot(const std::vector<Real>& values,
+void HistogramPlot::Plot(const std::vector<Real> &values,
                          unsigned int num_bins) {
   Plot(values, num_bins, DEFAULT_COLOR);
 }
 
-std::vector<Real> HistogramPlot::CalculateBins(
-    const std::vector<Real>& intervals) {
+std::vector<Real>
+HistogramPlot::CalculateBins(const std::vector<Real> &intervals) {
   const std::size_t num_intervals = intervals.size();
   if (num_intervals == 0) {
     return {};
@@ -91,8 +92,9 @@ std::vector<Real> HistogramPlot::CalculateBins(
   return bins;
 }
 
-std::vector<Real> HistogramPlot::CalculateHistogram(
-    const std::vector<Real>& values, const std::vector<Real>& intervals) {
+std::vector<Real>
+HistogramPlot::CalculateHistogram(const std::vector<Real> &values,
+                                  const std::vector<Real> &intervals) {
   if (intervals.size() == 0) {
     return {};
   }
@@ -100,7 +102,7 @@ std::vector<Real> HistogramPlot::CalculateHistogram(
   const std::size_t num_bins = intervals.size() - 1;
   std::vector<std::size_t> counts(num_bins, 0);
 
-  for (const auto& value : values) {
+  for (const auto &value : values) {
     const auto [index, found] = BinarySearchInterval(value, intervals);
     if (found) {
       ++counts[index];
@@ -110,4 +112,4 @@ std::vector<Real> HistogramPlot::CalculateHistogram(
   return adaptor::Real(counts);
 }
 
-}  // namespace plotcpp
+} // namespace plotcpp

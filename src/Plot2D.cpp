@@ -37,8 +37,7 @@
 
 namespace plotcpp {
 
-template <typename T>
-static bool IsInfinity(T x) {
+template <typename T> static bool IsInfinity(T x) {
   return (x == std::numeric_limits<T>::infinity()) ||
          (x == -std::numeric_limits<T>::infinity());
 }
@@ -47,9 +46,9 @@ const std::string Plot2D::FRAME_RECT_CLIP_PATH_ID = {"rect-clip-path"};
 
 Plot2D::Plot2D() : Figure(), m_color_selector(color_tables::BRIGHT) {}
 
-void Plot2D::Plot(const std::vector<Real>& x_data,
-                  const std::vector<Real>& y_data, const Color& color,
-                  const float stroke_width, const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<Real> &x_data,
+                  const std::vector<Real> &y_data, const Color &color,
+                  const float stroke_width, const std::string &dash_array) {
   if (x_data.size() != y_data.size()) {
     return;
   }
@@ -65,14 +64,14 @@ void Plot2D::Plot(const std::vector<Real>& x_data,
   m_categorical_data.clear();
 }
 
-void Plot2D::Plot(const std::vector<Real>& x_data,
-                  const std::vector<Real>& y_data, const float stroke_width,
-                  const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<Real> &x_data,
+                  const std::vector<Real> &y_data, const float stroke_width,
+                  const std::string &dash_array) {
   Plot(x_data, y_data, m_color_selector.NextColor(), stroke_width, dash_array);
 }
 
-void Plot2D::Plot(const std::vector<Real>& y_data, const Color& color,
-                  const float stroke_width, const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<Real> &y_data, const Color &color,
+                  const float stroke_width, const std::string &dash_array) {
   if (m_data_type == DataType::NUMERIC) {
     std::vector<Real> x_data;
     x_data.resize(y_data.size());
@@ -89,28 +88,28 @@ void Plot2D::Plot(const std::vector<Real>& y_data, const Color& color,
   }
 }
 
-void Plot2D::Plot(const std::vector<Real>& y_data, const float stroke_width,
-                  const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<Real> &y_data, const float stroke_width,
+                  const std::string &dash_array) {
   Plot(y_data, m_color_selector.NextColor(), stroke_width, dash_array);
 }
 
-void Plot2D::Plot(const std::vector<Real>& x_data,
-                  const std::function<Real(Real)>& function, const Color& color,
-                  const float stroke_width, const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<Real> &x_data,
+                  const std::function<Real(Real)> &function, const Color &color,
+                  const float stroke_width, const std::string &dash_array) {
   const auto y_data = ranges::Generate(x_data, function);
   Plot(x_data, y_data, color, stroke_width, dash_array);
 }
 
-void Plot2D::Plot(const std::vector<Real>& x_data,
-                  const std::function<Real(Real)>& function,
-                  const float stroke_width, const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<Real> &x_data,
+                  const std::function<Real(Real)> &function,
+                  const float stroke_width, const std::string &dash_array) {
   Plot(x_data, function, m_color_selector.NextColor(), stroke_width,
        dash_array);
 }
 
-void Plot2D::Plot(const std::vector<std::string>& x_data,
-                  const std::vector<Real>& y_data, const Color& color,
-                  const float stroke_width, const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<std::string> &x_data,
+                  const std::vector<Real> &y_data, const Color &color,
+                  const float stroke_width, const std::string &dash_array) {
   if (x_data.size() != y_data.size()) {
     return;
   }
@@ -133,14 +132,14 @@ void Plot2D::Plot(const std::vector<std::string>& x_data,
   m_data_type = DataType::CATEGORICAL;
 }
 
-void Plot2D::Plot(const std::vector<std::string>& x_data,
-                  const std::vector<Real>& y_data, const float stroke_width,
-                  const std::string& dash_array) {
+void Plot2D::Plot(const std::vector<std::string> &x_data,
+                  const std::vector<Real> &y_data, const float stroke_width,
+                  const std::string &dash_array) {
   Plot(x_data, y_data, m_color_selector.NextColor(), stroke_width, dash_array);
 }
 
-void Plot2D::Scatter(const std::vector<Real>& x_data,
-                     const std::vector<Real>& y_data, const Color& color,
+void Plot2D::Scatter(const std::vector<Real> &x_data,
+                     const std::vector<Real> &y_data, const Color &color,
                      const float radius) {
   if (x_data.size() != y_data.size()) {
     return;
@@ -157,13 +156,13 @@ void Plot2D::Scatter(const std::vector<Real>& x_data,
   m_categorical_data.clear();
 }
 
-void Plot2D::Scatter(const std::vector<Real>& x_data,
-                     const std::vector<Real>& y_data, const float radius) {
+void Plot2D::Scatter(const std::vector<Real> &x_data,
+                     const std::vector<Real> &y_data, const float radius) {
   Scatter(x_data, y_data, m_color_selector.NextColor(), radius);
 }
 
-void Plot2D::Scatter(const std::vector<std::string>& x_data,
-                     const std::vector<Real>& y_data, const Color& color,
+void Plot2D::Scatter(const std::vector<std::string> &x_data,
+                     const std::vector<Real> &y_data, const Color &color,
                      const float radius) {
   if (x_data.size() != y_data.size()) {
     return;
@@ -182,8 +181,8 @@ void Plot2D::Scatter(const std::vector<std::string>& x_data,
   m_data_type = DataType::CATEGORICAL;
 }
 
-void Plot2D::Scatter(const std::vector<std::string>& x_data,
-                     const std::vector<Real>& y_data, const float radius) {
+void Plot2D::Scatter(const std::vector<std::string> &x_data,
+                     const std::vector<Real> &y_data, const float radius) {
   Scatter(x_data, y_data, m_color_selector.NextColor(), radius);
 }
 
@@ -207,9 +206,9 @@ std::optional<ranges::Interval<Real>> Plot2D::GetYRange() const {
   return m_y_set_range;
 }
 
-void Plot2D::SetXLabel(const std::string& label) { m_x_label = label; }
+void Plot2D::SetXLabel(const std::string &label) { m_x_label = label; }
 
-void Plot2D::SetYLabel(const std::string& label) { m_y_label = label; }
+void Plot2D::SetYLabel(const std::string &label) { m_y_label = label; }
 
 std::string Plot2D::GetXLabel() const { return m_x_label; }
 
@@ -223,7 +222,7 @@ void Plot2D::SetGrid(bool enable) { m_grid_enable = enable; }
 
 void Plot2D::SetHold(bool hold) { m_hold = hold; }
 
-void Plot2D::SetLegend(const std::vector<std::string>& labels) {
+void Plot2D::SetLegend(const std::vector<std::string> &labels) {
   if (labels.empty()) {
     m_legend_labels.clear();
     return;
@@ -231,13 +230,13 @@ void Plot2D::SetLegend(const std::vector<std::string>& labels) {
 
   std::size_t num_plots = 0;
   switch (m_data_type) {
-    case DataType::NUMERIC:
-      num_plots = m_numeric_data.size();
-      break;
+  case DataType::NUMERIC:
+    num_plots = m_numeric_data.size();
+    break;
 
-    case DataType::CATEGORICAL:
-      num_plots = m_categorical_data.size();
-      break;
+  case DataType::CATEGORICAL:
+    num_plots = m_categorical_data.size();
+    break;
   }
 
   const std::size_t num_labels = std::min(labels.size(), num_plots);
@@ -292,14 +291,14 @@ void Plot2D::CalculateFrame() {
               (1.0f - FRAME_TOP_MARGIN_REL - FRAME_BOTTOM_MARGIN_REL);
 
   switch (m_data_type) {
-    case DataType::NUMERIC:
-      CalculateNumericFrame();
-      break;
-    case DataType::CATEGORICAL:
-      CalculateCategoricalFrame();
-      break;
-    default:
-      break;
+  case DataType::NUMERIC:
+    CalculateNumericFrame();
+    break;
+  case DataType::CATEGORICAL:
+    CalculateCategoricalFrame();
+    break;
+  default:
+    break;
   }
 
   // Calculate markers
@@ -333,7 +332,7 @@ void Plot2D::CalculateNumericFrame() {
   Real max_x = std::numeric_limits<Real>::lowest();
   Real min_y = std::numeric_limits<Real>::max();
   Real max_y = std::numeric_limits<Real>::lowest();
-  for (auto& plot : m_numeric_data) {
+  for (auto &plot : m_numeric_data) {
     const std::size_t size = plot.x.size();
     for (std::size_t i = 0; i < size; ++i) {
       const Real x = plot.x[i];
@@ -374,8 +373,8 @@ void Plot2D::CalculateCategoricalFrame() {
   // Ranges
   Real min_y = std::numeric_limits<Real>::max();
   Real max_y = std::numeric_limits<Real>::lowest();
-  for (const auto& data : m_categorical_data) {
-    for (const auto& y : data.y) {
+  for (const auto &data : m_categorical_data) {
+    for (const auto &y : data.y) {
       if (!IsInfinity(y)) {
         min_y = std::min(y, min_y);
         max_y = std::max(y, max_y);
@@ -407,7 +406,7 @@ void Plot2D::DrawFrame() {
   left_markers.insert(m_y_markers.begin(), m_y_markers.end());
   left_markers.insert(m_y_custom_markers.begin(), m_y_custom_markers.end());
 
-  for (const auto& marker : left_markers) {
+  for (const auto &marker : left_markers) {
     if ((marker < m_y_range.first) || (marker > m_y_range.second)) {
       continue;
     }
@@ -422,7 +421,7 @@ void Plot2D::DrawFrame() {
     bottom_markers.insert(m_x_markers.begin(), m_x_markers.end());
     bottom_markers.insert(m_x_custom_markers.begin(), m_x_custom_markers.end());
 
-    for (const auto& marker : bottom_markers) {
+    for (const auto &marker : bottom_markers) {
       if ((marker < m_x_range.first) || (marker > m_x_range.second)) {
         continue;
       }
@@ -449,19 +448,19 @@ void Plot2D::DrawFrame() {
 
 void Plot2D::DrawData() {
   switch (m_data_type) {
-    case DataType::NUMERIC:
-      DrawNumericData();
-      break;
-    case DataType::CATEGORICAL:
-      DrawCategoricalData();
-      break;
-    default:
-      break;
+  case DataType::NUMERIC:
+    DrawNumericData();
+    break;
+  case DataType::CATEGORICAL:
+    DrawCategoricalData();
+    break;
+  default:
+    break;
   }
 }
 
 void Plot2D::DrawNumericData() {
-  for (const auto& plot : m_numeric_data) {
+  for (const auto &plot : m_numeric_data) {
     if (plot.style.scatter == false) {
       DrawNumericPath(plot);
     } else {
@@ -470,13 +469,13 @@ void Plot2D::DrawNumericData() {
   }
 }
 
-void Plot2D::DrawNumericPath(const DataSeries& plot) {
+void Plot2D::DrawNumericPath(const DataSeries &plot) {
   svg::Path path;
   path.stroke_color = plot.style.color;
   path.stroke_width = plot.style.stroke;
 
-  const std::vector<Real>& data_x = plot.x;
-  const std::vector<Real>& data_y = plot.y;
+  const std::vector<Real> &data_x = plot.x;
+  const std::vector<Real> &data_y = plot.y;
   const std::size_t size = data_x.size();
 
   for (std::size_t i = 0; i < size; ++i) {
@@ -506,9 +505,9 @@ void Plot2D::DrawNumericPath(const DataSeries& plot) {
   // svg::SetAttribute(path_node, "stroke-linejoin", "bevel");
 }
 
-void Plot2D::DrawNumericScatter(const DataSeries& plot) {
-  const std::vector<Real>& data_x = plot.x;
-  const std::vector<Real>& data_y = plot.y;
+void Plot2D::DrawNumericScatter(const DataSeries &plot) {
+  const std::vector<Real> &data_x = plot.x;
+  const std::vector<Real> &data_y = plot.y;
   const std::size_t size = data_x.size();
 
   for (std::size_t i = 0; i < size; ++i) {
@@ -527,7 +526,7 @@ void Plot2D::DrawNumericScatter(const DataSeries& plot) {
 }
 
 void Plot2D::DrawCategoricalData() {
-  for (const auto& plot : m_categorical_data) {
+  for (const auto &plot : m_categorical_data) {
     if (plot.style.scatter == false) {
       DrawCategoricalPath(plot);
     } else {
@@ -536,12 +535,12 @@ void Plot2D::DrawCategoricalData() {
   }
 }
 
-void Plot2D::DrawCategoricalPath(const CategoricalDataSeries& plot) {
+void Plot2D::DrawCategoricalPath(const CategoricalDataSeries &plot) {
   svg::Path path;
   path.stroke_color = plot.style.color;
   path.stroke_width = plot.style.stroke;
 
-  const std::vector<Real>& data_y = plot.y;
+  const std::vector<Real> &data_y = plot.y;
   const std::size_t size = data_y.size();
 
   for (std::size_t i = 0; i < size; ++i) {
@@ -570,8 +569,8 @@ void Plot2D::DrawCategoricalPath(const CategoricalDataSeries& plot) {
   }
 }
 
-void Plot2D::DrawCategoricalScatter(const CategoricalDataSeries& plot) {
-  const std::vector<Real>& data_y = plot.y;
+void Plot2D::DrawCategoricalScatter(const CategoricalDataSeries &plot) {
+  const std::vector<Real> &data_y = plot.y;
   const std::size_t size = data_y.size();
 
   for (std::size_t i = 0; i < size; ++i) {
@@ -648,39 +647,38 @@ void Plot2D::DrawLegend() {
   components::Legend legend;
 
   switch (m_data_type) {
-    case DataType::NUMERIC: {
-      const std::size_t num_labels =
-          std::min(m_legend_labels.size(), m_numeric_data.size());
-      for (std::size_t i = 0; i < num_labels; ++i) {
-        components::Legend::DataType type =
-            (m_numeric_data[i].style.scatter == false)
-                ? components::Legend::DataType::LINE
-                : components::Legend::DataType::POINT;
-        legend.AddEntry(m_legend_labels[i],
-                        {type, m_numeric_data[i].style.color,
-                         m_numeric_data[i].style.dash_array});
-      }
-      break;
+  case DataType::NUMERIC: {
+    const std::size_t num_labels =
+        std::min(m_legend_labels.size(), m_numeric_data.size());
+    for (std::size_t i = 0; i < num_labels; ++i) {
+      components::Legend::DataType type =
+          (m_numeric_data[i].style.scatter == false)
+              ? components::Legend::DataType::LINE
+              : components::Legend::DataType::POINT;
+      legend.AddEntry(m_legend_labels[i], {type, m_numeric_data[i].style.color,
+                                           m_numeric_data[i].style.dash_array});
     }
+    break;
+  }
 
-    case DataType::CATEGORICAL: {
-      const std::size_t num_labels =
-          std::min(m_legend_labels.size(), m_categorical_data.size());
-      for (std::size_t i = 0; i < num_labels; ++i) {
-        components::Legend::DataType type =
-            (m_categorical_data[i].style.scatter == false)
-                ? components::Legend::DataType::LINE
-                : components::Legend::DataType::POINT;
-        legend.AddEntry(m_legend_labels[i],
-                        {type, m_categorical_data[i].style.color,
-                         m_categorical_data[i].style.dash_array});
-      }
-      break;
+  case DataType::CATEGORICAL: {
+    const std::size_t num_labels =
+        std::min(m_legend_labels.size(), m_categorical_data.size());
+    for (std::size_t i = 0; i < num_labels; ++i) {
+      components::Legend::DataType type =
+          (m_categorical_data[i].style.scatter == false)
+              ? components::Legend::DataType::LINE
+              : components::Legend::DataType::POINT;
+      legend.AddEntry(m_legend_labels[i],
+                      {type, m_categorical_data[i].style.color,
+                       m_categorical_data[i].style.dash_array});
     }
+    break;
+  }
   }
 
   legend.Draw(&m_svg, m_frame_x + m_frame_w, m_frame_y, LEGEND_MARGIN,
               components::Legend::Alignment::TOP_RIGHT);
 }
 
-}  // namespace plotcpp
+} // namespace plotcpp

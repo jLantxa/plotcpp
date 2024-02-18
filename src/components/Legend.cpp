@@ -24,11 +24,11 @@
 namespace plotcpp {
 namespace components {
 
-void Legend::AddEntry(const std::string& label, const Style& style) {
+void Legend::AddEntry(const std::string &label, const Style &style) {
   m_legend_labels.emplace_back(LegendEntry{label, style});
 }
 
-void Legend::Draw(svg::Document* document, float x, float y, float margin,
+void Legend::Draw(svg::Document *document, float x, float y, float margin,
                   Alignment alignment) const {
   if (m_legend_labels.empty()) {
     return;
@@ -36,7 +36,7 @@ void Legend::Draw(svg::Document* document, float x, float y, float margin,
 
   // Calculate sizes
   float max_font_width_em = 0;
-  for (const auto& label : m_legend_labels) {
+  for (const auto &label : m_legend_labels) {
     const auto [w, _] =
         fonts::CalculateTextSize(label.first, components::TEXT_FONT, FONT_SIZE);
     max_font_width_em = std::max(max_font_width_em, w);
@@ -50,22 +50,22 @@ void Legend::Draw(svg::Document* document, float x, float y, float margin,
 
   // Apply alignment
   switch (alignment) {
-    case Alignment::TOP_LEFT:
-      x += margin;
-      y += margin;
-      break;
-    case Alignment::TOP_RIGHT:
-      x -= (box_w + margin);
-      y += margin;
-      break;
-    case Alignment::BOTTOM_LEFT:
-      x += margin;
-      y -= (box_h + margin);
-      break;
-    case Alignment::BOTTOM_RIGHT:
-      x -= (box_w + margin);
-      y -= (box_h - margin);
-      break;
+  case Alignment::TOP_LEFT:
+    x += margin;
+    y += margin;
+    break;
+  case Alignment::TOP_RIGHT:
+    x -= (box_w + margin);
+    y += margin;
+    break;
+  case Alignment::BOTTOM_LEFT:
+    x += margin;
+    y -= (box_h + margin);
+    break;
+  case Alignment::BOTTOM_RIGHT:
+    x -= (box_w + margin);
+    y -= (box_h - margin);
+    break;
   }
 
   svg::Rect box_rect = {.x = x,
@@ -129,5 +129,5 @@ void Legend::Draw(svg::Document* document, float x, float y, float margin,
   }
 }
 
-}  // namespace components
-}  // namespace plotcpp
+} // namespace components
+} // namespace plotcpp

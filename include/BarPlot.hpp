@@ -50,22 +50,22 @@ namespace plotcpp {
  * bar is represented by the x axis.
  */
 class BarPlot : public BarPlotBase {
- public:
+public:
   BarPlot();
   virtual ~BarPlot() = default;
 
-  void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data,
-            const Color& color);
-  void Plot(const std::vector<Real>& x_data, const std::vector<Real>& y_data);
-  void Plot(const std::vector<std::string>& x_data,
-            const std::vector<Real>& y_data, const Color& color);
-  void Plot(const std::vector<std::string>& x_data,
-            const std::vector<Real>& y_data);
-  void Plot(const std::vector<Real>& y_data, const Color& color);
-  void Plot(const std::vector<Real>& y_data);
+  void Plot(const std::vector<Real> &x_data, const std::vector<Real> &y_data,
+            const Color &color);
+  void Plot(const std::vector<Real> &x_data, const std::vector<Real> &y_data);
+  void Plot(const std::vector<std::string> &x_data,
+            const std::vector<Real> &y_data, const Color &color);
+  void Plot(const std::vector<std::string> &x_data,
+            const std::vector<Real> &y_data);
+  void Plot(const std::vector<Real> &y_data, const Color &color);
+  void Plot(const std::vector<Real> &y_data);
 
-  void SetXData(const std::vector<Real>& x_data);
-  void SetXData(const std::vector<std::string>& x_data);
+  void SetXData(const std::vector<Real> &x_data);
+  void SetXData(const std::vector<std::string> &x_data);
 
   /**
    * @brief Set a baseline value for all bars.
@@ -83,15 +83,15 @@ class BarPlot : public BarPlotBase {
    *
    * @param baseline Baseline value.
    */
-  void SetBaselines(const std::vector<Real>& baselines);
+  void SetBaselines(const std::vector<Real> &baselines);
 
   /** Set the figure legend */
-  void SetLegend(const std::vector<std::string>& labels);
+  void SetLegend(const std::vector<std::string> &labels);
 
- protected:
+protected:
   ColorSelector m_color_selector;
 };
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_BAR_PLOT_HPP_
+#endif // _PLOTCPP_INCLUDE_BAR_PLOT_HPP_

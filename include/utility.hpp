@@ -56,10 +56,7 @@ namespace adaptor {
  * @param x Value
  * @return Real Conversion from T to Real
  */
-template <typename T>
-Real Real(T x) {
-  return static_cast<::plotcpp::Real>(x);
-}
+template <typename T> Real Real(T x) { return static_cast<::plotcpp::Real>(x); }
 
 /**
  * @brief Convert a vector of any numeric type to the internal real
@@ -69,8 +66,7 @@ Real Real(T x) {
  * @param v Vector
  * @return std::vector<Real> Conversion from T to Real
  */
-template <typename T>
-std::vector<::plotcpp::Real> Real(std::vector<T> v) {
+template <typename T> std::vector<::plotcpp::Real> Real(std::vector<T> v) {
   const std::size_t size = v.size();
 
   std::vector<::plotcpp::Real> real_vector;
@@ -83,12 +79,11 @@ std::vector<::plotcpp::Real> Real(std::vector<T> v) {
   return real_vector;
 }
 
-}  // namespace adaptor
+} // namespace adaptor
 
 namespace ranges {
 
-template <typename T>
-using Interval = std::pair<T, T>;
+template <typename T> using Interval = std::pair<T, T>;
 
 /**
  * @brief Returns a vector of Real numbers from a to b in equally spaced
@@ -96,8 +91,7 @@ using Interval = std::pair<T, T>;
  *
  * @tparam T Custom numeric type
  */
-template <typename T>
-std::vector<T> MakeRange(T start, T end, T step) {
+template <typename T> std::vector<T> MakeRange(T start, T end, T step) {
   const bool wrong_direction =
       ((start < end) && (step <= 0)) || ((start > end) && (step >= 0));
   if (wrong_direction) {
@@ -138,8 +132,8 @@ std::vector<T> MakeRange(T start, T end, T step) {
  * @return A vector y such that y=function(x)
  */
 template <typename T>
-std::vector<T> Generate(const std::vector<T>& x,
-                        const std::function<T(T)>& function) {
+std::vector<T> Generate(const std::vector<T> &x,
+                        const std::function<T(T)> &function) {
   const std::size_t size = x.size();
   if (size == 0) {
     return {};
@@ -160,7 +154,7 @@ std::vector<T> Generate(const std::vector<T>& x,
  * from the minumum value to the maximum value.
  */
 template <typename T>
-std::set<T> TrivialPartitionRange(const Interval<T>& range,
+std::set<T> TrivialPartitionRange(const Interval<T> &range,
                                   unsigned int num_markers) {
   std::set<T> values;
 
@@ -184,16 +178,16 @@ std::set<T> TrivialPartitionRange(const Interval<T>& range,
  * showing relevant values.
  */
 template <typename T>
-std::set<T> PartitionRange(const Interval<T>& range, unsigned int num_markers) {
+std::set<T> PartitionRange(const Interval<T> &range, unsigned int num_markers) {
   // TODO: Implement algorithm
   return TrivialPartitionRange(range, num_markers);
 }
 
-}  // namespace ranges
+} // namespace ranges
 
 template <typename T>
-std::pair<std::size_t, bool> BinarySearchInterval(
-    T value, const std::vector<T>& intervals) {
+std::pair<std::size_t, bool>
+BinarySearchInterval(T value, const std::vector<T> &intervals) {
   const std::size_t num_intervals = intervals.size();
 
   if (num_intervals == 0) {
@@ -245,23 +239,23 @@ const std::vector<Color> LIGHT{
     Color(0xFFAABB), Color(0x99DDFF), Color(0x44BB99),
     Color(0xBBCC33), Color(0xAAAA00), Color(0xDDDDDD)};
 
-}  // namespace color_tables
+} // namespace color_tables
 
 class ColorSelector final {
- public:
-  ColorSelector(const std::vector<Color>& table) : m_table(table) {}
-  const Color& NextColor() {
-    const Color& color = m_table[index];
+public:
+  ColorSelector(const std::vector<Color> &table) : m_table(table) {}
+  const Color &NextColor() {
+    const Color &color = m_table[index];
     index = (index + 1) % m_table.size();
     return color;
   }
 
- private:
+private:
   const std::vector<Color> m_table;
 
   std::size_t index = 0;
 };
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_UTILITY_HPP_
+#endif // _PLOTCPP_INCLUDE_UTILITY_HPP_

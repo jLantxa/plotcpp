@@ -33,4 +33,4 @@ struct DataCollection final {
 
 const std::string DEFAULT_CSV_DELIMITER{","};
 
-#endif  // _PLOTCPP_APP_INCLUDE_APP_HPP_
+#endif // _PLOTCPP_APP_INCLUDE_APP_HPP_

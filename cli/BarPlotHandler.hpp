@@ -22,9 +22,9 @@
 #include <string>
 
 class BarPlotHandler final {
- public:
+public:
   BarPlotHandler() = default;
-  bool Run(int argc, char** argv);
+  bool Run(int argc, char **argv);
 };
 
-#endif  // _PLOTCPP_APP_INCLUDE_BAR_PLOT_HANDLER_HPP_
+#endif // _PLOTCPP_APP_INCLUDE_BAR_PLOT_HANDLER_HPP_

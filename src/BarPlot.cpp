@@ -29,8 +29,8 @@ BarPlot::BarPlot() : m_color_selector(color_tables::VIBRANT) {
   m_discrete_x_axis = true;
 }
 
-void BarPlot::Plot(const std::vector<Real>& x_data,
-                   const std::vector<Real>& y_data, const Color& color) {
+void BarPlot::Plot(const std::vector<Real> &x_data,
+                   const std::vector<Real> &y_data, const Color &color) {
   if (x_data.size() != y_data.size()) {
     return;
   }
@@ -53,13 +53,13 @@ void BarPlot::Plot(const std::vector<Real>& x_data,
   m_y_data.emplace_back(DataSeries{y_data, color});
 }
 
-void BarPlot::Plot(const std::vector<Real>& x_data,
-                   const std::vector<Real>& y_data) {
+void BarPlot::Plot(const std::vector<Real> &x_data,
+                   const std::vector<Real> &y_data) {
   Plot(x_data, y_data, m_color_selector.NextColor());
 }
 
-void BarPlot::Plot(const std::vector<std::string>& x_data,
-                   const std::vector<Real>& y_data, const Color& color) {
+void BarPlot::Plot(const std::vector<std::string> &x_data,
+                   const std::vector<Real> &y_data, const Color &color) {
   if (x_data.size() != y_data.size()) {
     return;
   }
@@ -82,12 +82,12 @@ void BarPlot::Plot(const std::vector<std::string>& x_data,
   m_y_data.emplace_back(DataSeries{y_data, color});
 }
 
-void BarPlot::Plot(const std::vector<std::string>& x_data,
-                   const std::vector<Real>& y_data) {
+void BarPlot::Plot(const std::vector<std::string> &x_data,
+                   const std::vector<Real> &y_data) {
   Plot(x_data, y_data, m_color_selector.NextColor());
 }
 
-void BarPlot::Plot(const std::vector<Real>& y_data, const Color& color) {
+void BarPlot::Plot(const std::vector<Real> &y_data, const Color &color) {
   if (m_y_data.size() == 0) {
     m_num_bars = y_data.size();
     m_numeric_x_data.clear();
@@ -107,16 +107,16 @@ void BarPlot::Plot(const std::vector<Real>& y_data, const Color& color) {
   m_y_data.emplace_back(DataSeries{y_data, color});
 }
 
-void BarPlot::Plot(const std::vector<Real>& y_data) {
+void BarPlot::Plot(const std::vector<Real> &y_data) {
   Plot(y_data, m_color_selector.NextColor());
 }
 
-void BarPlot::SetXData(const std::vector<Real>& x_data) {
+void BarPlot::SetXData(const std::vector<Real> &x_data) {
   m_numeric_x_data = x_data;
   m_data_type = DataType::NUMERIC;
 }
 
-void BarPlot::SetXData(const std::vector<std::string>& x_data) {
+void BarPlot::SetXData(const std::vector<std::string> &x_data) {
   m_categorical_x_data = x_data;
   m_data_type = DataType::CATEGORICAL;
 }
@@ -125,11 +125,11 @@ void BarPlot::SetBaseline(Real baseline) {
   m_baselines = std::vector<Real>(m_num_bars, baseline);
 }
 
-void BarPlot::SetBaselines(const std::vector<Real>& baselines) {
+void BarPlot::SetBaselines(const std::vector<Real> &baselines) {
   m_baselines = baselines;
 }
 
-void BarPlot::SetLegend(const std::vector<std::string>& labels) {
+void BarPlot::SetLegend(const std::vector<std::string> &labels) {
   if (labels.empty()) {
     m_legend_labels.clear();
     return;
@@ -138,4 +138,4 @@ void BarPlot::SetLegend(const std::vector<std::string>& labels) {
   m_legend_labels = labels;
 }
 
-}  // namespace plotcpp
+} // namespace plotcpp

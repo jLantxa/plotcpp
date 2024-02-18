@@ -33,7 +33,7 @@ class GroupFigure : public Figure {
   static_assert(_rows > 0);
   static_assert(_cols > 0);
 
- public:
+public:
   GroupFigure() { ClearFigures(); };
 
   /**
@@ -43,7 +43,7 @@ class GroupFigure : public Figure {
    * @param row Row
    * @param col Column
    */
-  void Subplot(Figure* figure, std::size_t row, std::size_t col) {
+  void Subplot(Figure *figure, std::size_t row, std::size_t col) {
     if ((row >= _rows) && (col >= _cols)) {
       return;
     }
@@ -58,7 +58,7 @@ class GroupFigure : public Figure {
    * @param row Row
    * @param col Column
    */
-  Figure* GetFigure(std::size_t row, std::size_t col) {
+  Figure *GetFigure(std::size_t row, std::size_t col) {
     return m_figures[_cols * row + col];
   }
 
@@ -72,7 +72,7 @@ class GroupFigure : public Figure {
 
     for (unsigned int i = 0; i < _rows; ++i) {
       for (unsigned int j = 0; j < _cols; ++j) {
-        Figure* figure = GetFigure(i, j);
+        Figure *figure = GetFigure(i, j);
         if (figure == nullptr) {
           continue;
         }
@@ -92,20 +92,20 @@ class GroupFigure : public Figure {
     }
   }
 
- protected:
-  std::array<Figure*, _rows * _cols> m_figures;
+protected:
+  std::array<Figure *, _rows * _cols> m_figures;
 
   static constexpr unsigned int HORIZONTAL_MARGIN = 20;
   static constexpr unsigned int VERTICAL_MARGIN = 20;
 
   void ClearFigures() {
-    for (auto& figure_ptr : m_figures) {
+    for (auto &figure_ptr : m_figures) {
       figure_ptr = nullptr;
     }
   }
 
-};  // namespace plotcpp
+}; // namespace plotcpp
 
-}  // namespace plotcpp
+} // namespace plotcpp
 
-#endif  // _PLOTCPP_INCLUDE_GROUPFIGURE_HPP_
+#endif // _PLOTCPP_INCLUDE_GROUPFIGURE_HPP_
