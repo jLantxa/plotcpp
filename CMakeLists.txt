@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 
 project(plotcpp)
 
@@ -78,6 +78,7 @@ set_target_properties(cli_static PROPERTIES OUTPUT_NAME plotcpp_static)
 
 # Figure tester
 add_executable(figure_tester ${LIB_SOURCES} examples/figure_tester.cpp)
+set_target_properties(figure_tester PROPERTIES COMPILE_FLAGS "-g3")
 target_link_libraries(figure_tester ${LIB_LINKED_LIBRARIES})
 
 # Tests
