@@ -357,10 +357,10 @@ void Plot2D::CalculateNumericFrame() {
       m_y_set_range.has_value() ? m_y_set_range.value() : m_y_data_range;
 
   // Zoom factors
-  m_zoom_x =
-      static_cast<float>(abs(m_frame_w / (m_x_range.second - m_x_range.first)));
-  m_zoom_y =
-      static_cast<float>(abs(m_frame_h / (m_y_range.second - m_y_range.first)));
+  m_zoom_x = fabsf(
+      static_cast<float>(m_frame_w / (m_x_range.second - m_x_range.first)));
+  m_zoom_y = fabsf(
+      static_cast<float>(m_frame_h / (m_y_range.second - m_y_range.first)));
 }
 
 std::pair<float, float> Plot2D::TranslateToFrame(Real x, Real y) const {
@@ -387,8 +387,8 @@ void Plot2D::CalculateCategoricalFrame() {
       m_y_set_range.has_value() ? m_y_set_range.value() : m_y_data_range;
 
   // Zoom factor
-  m_zoom_y =
-      static_cast<float>(abs(m_frame_h / (m_y_range.second - m_y_range.first)));
+  m_zoom_y = fabsf(
+      static_cast<float>(m_frame_h / (m_y_range.second - m_y_range.first)));
 
   const unsigned int num_y_markers =
       std::min(MAX_NUM_Y_MARKERS,
@@ -637,8 +637,7 @@ void Plot2D::DrawLabels() {
 
     std::stringstream trans_ss;
     trans_ss << "translate(" << std::to_string(x) << ", " << std::to_string(y)
-             << ") "
-             << "rotate(-90)";
+             << ") " << "rotate(-90)";
     svg::SetAttribute(node_ptr, "transform", trans_ss.str());
   }
 }
